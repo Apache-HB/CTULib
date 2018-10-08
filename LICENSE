@@ -173,6 +173,12 @@ Apache License
       incurred by, or claims asserted against, such Contributor by reason
       of your accepting any such warranty or additional liability.
 
+    10.Extra Limitations. When building a product or "Video game" with
+       this library, you may not, under any circumstances, encrypt, 
+       disable or impede the end users ability to modify files generated
+       by said game. These include but are not limited to "save files",
+       "settings files" and "generated caches".
+
    END OF TERMS AND CONDITIONS
 
    APPENDIX: How to apply the Apache License to your work.
