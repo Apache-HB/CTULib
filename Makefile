@@ -1,4 +1,4 @@
-NAME = cthulhu
+NAME = cthulhu.o
 STD = -std=c++17
 
 #all C++ code sources
@@ -11,7 +11,7 @@ PATHS = -I ./Source/Core -I ./Source
 #change this to your compiler of choice, (e.g g++)
 CC = clang++
 
-FRONT = $(CC) $(STD) $(DIRS) $(PATHS)
+FRONT = $(CC) $(STD) $(DIRS) $(PATHS) -o $(NAME)
 
 main:
 	$(FRONT)

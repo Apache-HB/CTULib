@@ -17,11 +17,11 @@
 #include "Meta/Macros.h"
 
 #pragma once
-
+//TODO more detailed docs on all functions
 namespace Cthulhu
 {
 
-//Forward declaration to prevent looping includes
+//Forward declaration to prevent looping includes and reduce compile times
 template<typename T>
 class Array;
 
@@ -104,6 +104,22 @@ public:
 
     /**Reference copy constructor
      * sets the content to a copy of the other classes content
+     * Performs a deep copy of the content so the new string can
+     * be modified without editing the old string
+     * 
+     * @code{.cpp}
+     * 
+     * String S = String("Some random content");
+     * 
+     * String J = String(S);
+     * 
+     * S += " More Content";
+     * 
+     * //S = "Some random content More Content"
+     * 
+     * //J = "Some random content"
+     * 
+     * @endcode
      * 
      * @param Other the string to copy
      */
@@ -111,6 +127,23 @@ public:
 
     /**pointer copy constructor
      * copys the content from a pointer to a string
+     * performs a deep copy of the other strings content, 
+     * is not nullptr safe
+     * 
+     * @code{.cpp}
+     * 
+     * String* S = new String("Some content");
+     * 
+     * String D = String(S);
+     * 
+     * //D = "Some content"
+     * 
+     * String E = String(nullptr);
+     * 
+     * //BANG!
+     * //segmentation fault 11
+     * 
+     * @endcode
      * 
      * @param Other the pointer to copy from
      */
@@ -118,6 +151,17 @@ public:
 
     /**Assignment operator overload
      * copys the content from the other string to this string
+     * 
+     * @code{.cpp}
+     * 
+     * String S = String("Name jeff");
+     * 
+     * String J = S;
+     * 
+     * //S = "Name jeff"
+     * //J = "Name jeff"
+     * 
+     * @endcode
      * 
      * @param Other the string to copy from
      * 
@@ -139,12 +183,20 @@ public:
     /**check if the string is empty
      * equivilent to String.Len() == 0;
      * 
+     * @code{.cpp}
+     * 
+     * @endcode
+     * 
      * @return if the string is empty or not
      */
     ALWAYSINLINE bool IsEmpty() const;
 
     /**Overloaded bool for string 
-     * equivilent to String.IsEmpty();
+     * equivilent to String.IsEmpty(); or String.Len() == 0;
+     * 
+     * @code{.cpp}
+     * 
+     * @endcode
      * 
      * @return if the string is empty or not
      */

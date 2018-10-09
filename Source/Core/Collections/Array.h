@@ -49,7 +49,7 @@ protected:
         T* Temp = Real;
         Real = new T[Allocated];
 
-        for(int I = 0; I < Length; I++)
+        for(uint32 I = 0; I < Length; I++)
         {
             Real[I] = Temp[I];
         }
@@ -62,7 +62,7 @@ protected:
         Allocated = Length + Slack;
         Real = new T[Allocated];
 
-        for(int I = 0; I < PtrLen; I++)
+        for(uint32 I = 0; I < PtrLen; I++)
         {
             Real[I] = Data[I];
         }
@@ -162,7 +162,7 @@ public:
     Array& Append(const Array& Other)
     {
         for(int I = 0; I < Other.Len(); I++)
-        {
+        {//TODO: optimize
             Append(Other[I]);
         }
         return *this;

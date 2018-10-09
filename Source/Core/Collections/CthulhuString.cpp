@@ -684,7 +684,7 @@ int Cthulhu::String::Strlen(const char* Str)
 
 char* Cthulhu::String::Strdup(const char* Str)
 {
-    int Len = Strlen(Str);
+    int32 Len = Strlen(Str);
     char* Ret = new char[Len + 1];
     Memory::Memcpy(Str, Ret, sizeof(char) * Len + 1);
     return Ret;
