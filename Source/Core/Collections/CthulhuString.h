@@ -359,10 +359,10 @@ public:
      * String Path = "Some"/"File"/"Path"/"File.txt";
      * 
      * //On OSX/Unix
-     * // `Some/File/Path/File.txt`
+     * // "Some/File/Path/File.txt"
      * 
      * //On Windows
-     * // `Some\\File\\Path\\File.txt`
+     * // "Some\\File\\Path\\File.txt"
      * 
      * @endcode
      * 
@@ -373,6 +373,22 @@ public:
     String operator/(const String& Other) const;
 
     /**Append a string using the OS file path seperator
+     * 
+     * @code{.cpp}
+     * 
+     * String Path = "Some";
+     * 
+     * Path /= "File";
+     * Path /= "Path";
+     * Path /= "File.txt";
+     * 
+     * //On OSX/Unix
+     * // "Some/File/Path/File.txt"
+     * 
+     * //On Windows
+     * // "Some\\File\\Path\\File.txt"
+     * 
+     * @endcode
      * 
      * @param Other the string to append
      * 

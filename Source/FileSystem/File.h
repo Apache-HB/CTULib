@@ -22,7 +22,7 @@ namespace Cthulhu
 
 struct File
 {
-
+    
 };
 
 }

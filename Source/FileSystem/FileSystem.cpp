@@ -13,17 +13,4 @@
  *  limitations under the License.
  */
 
-#include "Collections/Array.h"
-#include "File.h"
-
-#pragma once
-//TODO everything
-namespace Cthulhu
-{
-
-class Directory
-{
-
-};
-
-}
+#include "FileSystem.h"
