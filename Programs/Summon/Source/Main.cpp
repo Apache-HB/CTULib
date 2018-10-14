@@ -13,33 +13,18 @@
  *  limitations under the License.
  */
 
-#include "TestUtils.h"
+#include "Core/Collections/Array.h"
+#include "Core/Collections/CthulhuString.h"
 
-#include "Core/Types/Lambda.h"
+using Cthulhu::Array;
+using Cthulhu::String;
 
-using Cthulhu::Lambda;
-
-bool Jeff(Lambda<bool(bool)> Fun) { return Fun(true); }
-
-bool TestLambda()
+int Main(Array<String> Args)
 {
-    bool Pass = true;
-    
-    Lambda<bool(bool)> L([](bool B){ return B; });
 
-    //auto L = Lambda::FromMethod([]{ printf("Yeet\n"); });
-
-    int I = 0;
-
-    Jeff([Pass, &I](bool B){ I++; return B && Pass; });
-
-    return Pass;
 }
 
 int main(int argc, char const *argv[])
 {
-    bool Pass = true;
-    TEST_BLOCK(Pass, TestLambda, "lambda");
-    
-    TEST_RETURN(Pass, "lambda");
+    return Main(Array<String>(argc, [argv](int argc) -> String { return argv[argc]; }));
 }

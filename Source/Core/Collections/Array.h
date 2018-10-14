@@ -18,6 +18,8 @@
 #include "Optional.h"
 #include "Iterator.h"
 
+#include "Core/Types/Lambda.h"
+
 #include "Meta/Aliases.h"
 #include "Meta/Macros.h"
 
@@ -108,7 +110,7 @@ public:
         Real = Ptr;
     }
     
-    Array(uint32 InLen, T(*Predicate)(int))
+    Array(uint32 InLen, Lambda<T(int)> Predicate)
         : Slack(32)
     {
         Real = new T[InLen + Slack];

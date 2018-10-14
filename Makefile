@@ -34,15 +34,8 @@ release:
 tests:
 	#create the binary, compile and run every test, then clean the last test
 	make debug && \
-	$(CC) $(STD) $(PATHS) $(BUILD_FILE)/$(LIB_NAME) -I./Programs/Tests Programs/Tests/Core/Types/Lambda.cpp -o Test && ./Test
-	#&& \
-	#for test in $(TESTS); 	\
-	#do 	$(CC) $(STD) $(PATHS) -I./Programs/Tests $(DIRS) $(BUILD_FILE)/$(LIB_NAME) $(test) -o Test; \ 
-	#	./Test; \
-	#done; && \
-	#rm -rf Test 
-	#$(foreach file, $(TESTS), $(CC) $(STD) $(PATHS) -I./Programs/Tests $(DIRS) $(BUILD_FILE)/$(LIB_NAME) $(file) -o Test && ./Test) && \
-	#rm -rf Test
+	for test in $(TESTS); do $(CC) $(STD) $(PATHS) -I./Programs/Tests $(DIRS) $(BUILD_FILE)/$(LIB_NAME) $$test -o Test && ./Test; done; rm -rf Test
+
 
 clean:
 	rm -rf ./Build
@@ -51,6 +44,4 @@ setup:
 	if [ ! -d "./$(BUILD_FILE)" ]; then mkdir $(BUILD_FILE); fi
 
 move:
-	make setup && \
-	ar rsc $(BUILD_FILE)/$(LIB_NAME) *.o && \
-	rm -rf *.o
+	make setup && ar cr $(BUILD_FILE)/$(LIB_NAME) *.o && rm -rf *.o

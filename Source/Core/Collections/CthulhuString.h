@@ -16,6 +16,8 @@
 #include "Meta/Aliases.h"
 #include "Meta/Macros.h"
 
+#include "Core/Types/Lambda.h"
+
 #pragma once
 //TODO more detailed docs on all functions
 namespace Cthulhu
@@ -535,12 +537,12 @@ public:
     /**
      * 
      */
-    String Map(char(*Transform)(const char)) const;
+    String Map(Lambda<const char(const char)> Transform) const;
 
     /**
      * 
      */
-    String Filter(bool(*Predicate)(const char)) const;
+    String Filter(Lambda<bool(const char)> Predicate) const;
 
     /**
      * 

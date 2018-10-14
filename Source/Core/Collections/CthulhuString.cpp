@@ -410,7 +410,7 @@ bool Cthulhu::String::EndsWith(const String& Other) const
     return false;
 }
 
-Cthulhu::String Cthulhu::String::Map(char(*Transform)(const char)) const
+Cthulhu::String Cthulhu::String::Map(Lambda<const char(const char)> Transform) const
 {
     String Ret;
     
@@ -421,7 +421,7 @@ Cthulhu::String Cthulhu::String::Map(char(*Transform)(const char)) const
     return Ret;
 }
 
-Cthulhu::String Cthulhu::String::Filter(bool(*Predicate)(const char)) const
+Cthulhu::String Cthulhu::String::Filter(Cthulhu::Lambda<bool(const char)> Predicate) const
 {
     String Ret;
     
