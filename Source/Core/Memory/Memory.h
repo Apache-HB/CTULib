@@ -37,10 +37,10 @@ namespace Memory
     ALWAYSINLINE T* Memcpy(const T* Source, T* Dest, size_t Len) { return (T*)memcpy((void*)Dest, (void*)Source, Len); }
 
     template<typename T>
-    ALWAYSINLINE bool Memcmp(const T* Source, const T* Other, size_t Len) { return memcmp((void*)Source, (void*)Other, Len); }
+    ALWAYSINLINE int Memcmp(const T* Source, const T* Other, size_t Len) { return memcmp((void*)Source, (void*)Other, Len); }
 
     template<typename T>
-    ALWAYSINLINE T* Memdup(const T* Source, size_t Len) 
+    ALWAYSINLINE T* Memdup(const T* Source, size_t Len)
     {
         T* Ret = (T*)malloc(Len);
 
@@ -50,10 +50,7 @@ namespace Memory
     }
 
     template<typename T>
-    ALWAYSINLINE T* Realloc(T* Source, size_t NewLen)
-    {
-        return (T*)realloc((void*)Source, NewLen);
-    }
+    ALWAYSINLINE T* Realloc(T* Source, size_t NewLen) { return (T*)realloc((void*)Source, NewLen); }
 
     template<typename T>
     ALWAYSINLINE T* Malloc(size_t Len) { return (T*)malloc(Len); }

@@ -140,6 +140,34 @@ public:
      * @return bool is the content valid or not
      */
     ALWAYSINLINE bool Valid() const { return IsValid; }
+
+    //TODO: redoc with 3-4 examples
+    /**Functionally fold the result between 2 functions
+     * 
+     * @code{.cpp}
+     * 
+     * Optional<float> F = SomeFunction();
+     * 
+     * F.Fold([](float F){
+     *     //there is content
+     *     //do something with the content
+     * }, [](){
+     *     //there was no content
+     *     //do something else
+     * });
+     * 
+     * @endcode
+     * 
+     * @param WhenValid the function to execute when the optional has content
+     * @param Otherwise the function to execute when the optional is empty
+     * @param TRet      the return type of the fold
+     * 
+     */
+    template<typename TRet = void>
+    TRet Fold(TRet(*WhenValid)(T), TRet(*Otherwise)())
+    {
+        return (IsValid) ? WhenValid(Content) : Otherwise();
+    }
 };
 
 /**Returns a empty optional of any type

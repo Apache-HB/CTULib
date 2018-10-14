@@ -13,23 +13,29 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include "TestUtils.h"
 
-/**
- * type aliases to shorter words
- */
+#include "Core/Types/Lambda.h"
 
-namespace Cthulhu
+using Cthulhu::Lambda;
+
+bool Jeff(Lambda<bool(bool)> Fun) { return Fun(true); }
+
+bool TestLambda()
 {
+    bool Pass = true;
+    
+    Lambda<bool(bool)> L = Lambda([](bool B){ return B; })
 
-using uint64 = unsigned long long;
-using uint32 = unsigned int;
-using uint16 = unsigned short;
-using uint8 = unsigned char;
+    //Jeff([Pass](bool B){ return B && Pass; });
 
-using int64 = signed long long;
-using int32 = signed int;
-using int16 = signed short;
-using int8 = signed char;
+    return Pass;
+}
 
+int main(int argc, char const *argv[])
+{
+    bool Pass = true;
+    TEST_BLOCK(Pass, TestLambda, "lambda");
+    
+    TEST_RETURN(Pass, "lambda");
 }

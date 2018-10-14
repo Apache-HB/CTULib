@@ -15,22 +15,27 @@
 
 #pragma once
 
-//TODO explain
+/**This switch detects the operating system using OS predefines
+ * it is used for many things such as the platform specific path seperator
+ * @see String::PathSeperator()
+ */
 
 #if defined(_WIN32) || defined(_WIN64)
 #   define OS_WINDOWS 1
-#   define OS_PATH_SEP "\\"
 #elif defined(__APPLE__) && defined(__MACH__)
 #   define OS_APPLE 1
-#   define OS_PATH_SEP "/"
 #elif defined(__linux__) || defined(__unix__)
 #   define OS_LINUX 1
-#   define OS_PATH_SEP "/"
 #else
 #   error "Unrecognised target platform"
 #endif
 
 
+/**This is a compiler switch to detect which compiler is being used
+ * as every compile has compiler specific stuff, such as __forceinline or 
+ * __attribute__((always_inline)) because whoever wrote these things doesnt
+ * know how to follow standards
+ */
 
 #if defined(_MSC_VER)
 #   define ALWAYSINLINE __forceinline
@@ -47,3 +52,5 @@
 #else
 #   error "Unrecognised compiler"
 #endif
+
+#define WITH_CTHULHU 1

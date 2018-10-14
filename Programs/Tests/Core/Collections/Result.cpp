@@ -13,23 +13,30 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include "TestUtils.h"
 
-/**
- * type aliases to shorter words
- */
+#include "Core/Collections/Result.h"
 
-namespace Cthulhu
+using Cthulhu::Result;
+using Cthulhu::Pass;
+using Cthulhu::Fail;
+
+bool TestConstructors()
 {
+    bool TestPass = true;
 
-using uint64 = unsigned long long;
-using uint32 = unsigned int;
-using uint16 = unsigned short;
-using uint8 = unsigned char;
+    TEST_ASSERT(TestPass, (Fail<int, int>(5).HasErr()));
 
-using int64 = signed long long;
-using int32 = signed int;
-using int16 = signed short;
-using int8 = signed char;
+    TEST_ASSERT(TestPass, (Pass<int, int>(25).HasRes()));
 
+    return TestPass;
+}
+
+int main(int argc, char const *argv[])
+{
+    bool TestPass = true;
+
+    TEST_BLOCK(TestPass, TestConstructors, "result constructors");
+    
+    TEST_RETURN(TestPass, "Result");
 }

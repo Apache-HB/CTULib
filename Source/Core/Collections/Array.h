@@ -27,6 +27,7 @@ namespace Cthulhu
 {
 
 //TODO: document
+//TODO: actually complete
 
 template<typename T>
 class Array

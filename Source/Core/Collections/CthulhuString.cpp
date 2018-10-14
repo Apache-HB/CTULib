@@ -22,7 +22,7 @@
 #include "Array.h"
 #include "Optional.h"
 
-#include "Memory/Memory.h"
+#include "Core/Memory/Memory.h"
 
 using Cthulhu::Optional;
 using Cthulhu::Array;
@@ -156,14 +156,14 @@ Cthulhu::String& Cthulhu::String::operator<<(double D)
 Cthulhu::String Cthulhu::String::operator/(const String& Other) const
 {
     String Temp(*this);
-    Temp.Append(OS_PATH_SEP);
+    Temp.Append(String::PathSeperator());
     Temp.Append(Other);
     return Temp;
 }
 
 Cthulhu::String& Cthulhu::String::operator/=(const String& Other)
 {
-    Append(OS_PATH_SEP);
+    Append(String::PathSeperator());
     Append(Other);
     return *this;
 }
@@ -560,6 +560,15 @@ Cthulhu::String Cthulhu::String::ToString(double D)
 Cthulhu::String Cthulhu::String::ToString(int64 I)
 {
     return std::to_string(I).c_str();
+}
+
+Cthulhu::String Cthulhu::String::PathSeperator()
+{
+#if defined(OS_WINDOWS)
+    return "\\";
+#elif defined(OS_APPLE) || defined(OS_LINUX)
+    return "/";
+#endif
 }
 
 Cthulhu::String Cthulhu::String::Whitespace()

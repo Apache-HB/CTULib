@@ -15,21 +15,13 @@
 
 #pragma once
 
-/**
- * type aliases to shorter words
- */
+#include <stdio.h>
 
-namespace Cthulhu
-{
+//tiny testing framework, (just a few macros) to make testing this stuff 
+//relativley easy
 
-using uint64 = unsigned long long;
-using uint32 = unsigned int;
-using uint16 = unsigned short;
-using uint8 = unsigned char;
+#define TEST_ASSERT(pass, expr) if(!(expr)) { pass = false; printf("Failed test %s at %d\n", __FILE__, __LINE__); }
 
-using int64 = signed long long;
-using int32 = signed int;
-using int16 = signed short;
-using int8 = signed char;
+#define TEST_BLOCK(pass, name, msg) if(!(name())) { pass = false; printf("Failed " msg " tests %s at %d\n", __FILE__, __LINE__); }
 
-}
+#define TEST_RETURN(pass, msg) if(pass) { return 0; } else { printf(msg" tests failed\n"); return 1; }

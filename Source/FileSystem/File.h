@@ -13,16 +13,18 @@
  *  limitations under the License.
  */
 
-#include "Collections/CthulhuString.h"
+#include "Core/Collections/CthulhuString.h"
 
 #pragma once
+
 //TODO everything
+
 namespace Cthulhu
 {
 
-struct File
+class File
 {
-    
+
 };
 
 }

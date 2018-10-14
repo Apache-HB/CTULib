@@ -13,23 +13,33 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include "Array.h"
 
-/**
- * type aliases to shorter words
- */
+#pragma once
 
 namespace Cthulhu
 {
 
-using uint64 = unsigned long long;
-using uint32 = unsigned int;
-using uint16 = unsigned short;
-using uint8 = unsigned char;
+template<typename T>
+struct Link
+{
+    T* Current;
+    Link* Next;
+    Link* Last;
+};
 
-using int64 = signed long long;
-using int32 = signed int;
-using int16 = signed short;
-using int8 = signed char;
+template<typename T>
+class List
+{
+    Link<T> Head;
+    Link<T> Tail;
+public:
+    List(Array<T> Arr);
+
+    void Append(T& In);
+    void Append(List& Lst);
+
+    T Pop();
+};
 
 }

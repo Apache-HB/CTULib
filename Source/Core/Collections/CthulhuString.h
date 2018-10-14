@@ -583,6 +583,11 @@ public:
     static String ToString(double D);
 
     /**
+     *
+     */
+    static ALWAYSINLINE String PathSeperator();
+
+    /**
      * 
      */
     static ALWAYSINLINE String Whitespace();
