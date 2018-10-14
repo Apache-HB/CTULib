@@ -13,35 +13,18 @@
  *  limitations under the License.
  */
 
-#include "TestUtils.h"
+#include "Meta/Macros.h"
+#include "Traits.h"
 
-#include "Core/Types/Lambda.h"
+#pragma once
 
-using Cthulhu::Lambda;
-
-bool Jeff(Lambda<bool(bool)> Fun) { return Fun(true); }
-
-bool TestLambda()
+namespace Cthulhu
 {
-    bool Pass = true;
-    
-    Lambda<bool(bool)> L([](bool B){ return B; });
 
-    //auto L = Lambda::FromMethod([]{ printf("Yeet\n"); });
-
-    int I = 0;
-
-    Jeff([Pass, &I](bool B){ I++; return B && Pass; });
-
-    printf("%d\n", I);
-
-    return Pass;
+template<typename TObject, typename... TArgs>
+ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
+{
+    return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
 }
 
-int main(int argc, char const *argv[])
-{
-    bool Pass = true;
-    TEST_BLOCK(Pass, TestLambda, "lambda");
-    
-    TEST_RETURN(Pass, "lambda");
 }

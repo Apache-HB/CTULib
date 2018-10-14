@@ -13,7 +13,8 @@
  *  limitations under the License.
  */
 
-#include "Core/Traits/Traits.h"
+#include "Core/Templates/Traits.h"
+#include "Core/Templates/Invoke.h"
 #include "Meta/Aliases.h"
 #include "Meta/Macros.h"
 
@@ -22,48 +23,79 @@
 namespace Cthulhu
 {
 
-template<typename> class Lambda;
-
-template<typename TRet, typename... TArgs>
-struct Lambda<TRet(TArgs...)>
+namespace Private
 {
-    Lambda()
-        : ObjectPtr(nullptr)
-        , StubPtr(nullptr)
-    {}
 
-    template<typename T, TRet(T::*TMethod)(TArgs...)>
-    Lambda(T* Object)
-        : ObjectPtr(Object)
-        , StubPtr(&MethodStub<T, TMethod>)
-    {}
+template<typename, typename> struct LambdaCaller;
 
-    template<typename T, TRet(T::*TMethod)(TArgs...)>
-    static Lambda FromMethod(T* Object)
+template<typename TFunctor, typename TRet, typename... TArgs>
+struct LambdaCaller<TFunctor, TRet(TArgs...)>
+{
+    static TRet Call(void* Object, TArgs... Args)
     {
-        Lambda Ret;
-        Ret.ObjectPtr = Object;
-        Ret.StubPtr = &MethodStub<T, TMethod>;
-        return Ret;
+        return Invoke(*(TFunctor*)Object, Forward<TArgs>(Args)...);
     }
+};
 
+template<typename, typename> struct LambdaBase;
+
+template<typename TDerived, typename TRet, typename... TArgs>
+struct LambdaBase<TDerived, TRet(TArgs...)>
+{
     TRet operator()(TArgs... Args) const
     {
-        return (*StubPtr)(ObjectPtr, Args...);
+        const TDerived* Derived = static_cast<const TDerived*>(this);
+        return Callback(Derived->Ptr, Args...);
+    }
+
+protected:
+
+    template<typename T>
+    void Set(T* Functor)
+    {
+        Callback = &LambdaCaller<T, TRet(TArgs...)>::Call;
     }
 
 private:
-    using StubType = TRet(*)(void*, TArgs...);
 
-    void* ObjectPtr;
-    StubType StubPtr;
+    TRet(*Callback)(void*, TArgs...);
+};
 
-    template<typename T, TRet(T::*TMethod)(TArgs...)>
-    static void MethodStub(void* InObjectPtr, TArgs&&... Args)
+}
+
+template<typename TFunctor>
+struct Lambda : Private::LambdaBase<Lambda<TFunctor>, TFunctor>
+{
+    friend struct Private::LambdaBase<Lambda<TFunctor>, TFunctor>;
+    using Super = Private::LambdaBase<Lambda<TFunctor>, TFunctor>;
+
+    template<typename TFunction>
+    Lambda(TFunction& Other)
     {
-        T* Object = static_cast<T*>(InObjectPtr);
-        return (Object->*TMethod)(Args...);
+        Set(&Other);
     }
+
+    template<typename TFunction>
+    Lambda(const TFunction& Other)
+    {
+        Set(&Other);
+    }
+
+    template<typename TFunction>
+    Lambda(TFunction* Functor)
+    {
+        Set(Functor);
+    }
+private:
+
+    template<typename TFunction>
+    void Set(TFunction* Function)
+    {
+        Ptr = (void*)Function;
+        Super::Set(Function);
+    }
+
+    void* Ptr;
 };
 
 }

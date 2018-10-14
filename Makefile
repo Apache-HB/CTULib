@@ -13,7 +13,7 @@ CC = clang++
 
 FRONT = $(CC) $(STD) $(DIRS) $(PATHS) -c
 
-TESTS = $(shell find Programs/Tests -name '*.cpp')
+TESTS = $(shell find ./Programs/Tests -name '*.cpp')
 
 LIB_NAME = cthulhu.a
 
@@ -34,8 +34,15 @@ release:
 tests:
 	#create the binary, compile and run every test, then clean the last test
 	make debug && \
-	$(foreach file, $(TESTS), $(CC) $(STD) $(PATHS) -I./Programs/Tests $(DIRS) $(BUILD_FILE)/$(LIB_NAME) $(file) -o Test && ./Test) && \
-	rm -rf Test
+	$(CC) $(STD) $(PATHS) $(BUILD_FILE)/$(LIB_NAME) -I./Programs/Tests Programs/Tests/Core/Types/Lambda.cpp -o Test && ./Test
+	#&& \
+	#for test in $(TESTS); 	\
+	#do 	$(CC) $(STD) $(PATHS) -I./Programs/Tests $(DIRS) $(BUILD_FILE)/$(LIB_NAME) $(test) -o Test; \ 
+	#	./Test; \
+	#done; && \
+	#rm -rf Test 
+	#$(foreach file, $(TESTS), $(CC) $(STD) $(PATHS) -I./Programs/Tests $(DIRS) $(BUILD_FILE)/$(LIB_NAME) $(file) -o Test && ./Test) && \
+	#rm -rf Test
 
 clean:
 	rm -rf ./Build
