@@ -13,6 +13,9 @@
  *  limitations under the License.
  */
 
+#include "Thread.h"
+#include "Core/Types/Lambda.h"
+
 #pragma once
 
 namespace Cthulhu
@@ -21,7 +24,17 @@ namespace Cthulhu
 template<typename T>
 class Future
 {
+    bool Available;
+    T Item;
+    Thread* RunningThread;
+public:
 
+    Future(Lambda<T()> Function)
+    {
+
+    }
+
+    T Await();
 };
 
 }

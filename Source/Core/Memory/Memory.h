@@ -40,6 +40,9 @@ namespace Memory
     ALWAYSINLINE int Memcmp(const T* Source, const T* Other, size_t Len) { return memcmp((void*)Source, (void*)Other, Len); }
 
     template<typename T>
+    ALWAYSINLINE void* MemZero(const T* Source, size_t Len) { return Memset(Source, 0, Len); }
+
+    template<typename T>
     ALWAYSINLINE T* Memdup(const T* Source, size_t Len)
     {
         T* Ret = (T*)malloc(Len);

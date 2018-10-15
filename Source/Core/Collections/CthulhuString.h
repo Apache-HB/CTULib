@@ -18,6 +18,10 @@
 
 #include "Core/Types/Lambda.h"
 
+#ifdef __OBJC__
+@class NSString;
+#endif
+
 #pragma once
 //TODO more detailed docs on all functions
 namespace Cthulhu
@@ -150,6 +154,10 @@ public:
      * @param Other the pointer to copy from
      */
     String(const String* Other);
+
+#ifdef __OBJC__
+    String(const NSString* Other);
+#endif
 
     /**Assignment operator overload
      * copys the content from the other string to this string
@@ -406,6 +414,8 @@ public:
      * @return the found char
      */
     ALWAYSINLINE char& operator[](int Index);
+
+    ALWAYSINLINE const char operator[](int Index) const;
 
     /**Safley return a char at an index in the string
      * 

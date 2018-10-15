@@ -20,6 +20,8 @@
 
 #include "Core/Types/Lambda.h"
 
+#include "Core/Memory/Memory.h"
+
 #include "Meta/Aliases.h"
 #include "Meta/Macros.h"
 
@@ -171,10 +173,33 @@ public:
         return *this;
     }
 
-    ALWAYSINLINE Optional<T> Pop()
+    Array& Push(const T& Item)
     {
-        return (Length == 0) ? Optional<T>(Real[Length--]) : NullOpt<T>();
+        if(Length + 1 >= Allocated)
+        {
+            Resize(Length);
+        }
+        Memory::Memmove(Real, Real + sizeof(T), Length);
+        Real[0] = Item;
+        Length++;
+        return *this;
     }
+
+    Optional<T> Extract(int Index)
+    {
+        if(ValidIndex(Index))
+        {
+            T Item = Real[Index];
+            Memory::Memmove(Real + (sizeof(T) * Index+1), Real + (sizeof(T) * Index), (Len() - 1) * sizeof(T));
+            return Optional<T>(Item);
+        }
+        else
+        {
+            return NullOpt<T>();
+        }
+    }
+
+    ALWAYSINLINE T Pop() { return Real[Length--]; }
 
     ALWAYSINLINE ArrayIterator<Array, T> Iterate() { return ArrayIterator<Array, T>(*this); }
     ALWAYSINLINE const ArrayIterator<Array, T> Iterate() const { return ArrayIterator<Array, T>(*this); }

@@ -27,7 +27,9 @@ bool TestLambda()
     
     Lambda<bool(bool)> L([](bool B){ return B; });
 
-    //auto L = Lambda::FromMethod([]{ printf("Yeet\n"); });
+    auto LL = Lambda<void()>([]{ printf("Yeet\n"); });
+
+    LL();
 
     int I = 0;
 

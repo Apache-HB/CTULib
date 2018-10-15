@@ -13,20 +13,47 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Traits.h"
+#include "Core/Collections/CthulhuString.h"
 
 #pragma once
 
-//TODO: document
-
-namespace Cthulhu
+namespace Summon
 {
 
-template<typename TObject, typename... TArgs>
-ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
+enum class Token : char
 {
-    return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
-}
+    None = '\0',
+    SquareOpen = '[',
+    SquareClose = ']',
+    Comma = ',',
+    Equals = '='
+};
+
+struct Lexeme
+{
+    Cthulhu::uint64 Line;
+    Cthulhu::uint64 Loc;
+    Token Tok;
+    Cthulhu::String& Identifier;
+};
+
+class Lexer
+{
+    const Cthulhu::String Content;
+
+    Cthulhu::uint64 Distance;
+    Cthulhu::uint64 Line;
+    Cthulhu::uint64 Loc;
+
+    bool EOF;
+
+protected:
+    void SkipWhitespace();
+
+public:
+    Lexer(const Cthulhu::String& Path);
+
+    const Lexeme Next();
+};
 
 }

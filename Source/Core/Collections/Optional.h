@@ -14,6 +14,7 @@
  */
 
 #include "Meta/Macros.h"
+#include "Core/Types/Lambda.h"
 
 #pragma once
 
@@ -141,6 +142,10 @@ public:
      */
     ALWAYSINLINE bool Valid() const { return IsValid; }
 
+    void WhenValid(Lambda<void(T)> Callback) const { if(IsValid) Callback(Content); }
+
+    void WhenInvalid(Lambda<void()> Callback) const { if(!IsValid) Callback(); }
+
     //TODO: redoc with 3-4 examples
     /**Functionally fold the result between 2 functions
      * 
@@ -164,7 +169,7 @@ public:
      * 
      */
     template<typename TRet = void>
-    TRet Fold(TRet(*WhenValid)(T), TRet(*Otherwise)())
+    TRet Fold(Lambda<TRet(T)> WhenValid, Lambda<TRet()> Otherwise)
     {
         return (IsValid) ? WhenValid(Content) : Otherwise();
     }

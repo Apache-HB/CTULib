@@ -13,6 +13,9 @@
  *  limitations under the License.
  */
 
+#include "Thread.h"
+#include "Core/Collections/Array.h"
+
 #pragma once
 
 namespace Cthulhu
@@ -20,7 +23,7 @@ namespace Cthulhu
 
 class ThreadPool
 {
-
+    Array<Thread> Threads;
 };
 
 }

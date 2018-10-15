@@ -129,7 +129,7 @@ public:
      * 
      */
     template<typename TRet = void>
-    TRet Fold(TRet(*ResHandle)(TRes), TRet(*ErrHandle)(TErr))
+    TRet Fold(Lambda<TRet(TRes)> ResHandle, Lambda<TRet(TErr)> ErrHandle)
     {
         return (ResValid) ? ResHandle(Res) : ErrHandle(Err);
     }

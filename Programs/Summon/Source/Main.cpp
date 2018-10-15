@@ -15,13 +15,37 @@
 
 #include "Core/Collections/Array.h"
 #include "Core/Collections/CthulhuString.h"
+#include "Core/Collections/Optional.h"
+
+#include "Utils/Build.h"
+
+#include <cstdio>
+#include <stdlib.h>
 
 using Cthulhu::Array;
 using Cthulhu::String;
+using Cthulhu::Optional;
 
 int Main(Array<String> Args)
 {
+    if(Args.Len() > 2)
+    {
+        printf("No tome provided\nExiting...\n");
+        exit(5);
+    }
 
+    
+
+    Optional<String> Compiler = Summon::GetCompiler();
+
+    Compiler.Fold<void>([](String Compiler) {
+
+    }, []{
+        printf("No compiler installed to the command line\nExiting...\n");
+        exit(5);
+    });
+
+    return 0;
 }
 
 int main(int argc, char const *argv[])

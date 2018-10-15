@@ -25,8 +25,10 @@ main:
 	$(FRONT) && make move
 	#remove object files
 
+DEBUG_FLAG = -DCTU_DEBUG
+
 debug:
-	$(FRONT) -g3 -fsanitize=address -g && make move
+	$(FRONT) $(DEBUG_FLAG) -g3 -fsanitize=address -fno-omit-frame-pointer -g && make move
 
 release:
 	$(FRONT) -O3 && make move
@@ -34,8 +36,7 @@ release:
 tests:
 	#create the binary, compile and run every test, then clean the last test
 	make debug && \
-	for test in $(TESTS); do $(CC) $(STD) $(PATHS) -I./Programs/Tests $(DIRS) $(BUILD_FILE)/$(LIB_NAME) $$test -o Test && ./Test; done; rm -rf Test
-
+	for test in $(TESTS); do $(CC) $(STD) $(PATHS) -fsanitize=address -fno-omit-frame-pointer -I./Programs/Tests $(BUILD_FILE)/$(LIB_NAME) $$test -o Test && ./Test; done; rm -rf Test
 
 clean:
 	rm -rf ./Build
@@ -45,3 +46,11 @@ setup:
 
 move:
 	make setup && ar cr $(BUILD_FILE)/$(LIB_NAME) *.o && rm -rf *.o
+
+SUMMON_NAME = summon
+SUMMON_PATH = Summon
+SUMMON_DIRS = $(shell find ./Programs/Summon -name '*.cpp')
+
+summon:
+	if [ ! -d "./$(BUILD_FILE)/$(SUMMON_PATH)" ]; then mkdir $(BUILD_FILE)/$(SUMMON_PATH); fi && \
+	make release && $(CC) $(STD) $(PATHS) -I./Programs/Summon $(BUILD_FILE)/$(LIB_NAME) $(SUMMON_DIRS) -o $(BUILD_FILE)/$(SUMMON_PATH)/$(SUMMON_NAME)

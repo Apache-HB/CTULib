@@ -16,7 +16,7 @@
 #pragma once
 
 /**
- * type aliases to shorter words
+ * type aliases to shorten words
  */
 
 namespace Cthulhu

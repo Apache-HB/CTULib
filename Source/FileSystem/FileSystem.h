@@ -82,6 +82,8 @@ namespace FileSystem
     FileError Delete(const String& Path);
 
     FileError Move(const String& Path, const String& NewPath);
+
+    const String Read(const String& Path);
 };
 
 }

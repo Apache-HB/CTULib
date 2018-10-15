@@ -13,20 +13,11 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Traits.h"
-
 #pragma once
 
-//TODO: document
-
-namespace Cthulhu
-{
-
-template<typename TObject, typename... TArgs>
-ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
-{
-    return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
-}
-
-}
+#ifdef CTU_DEBUG
+#   define ASSERT(Expr, Message) if(!(Expr)) { printf("ASSERT FAILED: "Message" |%s|%d|\n", __FILE__, __LINE__); exit(25); }
+#   define ASSERT_NO_ENTRY(Message) { printf("REACHED NO ENTRY: "Message" |%s|%d|\n", __FILE__, __LINE__); exit(25); }
+#else
+#   define ASSERT(Expr, Message) Expr
+#endif

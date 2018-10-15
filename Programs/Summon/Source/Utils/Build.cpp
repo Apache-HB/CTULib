@@ -13,20 +13,30 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Traits.h"
+#include <stdlib.h>
+#include <cstdio>
 
-#pragma once
+#include "Build.h"
 
-//TODO: document
+using Cthulhu::String;
+using Cthulhu::Optional;
+using Cthulhu::NullOpt;
 
-namespace Cthulhu
+const Cthulhu::Optional<Cthulhu::String> Summon::GetCompiler()
 {
+    //always prioritize clang as its the best compiler out of the 3
+    if(system("which clang++ > /dev/null 2>&1")) 
+    {
+        return Optional<String>("clang++");
+    }
+    else if(system("which g++ > /dev/null 2>&1"))
+    {
+        return Optional<String>("g++");
+    }
+    else if(system("MSBUILD.exe"))
+    {
+        return Optional<String>("MSBUILD.exe");
+    }
 
-template<typename TObject, typename... TArgs>
-ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
-{
-    return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
-}
-
+    return NullOpt<String>();
 }

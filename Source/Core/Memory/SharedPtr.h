@@ -17,6 +17,8 @@
 
 #pragma once
 
+//TODO: document
+
 namespace Cthulhu
 {
 
@@ -63,6 +65,11 @@ public:
             delete Content;
         }
     }
+
+    T operator*() const { return *Content->Content; }
+    T* operator->() const { return Content->Content; }
+
+    int Refs() const { return Content->Refs; }
 };
 
 }

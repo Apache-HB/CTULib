@@ -173,6 +173,11 @@ char& Cthulhu::String::operator[](int Index)
     return Real[Index];
 }
 
+const char Cthulhu::String::operator[](int Index) const
+{
+    return Real[Index];
+}
+
 char Cthulhu::String::At(int Index) const
 {
     return ValidIndex(Index) ? Real[Index] : '\0';
@@ -418,6 +423,7 @@ Cthulhu::String Cthulhu::String::Map(Lambda<const char(const char)> Transform) c
     {
         Ret.Append(Transform(Real[I]));
     }
+
     return Ret;
 }
 
@@ -448,9 +454,8 @@ Array<char> Cthulhu::String::CharArray() const
 Optional<double> Cthulhu::String::ParseFloat() const
 {
     int Flag = 1;
-    int Loc = 0;
+    int Loc, Index = 0;
     double Res = 0;
-    int Index = 0;
 
     char C;
     
@@ -515,7 +520,6 @@ Optional<bool> Cthulhu::String::ParseBool() const
     return NullOpt<bool>();
 }
 
-//TODO cleanup
 Optional<int64> Cthulhu::String::ParseInt() const
 {
     int64 Ret = 0;

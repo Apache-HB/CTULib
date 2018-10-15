@@ -17,6 +17,8 @@
 
 #pragma once
 
+//TODO: document
+
 namespace Cthulhu
 {
 

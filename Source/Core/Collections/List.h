@@ -23,7 +23,7 @@ namespace Cthulhu
 template<typename T>
 struct Link
 {
-    T* Current;
+    T Current;
     Link* Next;
     Link* Last;
 };
@@ -31,15 +31,63 @@ struct Link
 template<typename T>
 class List
 {
-    Link<T> Head;
-    Link<T> Tail;
+    Link<T>* Head;
+    Link<T>* Tail;
 public:
-    List(Array<T> Arr);
+    List() {}
+    List(const T& Start)
+    {
+        Head = new Link<T>{ Start, nullptr, nullptr };
+        Tail = Head;
+    }
 
-    void Append(T& In);
-    void Append(List& Lst);
+    List(Array<T> Arr)
+    {
+        for(T&& Each : Arr.Iterate())
+        {
+            Push(Each);
+        }
+    }
 
-    T Pop();
+    ~List() 
+    {
+        Link<T>* Current = Tail;
+        while(Tail)
+        {
+            Current = Tail->Next;
+            delete Current;
+        }
+    }
+
+    void Push(T& Item)
+    {
+        if(!Head)
+        {
+            Head = new Link<T>{ Item, nullptr, nullptr };
+            Tail = Head;
+        }
+        else
+        {
+            Link<T>* Next = new Link<T>{ Item, nullptr, Head };
+            Head->Next = Next;
+            Head = Next;
+        }
+    }
+
+    Optional<T> Pop()
+    {
+        if(!Head)
+        {
+            return NullOpt<T>();
+        }
+
+        T Ret = Head->Current;
+        Link<T>* Last = Head->Last;
+        delete Head;
+        Head = Last;
+        return Optional<T>(Ret);
+    }
+
 };
 
 }

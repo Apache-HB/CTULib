@@ -15,6 +15,8 @@
 
 #pragma once
 
+//TODO: document
+
 namespace Cthulhu
 {
 
@@ -31,6 +33,16 @@ public:
 
     bool Valid() const { return Raw != nullptr; }
     operator bool() const { return Raw != nullptr; }
+
+    T operator*() const { return *Raw; }
+    T* operator->() const { return Raw; }
+
+    T* Take()
+    {
+        T* Ret = Raw;
+        Raw = nullptr;
+        return Ret;
+    }
 };
 
 }

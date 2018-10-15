@@ -13,20 +13,4 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Traits.h"
-
 #pragma once
-
-//TODO: document
-
-namespace Cthulhu
-{
-
-template<typename TObject, typename... TArgs>
-ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
-{
-    return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
-}
-
-}

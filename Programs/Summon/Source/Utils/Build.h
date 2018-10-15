@@ -13,20 +13,14 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Traits.h"
+#include "Core/Collections/CthulhuString.h"
+#include "Core/Collections/Optional.h"
 
 #pragma once
 
-//TODO: document
-
-namespace Cthulhu
+namespace Summon
 {
 
-template<typename TObject, typename... TArgs>
-ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
-{
-    return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
-}
+const Cthulhu::Optional<Cthulhu::String> GetCompiler();
 
 }

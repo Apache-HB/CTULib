@@ -13,20 +13,35 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Traits.h"
+#include "FileSystem/FileSystem.h"
 
-#pragma once
+#include "Lex.h"
 
-//TODO: document
+namespace FS = Cthulhu::FileSystem;
 
-namespace Cthulhu
+using Cthulhu::String;
+
+Summon::Lexer::Lexer(const Cthulhu::String& Path)
+    : Content(FS::Read(Path))
+    , Distance(0)
+    , Line(0)
+    , Loc(0)
+    , EOF(false)
+{}
+
+void Summon::Lexer::SkipWhitespace()
 {
-
-template<typename TObject, typename... TArgs>
-ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
-{
-    return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
+    while(String::Whitespace().Has(Content[(int)Distance]))
+    {
+        if(Content[(int)Distance] == '\0')
+        {
+            EOF = true;
+        }
+        Distance++;
+    }
 }
 
+const Summon::Lexeme Summon::Lexer::Next()
+{
+    
 }
