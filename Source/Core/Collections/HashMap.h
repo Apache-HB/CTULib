@@ -15,6 +15,8 @@
 
 #pragma once
 
+#if 0
+
 namespace Cthulhu
 {
 
@@ -25,3 +27,5 @@ class Map
 };
 
 }
+
+#endif

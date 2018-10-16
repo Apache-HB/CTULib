@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include "Optional.h"
 
 #pragma once
@@ -192,3 +194,5 @@ template<typename TRes, typename TErr>
 Result<TRes, TErr> Fail(TErr Err) { return Result<TRes, TErr>(Err, false); }
 
 }
+
+#endif

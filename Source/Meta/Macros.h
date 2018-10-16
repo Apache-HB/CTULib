@@ -34,7 +34,7 @@
 /**This is a compiler switch to detect which compiler is being used
  * as every compile has compiler specific stuff, such as __forceinline or 
  * __attribute__((always_inline)) because whoever wrote these things doesnt
- * know how to follow standards
+ * know how to follow standards *cough* MSVC *cough*
  */
 
 #if defined(_MSC_VER)
@@ -44,6 +44,8 @@
 #   define ALWAYSINLINE __attribute__((always_inline))
 #   define CC_CLANG 1
 #elif defined(__GUNC__) || defined(__GUNG__)
+    //use inline instead of alwaysinline here because gcc has problems
+    //with inlining functions with out of line definitions
 #   define ALWAYSINLINE inline
 #   define CC_GCC 1
 #elif defined(__INTEL_COMPILER)

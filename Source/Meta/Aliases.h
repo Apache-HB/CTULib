@@ -16,20 +16,110 @@
 #pragma once
 
 /**
- * type aliases to shorten words
+ * type aliases to shorten function signatures while maintaining readability
  */
 
 namespace Cthulhu
 {
 
+/**Unsigned long long
+ * 
+ * always between 0 and +18,446,744,073,709,551,615
+ * 
+ * 8 bytes, 64 bits
+ * 
+ */
 using uint64 = unsigned long long;
-using uint32 = unsigned int;
+
+/**unsigned long int
+ * 
+ * always between 0 and +4,294,967,295
+ * 
+ * 4 bytes, 32 bits
+ * 
+ */
+using uint32 = unsigned long int;
+
+/**unsigned short
+ * 
+ * always between 0 and +65,535
+ * 
+ * 2 bytes, 16 bits
+ */
 using uint16 = unsigned short;
+
+/**usngined char
+ * 
+ * always between 0 and +255
+ * 
+ * 1 byte, 8 bits
+ */
 using uint8 = unsigned char;
 
+
+/**signed long long
+ * 
+ * always between −9,223,372,036,854,775,807 and +9,223,372,036,854,775,807
+ * 
+ * 8 bytes, 64 bits
+ */
 using int64 = signed long long;
-using int32 = signed int;
+
+/**signed long
+ * 
+ * always between −2,147,483,647 and +2,147,483,647
+ * 
+ * 4 bytes, 32 bits
+ */
+using int32 = signed long int;
+
+/**signed short
+ * 
+ * always between −32,767 and +32,767
+ * 
+ * 2 bytes, 16 bits
+ */
 using int16 = signed short;
+
+/**signed char
+ * 
+ * always between -127 and +127
+ * 
+ * 1 byte, 8 bits
+ */
 using int8 = signed char;
+
+/**32 bit char, garunteed to be 4 bytes wide
+ * 
+ * can represent any unicode character
+ * 
+ */
+using char32 = int32;
+
+/**16 bit char, garunteed to be 2 bytes wide
+ * 
+ */
+using char16 = int16;
+//             ^^^^^
+//use int16 rather than char16_t because 
+//not all compilers support the full C++11 & C++17 standard
+//such as MSVC (as always)
+
+/**8 bit char, garunteed to be 1 byte wide
+ * 
+ * can represent any standard ascii char
+ * 
+ */
+using char8 = unsigned char;
+
+/**32 bit wide char, unlike wchar_t is always 4 bytes wide
+ * 
+ */
+using WideChar = char32;
+
+/**8 bit char that can represent any standard ascii char
+ * 
+ */
+using AsciiChar = char8;
 
 }

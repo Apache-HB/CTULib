@@ -18,6 +18,7 @@
 
 #pragma once
 
+#if 0
 
 //TODO implement
 namespace Cthulhu
@@ -87,3 +88,5 @@ namespace FileSystem
 };
 
 }
+
+#endif

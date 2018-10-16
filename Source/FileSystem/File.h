@@ -17,6 +17,8 @@
 
 #pragma once
 
+#if 0
+
 //TODO everything
 
 namespace Cthulhu
@@ -28,3 +30,5 @@ struct File
 };
 
 }
+
+#endif

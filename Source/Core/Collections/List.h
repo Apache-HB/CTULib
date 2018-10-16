@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include "Array.h"
 
 #pragma once
@@ -91,3 +93,5 @@ public:
 };
 
 }
+
+#endif

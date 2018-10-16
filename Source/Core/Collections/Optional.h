@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include "Meta/Macros.h"
 #include "Core/Types/Lambda.h"
 
@@ -195,3 +197,5 @@ template<typename T>
 Optional<T> NullOpt() { return Optional<T>(); }
 
 }
+
+#endif

@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 //TODO remove imports
 #include <cstring>
 #include <string>
@@ -30,6 +32,8 @@ using Cthulhu::String;
 using Cthulhu::int64;
 
 //TODO document
+
+
 
 Cthulhu::String::String()
     : Real(String::Strdup("\0"))
@@ -702,3 +706,5 @@ char* Cthulhu::String::Strdup(const char* Str)
     Memory::Memcpy(Str, Ret, sizeof(char) * Len + 1);
     return Ret;
 }
+
+#endif

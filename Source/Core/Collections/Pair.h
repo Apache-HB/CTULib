@@ -15,6 +15,8 @@
 
 #pragma once
 
+#if 0
+
 namespace Cthulhu
 {
 
@@ -34,3 +36,5 @@ struct Triplet
 };
 
 }
+
+#endif 0
