@@ -14,3 +14,18 @@
  */
 
 #include "FileSystem.h"
+
+using Cthulhu::Result;
+using Cthulhu::Fail;
+
+using Cthulhu::String;
+
+using Cthulhu::FileSystem::TextFile;
+using Cthulhu::FileSystem::BinaryFile;
+using Cthulhu::FileSystem::IOError;
+using Cthulhu::FileSystem::Mode;
+
+Result<TextFile, IOError> TextOpen(const String& Path, const Mode FileMode)
+{
+    return Fail<TextFile, IOError>(IOError::NotFound);
+}

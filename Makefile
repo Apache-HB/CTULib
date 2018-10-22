@@ -27,6 +27,10 @@ main:
 
 DEBUG_FLAG = -DCTU_DEBUG
 
+unity:
+	sh Unity.sh && \
+	$(CC) $(STD) $(DIRS) Build/Unity.cpp $(PATHS) $(DEBUG_FLAG) -g3 -fsanitize=address -fno-omit-frame-pointer -g -c
+
 debug:
 	$(FRONT) $(DEBUG_FLAG) -g3 -fsanitize=address -fno-omit-frame-pointer -g && make move
 

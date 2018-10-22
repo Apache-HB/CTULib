@@ -15,6 +15,7 @@
 
 #include "Meta/Macros.h"
 #include "Traits.h"
+#include "Forward.h"
 
 #pragma once
 

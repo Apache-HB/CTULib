@@ -30,48 +30,8 @@ template<typename T> struct IsPointer<const             T*>    { static const bo
 template<typename T> struct IsPointer<volatile          T*>    { static const bool Value = true; };
 template<typename T> struct IsPointer<const volatile    T*>    { static const bool Value = true; };
 
-template<typename T> struct IsPointer<const             T>      { static const bool Value = false; };
-template<typename T> struct IsPointer<volatile          T>      { static const bool Value = false; };
-template<typename T> struct IsPointer<const volatile    T>      { static const bool Value = false; };
-
-template<typename T> struct RemoveReference         { using Type = T; };
-template<typename T> struct RemoveReference<T&>     { using Type = T; };
-template<typename T> struct RemoveReference<T&&>    { using Type = T; };
-
-template<typename T>
-ALWAYSINLINE T&& Forward(typename RemoveReference<T>::Type& Obj)
-{
-    return (T&&)Obj;
-}
-
-template<typename T>
-ALWAYSINLINE T&& Forward(typename RemoveReference<T>::Type&& Obj)
-{
-    return (T&&)Obj;
-}
-
-template<typename T> struct RemoveQualifiers { using Type = T; };
-template<typename T> struct RemoveQualifiers<const T> { using Type = T; };
-template<typename T> struct RemoveQualifiers<volatile T> { using Type = T; };
-template<typename T> struct RemoveQualifiers<const volatile T> { using Type = T; };
-
-
-template<typename T> 
-struct DecayNonReference
-{
-    using Type = typename RemoveQualifiers<T>::Type;
-};
-
-template<typename TRet, typename... TArgs>
-struct DecayNonReference<TRet(TArgs...)>
-{
-    using Type = TRet(*)(TArgs...);
-};
-
-template<typename T>
-struct Decay
-{
-    using Type = typename DecayNonReference<typename RemoveReference<T>::Type>::Type;
-};
+template<typename T> struct IsPointer<const             T>     { static const bool Value = false; };
+template<typename T> struct IsPointer<volatile          T>     { static const bool Value = false; };
+template<typename T> struct IsPointer<const volatile    T>     { static const bool Value = false; };
 
 }

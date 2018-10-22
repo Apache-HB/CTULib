@@ -13,6 +13,130 @@
  *  limitations under the License.
  */
 
+#include "Meta/Aliases.h"
+
+#pragma once
+
+namespace Cthulhu
+{
+
+template<typename> struct Array;
+template<typename, typename> struct Map;
+template<typename> struct Option;
+template<typename, typename> struct Iterator;
+
+struct String
+{
+    String();
+    String(const char* Input);
+    String(const String& Other);
+
+    String& operator=(const String& Other);
+
+    ~String();
+
+    uint32 Len() const;
+
+    bool IsEmpty() const;
+    operator bool() const;
+
+    bool operator==(const String& Other) const;
+    bool operator!=(const String& Other) const;
+
+    String& operator+=(const String& Other);
+    String& operator+=(const char* Other);
+    String& operator+=(const char Other);
+
+    String operator+(const String& Other) const;
+    String operator+(const char* Other) const;
+    String operator+(const char Other) const;
+
+    String& operator<<(uint64 Num);
+    String& operator<<(double Num);
+    String& operator<<(bool Num);
+
+    void Append(const String& Other);
+
+    char* operator*() const;
+
+    bool StartsWith(const String& Pattern) const;
+    bool EndsWith(const String& Pattern) const;
+
+    bool ValidIndex(uint32 Index) const;
+
+    char& operator[](uint32 Index);
+
+    //dont use Option<char> because theres already an agreed upon \0 null char
+    char At(uint32 Index) const;
+
+    String Section(uint32 Start, uint32 End) const;
+
+    Option<uint32> Find(const String& Pattern) const;
+    
+    String Lower() const;
+    String Upper() const;
+
+    String Trim(const String& Pattern = " ") const;
+    String Replace(const String& Search, const String& Substitute) const;
+
+    String Format(const Array<String>& Args) const;
+    String Format(const Map<String, String>& Args) const;
+
+    //cut from back
+    void Cut(uint32 Amount);
+
+    //drop from front
+    void Drop(uint32 Amount);
+
+    Iterator<String, char> Iterate();
+
+    bool Has(const String& Pattern) const;
+
+    Option<double> Double() const;
+    Option<int64> Int() const;
+    Option<bool> Bool() const;
+
+private:
+    char* Real;
+};
+
+namespace StringUtils
+{
+    String Padding(const String& Pattern, uint32 Repeat);
+    String Padding(const char Character, uint32 Repeat);
+    String ToString(double Value);
+    String ToString(uint64 Value);
+    String ToString(bool Value);
+};
+
+namespace CString
+{
+    //dup
+    char* Duplicate(const char* Other);
+    char* DuplicateN(const char* Other, uint32 Limit);
+    
+    //cpy
+    char* Copy(const char* From, char* To);
+    char* CopyN(const char* From, char* To, uint32 Limit);
+    
+    char* Merge(const char* Left, const char* Right);
+
+    //cat
+    char* Concat(char* Into, const char* From);
+    char* ConcatN(char* Into, const char* From, uint32 Limit);
+
+    //cmp
+    int Compare(const char* Left, const char* Right);
+    int CompareN(const char* Left, const char* Right, uint32 Limit);
+    
+    //strstr
+    char* Section(char* Haystack, const char* Needle);
+
+    //len
+    uint32 Length(const char* Content);
+};
+
+}
 
 #if 0
 

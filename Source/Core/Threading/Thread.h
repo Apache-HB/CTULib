@@ -23,6 +23,8 @@
 
 #pragma once
 
+#if 0
+
 namespace Cthulhu
 {
 
@@ -122,3 +124,5 @@ public:
 };
 
 }
+
+#endif

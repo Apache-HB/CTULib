@@ -13,35 +13,18 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/Array.h"
-#include "Core/Collections/CthulhuString.h"
-#include "Core/Collections/Optional.h"
+#pragma once
 
-#include "Utils/Build.h"
-
-#include <cstdio>
-#include <stdlib.h>
-
-using Cthulhu::Array;
-using Cthulhu::String;
-using Cthulhu::Optional;
-
-int Main(Array<String> Args)
+namespace Cthulhu
 {
-    if(Args.Len() > 2)
-    {
-        printf("No tome provided\nExiting...\n");
-        exit(5);
-    }
 
-    Option<String> Compiler = Summon::GetCompiler();
+template<typename T> struct RemoveReference         { using Type = T; };
+template<typename T> struct RemoveReference<T&>     { using Type = T; };
+template<typename T> struct RemoveReference<T&&>    { using Type = T; };
 
-    Compiler.
+template<typename T> struct RemoveQualifiers                    { using Type = T; };
+template<typename T> struct RemoveQualifiers<const T>           { using Type = T; };
+template<typename T> struct RemoveQualifiers<volatile T>        { using Type = T; };
+template<typename T> struct RemoveQualifiers<const volatile T>  { using Type = T; };
 
-    return 0;
-}
-
-int main(int argc, char const *argv[])
-{
-    return Main(Array<String>(argc, [argv](int argc) -> String { return argv[argc]; }));
 }

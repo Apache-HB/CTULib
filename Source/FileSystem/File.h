@@ -14,21 +14,57 @@
  */
 
 #include "Core/Collections/CthulhuString.h"
+#include "Core/Collections/Array.h"
+
+#include "Meta/Aliases.h"
 
 #pragma once
-
-#if 0
-
-//TODO everything
 
 namespace Cthulhu
 {
 
-struct File
+template<typename> struct Option;
+struct FILE;
+
+namespace FileSystem
 {
 
+struct BinaryFile
+{
+    BinaryFile();
+
+    BinaryFile(FILE* File, const String& Name);
+
+    Array<uint8> Data;
+    const String Name;
+
+    void Append(const Array<uint8> Data);
+    void Write(const Array<uint8> NewData);
+    void Save(const Option<String> Name);
+    void Close();
+
+private:
+    FILE* RawFile;
+};
+
+struct TextFile
+{
+    TextFile();
+    
+    TextFile(FILE* File, const String& Name);
+
+    String Content;
+    const String Name;
+
+    void Append(const String& Text);
+    void Write(const String& NewText);
+    void Save(const Option<String> Name);
+    void Close();
+
+private:
+    FILE* RawFile;
 };
 
 }
 
-#endif
+}

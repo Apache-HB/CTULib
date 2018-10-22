@@ -13,35 +13,18 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/Array.h"
-#include "Core/Collections/CthulhuString.h"
-#include "Core/Collections/Optional.h"
+#include <initializer_list>
+#include "Array.h"
 
-#include "Utils/Build.h"
+#pragma once
 
-#include <cstdio>
-#include <stdlib.h>
-
-using Cthulhu::Array;
-using Cthulhu::String;
-using Cthulhu::Optional;
-
-int Main(Array<String> Args)
+namespace Cthulhu
 {
-    if(Args.Len() > 2)
-    {
-        printf("No tome provided\nExiting...\n");
-        exit(5);
-    }
 
-    Option<String> Compiler = Summon::GetCompiler();
-
-    Compiler.
-
-    return 0;
-}
-
-int main(int argc, char const *argv[])
+template<typename TKey, typename TVal>
+struct Map
 {
-    return Main(Array<String>(argc, [argv](int argc) -> String { return argv[argc]; }));
+    
+};
+
 }

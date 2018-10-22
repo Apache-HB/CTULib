@@ -13,6 +13,677 @@
  *  limitations under the License.
  */
 
+#include "CthulhuString.h"
+#include "Array.h"
+#include "Map.h"
+#include "Option.h"
+#include "Iterator.h"
+
+#include "Meta/Assert.h"
+
+#include "Core/Math/Math.h"
+#include "Core/Memory/Memory.h"
+
+//TODO: lets get rid of this
+#include <string>
+
+using Cthulhu::Option;
+using Cthulhu::Array;
+using Cthulhu::Map;
+using Cthulhu::String;
+using Cthulhu::Iterator;
+
+using Cthulhu::uint32;
+using Cthulhu::int64;
+using Cthulhu::Math::Min;
+
+Cthulhu::String::String()
+    : Real(CString::Duplicate(""))
+{}
+
+Cthulhu::String::String(const char* Input)
+    : Real(CString::Duplicate(Input))
+{}
+
+Cthulhu::String::String(const String& Other)
+    : Real(CString::Duplicate(*Other))
+{}
+
+Cthulhu::String& Cthulhu::String::operator=(const String& Other)
+{
+    delete[] Real;
+    Real = CString::Duplicate(*Other);
+    return *this;
+}
+
+Cthulhu::String::~String()
+{
+    delete[] Real;
+}
+
+uint32 Cthulhu::String::Len() const { return CString::Length(Real); }
+
+bool Cthulhu::String::IsEmpty() const { return CString::Length(Real) == 0; }
+
+Cthulhu::String::operator bool() const { return CString::Length(Real) == 0; }
+
+bool Cthulhu::String::operator==(const String& Other) const
+{
+    return CString::Compare(Real, *Other) == 0;
+}
+
+bool Cthulhu::String::operator!=(const String& Other) const
+{
+    return CString::Compare(Real, *Other) != 0;
+}
+
+String& Cthulhu::String::operator+=(const String& Other)
+{
+    Append(Other.Real);
+    return *this;
+}
+
+String& Cthulhu::String::operator+=(const char* Other)
+{
+    Append(Other);
+    return *this;
+}
+
+String& Cthulhu::String::operator+=(const char Other)
+{
+    const uint32 ThisLen = Len();
+    
+    char* Ret = Memory::Alloc<char>(ThisLen + 2);
+    CString::Copy(Real, Ret);
+
+    Ret[ThisLen] = Other;
+    Ret[ThisLen + 1] = '\0';
+
+    delete[] Real;
+    Real = Ret;
+
+    return *this;
+}
+
+String Cthulhu::String::operator+(const String& Other) const
+{
+    String Ret = Real;
+    Ret += Other;
+
+    return Ret;
+}
+
+String Cthulhu::String::operator+(const char* Other) const
+{
+    String Ret = Real;
+    Ret += Other;
+
+    return Ret;
+}
+
+String Cthulhu::String::operator+(const char Other) const
+{
+    String Ret = Real;
+    Ret += Other;
+
+    return Ret;
+}
+
+
+String& Cthulhu::String::operator<<(uint64 Num)
+{
+    Append(StringUtils::ToString(Num));
+
+    return *this;
+}
+
+String& Cthulhu::String::operator<<(double Num)
+{
+    Append(StringUtils::ToString(Num));
+    
+    return *this;
+}
+
+String& Cthulhu::String::operator<<(bool Num)
+{
+    Append(StringUtils::ToString(Num));
+
+    return *this;
+}
+
+
+void Cthulhu::String::Append(const String& Other)
+{
+    CString::Concat(Real, Other.Real);
+}
+
+char* Cthulhu::String::operator*() const { return Real; }
+
+bool Cthulhu::String::StartsWith(const String& Pattern) const
+{
+    return CString::CompareN(Real, Pattern.Real, Pattern.Len()) == 0;
+}
+
+bool Cthulhu::String::EndsWith(const String& Pattern) const
+{
+    const uint32 PatternLen = Pattern.Len(),
+                 ThisLen = Len();
+
+    if(PatternLen >= ThisLen)
+        return Memory::Compare<char>(Pattern.Real, Real + (PatternLen - ThisLen), ThisLen);
+    
+    return false;
+}
+
+bool Cthulhu::String::ValidIndex(uint32 Index) const
+{
+    return 0 <= Index && Index <= CString::Length(Real);
+}
+
+char& Cthulhu::String::operator[](uint32 Index) { return Real[Index]; }
+
+char Cthulhu::String::At(uint32 Index) const 
+{
+    return ValidIndex(Index) ? Real[Index] : '\0';
+}
+
+String Cthulhu::String::Section(uint32 Start, uint32 End) const
+{
+    char* Temp = CString::DuplicateN(Real, End);
+    Temp[Start] = '\0';
+
+    String Ret = Temp;
+    delete[] Temp;
+
+    return Ret;
+}
+
+Option<uint32> Cthulhu::String::Find(const String& Pattern) const
+{
+    const uint32 ThisLen = Len();
+
+    if(Pattern.Len() > ThisLen) return None<uint32>();
+    
+    for(uint32 I = 0; I < ThisLen; I++)
+    {
+        if(CString::Compare(Real + I, Pattern.Real)) 
+            return Some(I);
+    }
+    
+    return None<uint32>();
+}
+
+String Cthulhu::String::Lower() const
+{
+    char* Ret = CString::Duplicate(Real);
+    
+    while(*Ret)
+    {
+        if(65 >= *Ret && *Ret <= 90)
+            *Ret += 32;
+    }
+
+    String Temp = Ret;
+    delete[] Ret;
+
+    return Temp;
+}
+
+String Cthulhu::String::Upper() const
+{
+    char* Ret = CString::Duplicate(Real);
+    
+    while(*Ret)
+    {
+        if(97 >= *Ret && *Ret <= 122)
+            *Ret -= 32;
+    }
+
+    String Temp = Ret;
+    delete[] Ret;
+
+    return Temp;
+}
+
+String Cthulhu::String::Trim(const String& Pattern) const
+{
+    String Ret = Real;
+
+    const uint32 Length = Pattern.Len();
+
+    while(Ret.StartsWith(Pattern)) Ret.Drop(Length);
+
+    while(Ret.EndsWith(Pattern)) Ret.Cut(Length);
+
+    return Ret;
+}
+
+String Cthulhu::String::Replace(const String& Search, const String& Substitute) const
+{
+    uint32  I = 0, 
+            Count = 0,
+            SearchLen = Search.Len(),
+            SubLen = Substitute.Len();
+    
+    for(uint32 I = 0; Real[I] != '\0'; I++)
+    {
+        if(CString::Section(&Real[I], Search.Real) == &Real[I])
+        {
+            Count++;
+            I += SearchLen - 1;
+        }
+    }
+    
+    char* Result = new char[Len() + (Count * (SubLen - SearchLen)) + 1];
+    I = 0;
+
+    char* Temp = CString::Duplicate(Real);
+    
+    while(*Temp)
+    {
+        if(CString::Section(Temp, Search.Real) == Temp)
+        {
+            CString::Copy(&Result[I], Substitute.Real);
+            I += SubLen;
+            Temp += SearchLen;
+        }
+        else
+        {
+            Result[I++] = *Temp++;
+        }
+    }
+
+    Result[I] = '\0';
+    String Ret = Temp;
+
+    delete[] Temp;
+
+    return Ret;
+}
+
+String Cthulhu::String::Format(const Array<String>& Args) const
+{
+    String Ret = Real;
+
+    const uint64 ArgLen = Args.Len();
+
+    for(uint64 I = 0; I < ArgLen; I++)
+    {
+        const String ToFind = (String("{") << I) + "}";
+        Ret = Ret.Replace(ToFind, Args[I]);
+    }
+
+    return Ret;
+}
+
+String Cthulhu::String::Format(const Map<String, String>& Args) const
+{
+    NO_IMPL();
+
+    //String Ret = Real;
+    
+    /*for(auto&& Entry : Args.Items())
+    {
+        const String ToFind = String("{") + Entry->Key + "}";
+        Ret = Ret.Replace(ToFind, Entry->Value);
+    }*/
+
+    //return Ret;
+}
+
+void Cthulhu::String::Cut(uint32 Amount)
+{
+    uint32 Length = Len();
+    
+    if(Amount >= Length)
+    {
+        delete[] Real;
+        Real = CString::Duplicate("");
+    }
+    else
+    {
+        Real[Length - Amount] = '\0';
+    }
+}
+
+void Cthulhu::String::Drop(uint32 Amount)
+{
+    if(Amount >= Len())
+    {
+        delete[] Real;
+        Real = CString::Duplicate("");
+    }
+    else
+    {
+        Real += Amount;
+    }
+}
+
+Iterator<String, char> Cthulhu::String::Iterate()
+{
+    return Iterator<String, char>(*this);
+}
+
+bool Cthulhu::String::Has(const String& Pattern) const
+{
+    return Find(Pattern).Valid();
+}
+
+Option<double> Cthulhu::String::Double() const
+{
+    int Flag = 1,
+        Loc = 0,
+        Index = 0;
+    
+    double Res = 0;
+
+    while(Real[Index] == ' ') { Index++; }
+
+    char C;
+
+    while(Real[Index] == '+' || Real[Index] == '-')
+    {
+        C = Real[Index];
+        
+        if(C == '-')
+        {
+            Flag *= -1;
+        }
+        
+        Index++;
+    }
+
+    bool Decimal = false;
+
+    while((C = Real[Index++]))
+    {
+        if(C == '.')
+        {
+            if(Decimal)
+                return None<double>();
+            
+            Loc = Index;
+            Decimal = true;
+            continue;
+        }
+
+        if(C < '0' && '9' < C)
+            return None<double>();
+
+        Res *= 10;
+        Res += C - '0';
+    }
+
+    Loc = Len() - Loc;
+
+    double Ret = Res;
+    
+    //shift the decimal place to the corrent location
+    for(int I = 0; I < Loc; I++)
+    {
+        Ret *= 0.1;
+    }
+    
+    Ret *= Flag;
+
+    return Some(Ret);
+}
+
+Option<int64> Cthulhu::String::Int() const
+{
+    int64 Ret = 0;
+    
+    int Index = 0, 
+        Sign = 1;
+
+    while(Real[Index] == ' ') { Index++; }
+
+    while(Real[Index] == '-')
+    {
+        Index++;
+        Sign *= -1;
+    }
+
+    char C;
+
+    while((C = Real[Index++]))
+    {
+        if(C < '0' || '9' < C)
+            return None<int64>();
+
+        Ret *= 10;
+        Ret += C - '0';
+    }
+
+    return Some(Ret * Sign);
+}
+
+Option<bool> Cthulhu::String::Bool() const
+{
+    String Temp = Lower();
+    
+    if(Temp == "true" || Temp == "yes" || Temp == "y" || Temp == "t")
+        return Some(true);
+
+    if(Temp == "false" || Temp == "no" || Temp == "n" || Temp == "f")
+        return Some(false);
+
+    return None<bool>();
+}
+
+
+
+
+
+
+String Cthulhu::StringUtils::Padding(const String& Pattern, uint32 Repeat)
+{
+    String Ret;
+    
+    for(uint32 I = 0; I < Repeat; I++)
+    {
+        Ret += Pattern;
+    }
+
+    return Ret;
+}
+
+String Cthulhu::StringUtils::Padding(const char Character, uint32 Repeat)
+{
+    const uint32 WithTerminal = Repeat+1;
+    
+    char* Ret = new char[WithTerminal];
+    Memory::Set<char>(Ret, Character, Repeat);
+    Ret[WithTerminal] = '\0';
+
+    String Str(Ret);
+    delete[] Ret;
+    
+    return Str;
+}
+
+String Cthulhu::StringUtils::ToString(double Value)
+{
+    return std::to_string(Value).c_str();
+}
+
+String Cthulhu::StringUtils::ToString(uint64 Value)
+{
+    return std::to_string(Value).c_str();
+}
+
+String Cthulhu::StringUtils::ToString(bool Value)
+{
+    return Value ? "true" : "false";
+}
+
+
+
+
+
+char* Cthulhu::CString::Duplicate(const char* Other)
+{
+    //figure out the length of the string and allocate a new block
+    //of memory with enough space for the original and a null terminal
+    uint32 Len = CString::Length(Other);
+    char* Ret = new char[Len+1];
+    
+    //copy the string over
+    Memory::Copy<char>(Other, Ret, Len);
+    
+    //add the null terminal
+    Ret[Len+1] = '\0';
+    
+    //and then return it
+    return Ret;
+}
+
+char* Cthulhu::CString::DuplicateN(const char* Other, uint32 Limit)
+{
+    uint32 Len = Min(CString::Length(Other), Limit);
+
+    char* Ret = new char[Len+1];
+
+    Memory::Copy<char>(Other, Ret, Len);
+
+    Ret[Len+1] = '\0';
+
+    return Ret;
+}
+
+char* Cthulhu::CString::Copy(const char* From, char* To)
+{
+    uint32 I = 0;
+    
+    while(From[I]) { To[I] = From[I]; I++; }
+    
+    return To;
+}
+
+char* Cthulhu::CString::CopyN(const char* From, char* To, uint32 Limit)
+{
+    uint32 I = 0;
+
+    while(From[I] && Limit) 
+    {
+        To[I] = From[I];
+        Limit--;
+    }
+
+    return To;
+}
+
+char* Cthulhu::CString::Merge(const char* First, const char* Second)
+{
+    uint32  FirstLen = CString::Length(First),
+            SecondLen = CString::Length(Second);
+
+    uint32 CombinedLen = FirstLen + SecondLen + 1;
+
+    char* Ret = new char[CombinedLen];
+
+    Memory::Copy<char>(First, Ret, FirstLen);
+    Memory::Copy<char>(Second, Ret + FirstLen, SecondLen);
+
+    Ret[CombinedLen] = '\0';
+
+    return Ret;
+}
+
+char* Cthulhu::CString::Concat(char* Into, const char* From)
+{
+    const uint32    FirstLen = CString::Length(Into),
+                    SecondLen = CString::Length(From);
+    
+
+    const uint32 WholeLen = FirstLen + SecondLen + 1;
+
+    char* Ret = new char[WholeLen];
+
+    Memory::Copy<char>(Into, Ret, FirstLen);
+    Memory::Copy<char>(From, Ret + FirstLen + 1, SecondLen);
+
+    delete[] Into;
+
+    Into = Ret;
+
+    return Ret;
+}
+
+char* Cthulhu::CString::ConcatN(char* Into, const char* From, uint32 Limit)
+{
+    const uint32 FirstLen = CString::Length(Into),
+                 OtherLen = Min<uint32>(CString::Length(From), Limit);
+
+    const uint32 WholeLen = FirstLen + OtherLen + 1;
+
+    char* Ret = new char[WholeLen];
+
+    Memory::Copy<char>(Into, Ret, FirstLen);
+    Memory::Copy<char>(From, Ret + FirstLen + 1, OtherLen);
+
+    delete[] Into;
+
+    Into = Ret;
+
+    return Ret;
+}
+
+int Cthulhu::CString::Compare(const char* First, const char* Other)
+{
+    while(*First && (*First == *Other))
+    {
+        First++;
+        Other++;
+    }
+
+    return *First - *Other;
+}
+
+int Cthulhu::CString::CompareN(const char* First, const char* Second, uint32 Limit)
+{
+    while(Limit && *First && (*First == *Second))
+    {
+        First++;
+        Second++;
+        Limit--;
+    }
+
+    if(Limit == 0)
+    {
+        return 0;
+    }
+
+    return *First - *Second;
+}
+
+char* Cthulhu::CString::Section(char* Haystack, const char* Needle)
+{
+    uint32 NeedleLen = CString::Length(Needle);
+    
+    while(*Haystack)
+    {
+        if(*Haystack == *Needle)
+        {
+            if(CString::CompareN(Haystack, Needle, NeedleLen) == 0)
+                return Haystack;
+        }
+
+        Haystack++;
+    }
+
+    return nullptr;
+}
+
+uint32 Cthulhu::CString::Length(const char* Content)
+{
+    uint32 Len = 0;
+
+    while(Content[Len]) { Len++; }
+
+    return Len-1; 
+}
+
 #if 0
 
 //TODO remove imports

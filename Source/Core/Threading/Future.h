@@ -22,6 +22,27 @@ namespace Cthulhu
 {
 
 template<typename T>
+struct Future
+{
+    Future(Lambda<T()> Worker)
+    {
+
+    }
+    
+private:
+    int RelatedID;
+    T Item;
+
+};
+
+}
+
+#if 0
+
+namespace Cthulhu
+{
+
+template<typename T>
 class Future
 {
     bool Available;
@@ -38,3 +59,5 @@ public:
 };
 
 }
+
+#endif

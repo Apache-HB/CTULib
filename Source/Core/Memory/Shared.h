@@ -14,8 +14,89 @@
  */
 
 #include "Meta/Aliases.h"
+#include "Deleter.h"
 
 #pragma once
+
+namespace Cthulhu
+{
+
+namespace Private
+{
+
+template<typename T>
+struct SharedContent
+{
+    T* Content;
+    uint64 Refs;
+};
+
+} //Private
+
+template<typename T, typename TDeleter = Deleter<T>>
+struct Shared
+{
+    Shared(T* InContent)
+        : Content(new SharedContent<T>({ Content, 1 }))
+    {}
+
+    T* Take()
+    {
+        //increment the refs here so that even once all shared pointers go out of scope
+        //it doesnt trigger the deleter so the pointer is still valid
+        Content->Refs++;
+        return Content->Content;
+    }
+
+    Shared(const Shared& Other)
+    {
+        Content = Other.Content;
+        Content->Refs++;
+    }
+
+    Shared(const Shared* Other)
+    {
+        Content = Other->Content;
+        Content->Refs++;
+    }
+
+    const T operator*() const { *Content->Content; }
+    T operator*() { return *Content->Content; }
+
+    const T* operator->() const { return Content->Content; }
+    T* operator->() { return Content->Content; }
+
+    ~Shared()
+    {
+        if(--Content->Refs == 0)
+        {
+            TDeleter::Delete(Content->Content);
+            delete Content;
+        }
+    }
+
+    Shared(const Shared&&) = delete;
+
+private:
+    Private::SharedContent<T>* Content;
+};
+
+template<typename T>
+struct Sharable
+{
+    Sharable()
+        : Contnet(new Content({ this, 1 }))
+    {}
+
+    Shared<T> SharedThis() const { return Content; }
+
+private:
+    Private::SharedContent<T>* Content;
+};
+
+}
+
+#if 0
 
 //TODO: document
 
@@ -73,3 +154,5 @@ public:
 };
 
 }
+
+#endif

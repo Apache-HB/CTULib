@@ -13,6 +13,63 @@
  *  limitations under the License.
  */
 
+#include "Meta/Aliases.h"
+
+#pragma once
+
+namespace Cthulhu
+{
+
+template<typename TContainer, typename TElement>
+struct Iterator
+{
+    TContainer& Container;
+    uint64 Index;
+public:
+    Iterator(TContainer& InContainer, uint64 StartIndex = 0)
+        : Container(InContainer)
+        , Index(StartIndex)
+    {}
+
+    Iterator begin() const { return Iterator<TContainer, TElement>(Container); }
+    Iterator end() const { return Iterator<TContainer, TElement>(Container, Container.Len()); }
+
+    Iterator operator++()
+    {
+        Index++;
+        return *this;
+    }
+
+    Iterator operator++(int)
+    {
+        Iterator Temp(*this);
+        Index++;
+        return Temp;
+    }
+
+    Iterator operator--()
+    {
+        Index--;
+        return *this;
+    }
+
+    Iterator operator--(int)
+    {
+        Iterator Temp(*this);
+        Index--;
+        return Temp;
+    }
+
+    TElement& operator*() { return Container[Index]; }
+
+    TElement* operator->() { return &Container[Index]; }
+
+    bool operator!=(const Iterator& Other) { return Index != Other.Index; }
+    bool operator==(const Iterator& Other) { return Index == Other.Index; }
+};
+
+}
+
 #if 0
 
 #include "Meta/Aliases.h"

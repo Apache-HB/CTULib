@@ -28,22 +28,22 @@ namespace Cthulhu
 namespace Memory
 {
     template<typename T>
-    ALWAYSINLINE T* Memset(T* Memory, int Value, size_t Len) { return (T*)memset((void*)Memory, Value, Len); }
+    ALWAYSINLINE T* Set(T* Memory, int Value, size_t Len) { return (T*)memset((void*)Memory, Value, Len); }
     
     template<typename T>
-    ALWAYSINLINE T* Memmove(const T* Source, T* Dest, size_t Len) { return (T*)memmove((void*)Dest, (void*)Source, Len); }
+    ALWAYSINLINE T* Move(const T* Source, T* Dest, size_t Len) { return (T*)memmove((void*)Dest, (void*)Source, Len); }
     
     template<typename T>
-    ALWAYSINLINE T* Memcpy(const T* Source, T* Dest, size_t Len) { return (T*)memcpy((void*)Dest, (void*)Source, Len); }
+    ALWAYSINLINE T* Copy(const T* Source, T* Dest, size_t Len) { return (T*)memcpy((void*)Dest, (void*)Source, Len); }
 
     template<typename T>
-    ALWAYSINLINE int Memcmp(const T* Source, const T* Other, size_t Len) { return memcmp((void*)Source, (void*)Other, Len); }
+    ALWAYSINLINE int Compare(const T* Source, const T* Other, size_t Len) { return memcmp((void*)Source, (void*)Other, Len); }
 
     template<typename T>
-    ALWAYSINLINE void* MemZero(const T* Source, size_t Len) { return Memset(Source, 0, Len); }
+    ALWAYSINLINE void* Zero(const T* Source, size_t Len) { return Memset(Source, 0, Len); }
 
     template<typename T>
-    ALWAYSINLINE T* Memdup(const T* Source, size_t Len)
+    ALWAYSINLINE T* Duplicate(const T* Source, size_t Len)
     {
         T* Ret = (T*)malloc(Len);
 
@@ -56,7 +56,7 @@ namespace Memory
     ALWAYSINLINE T* Realloc(T* Source, size_t NewLen) { return (T*)realloc((void*)Source, NewLen); }
 
     template<typename T>
-    ALWAYSINLINE T* Malloc(size_t Len) { return (T*)malloc(Len); }
+    ALWAYSINLINE T* Alloc(size_t Len) { return (T*)malloc(Len); }
 
     template<typename T>
     ALWAYSINLINE void Free(T* Data) { free((void*)Data); }

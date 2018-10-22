@@ -13,6 +13,9 @@
  *  limitations under the License.
  */
 
+#include <cstdlib>
+#include <string>
+
 #pragma once
 
 /**Assertion macros simmilar to C's assert macro
@@ -28,7 +31,7 @@
  */
 
 /**Assert an expression to be true and otherwise, print the message and exit with code 25
- * Is disabled when building without CTU_DEBUG, but the expression is still evalulated
+ * Is disabled when building without CTU_DEBUG, and the expression is not evaulated 
  * 
  * @code{.cpp}
  * 
@@ -54,7 +57,7 @@
  * ASSERT(++X == 6, "X must equal 6");
  * //Expands to if(++X == 6) {...} with CTU_DEBUG
  * //Or
- * //Expands to ++X == 6; without CTU_DEBUG
+ * //Expands to nothing without CTU_DEBUG
  * 
  * @code{.cpp}
  * 
@@ -118,26 +121,42 @@
  */
 //ASSERT_NO_REENTRY(Message)
 
+/**Denotes a function that has no implementation and may need to be added later
+ * or overriden in a subclass
+ * 
+ * @code{.cpp}
+ * 
+ * void Something()
+ * {
+ *     NO_IMPL();
+ * }
+ * 
+ * Something();
+ * //Asserts no impl
+ * 
+ * @endcode
+ * 
+ */
+//NO_IMPL()
 
 //move the docs outside this ifdef block because big grey'd out sections make vscode lag alot
 #ifdef CTU_DEBUG
-#   define ASSERT(Expr, Message) if(!(Expr)) { printf("ASSERT FAILED: "Message" |%s|%d|\n", __FILE__, __LINE__); exit(25); }
-#   define ASSERT_NO_ENTRY(Message) { printf("REACHED NO ENTRY: "Message" |%s|%d|\n", __FILE__, __LINE__); exit(25); }
+#   define ASSERT(Expr, Message) if(!(Expr)) { printf("ASSERT FAILED: " Message " |%s|%d|\n", __FILE__, __LINE__); exit(25); }
+#   define ASSERT_NO_ENTRY(Message) { printf("REACHED NO ENTRY: " Message " |%s|%d|\n", __FILE__, __LINE__); exit(25); }
 #   define ASSERT_NO_REENTRY(Message) {                                         \
                                         static bool REACHED__##__LINE__ = false; \
                                         if(REACHED__##__LINE__)                   \
                                         {                                          \
-                                            printf("REACHED NO REENTRY: "Message" |%s|%d|\n", __FILE__, __LINE__); \
+                                            printf("REACHED NO REENTRY: " Message " |%s|%d|\n", __FILE__, __LINE__); \
                                             exit(25); \
                                         } \
                                         REACHED__##__LINE__ = true; \
                                        }
+
+#   define NO_IMPL()                    { printf("CALLED NO IMPL |%s|%d|\n", __FILE__, __LINE__); exit(25); }
 #else
-#   define ASSERT(Expr, Message) Expr   //just execute the expression without debug
-                                        //all C++ compilers *should* optimise it out
-                                        //looking at you MSVC
-
+#   define ASSERT(Expr, Message)        //all expands to nothing
 #   define ASSERT_NO_ENTRY(Message)     //Expands to nothing without debug
-
 #   define ASSERT_NO_REENTRY(Message)   //also expands to nothing
+#   define NO_IMPL()                    //still expands to nothing
 #endif

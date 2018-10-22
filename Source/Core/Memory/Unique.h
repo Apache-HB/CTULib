@@ -13,7 +13,58 @@
  *  limitations under the License.
  */
 
+#include "Meta/Assert.h"
+#include "Meta/Macros.h"
+#include "Deleter.h"
+
 #pragma once
+
+namespace Cthulhu
+{
+
+template<typename T, typename TDeleter = Deleter<T>>
+struct Unique
+{
+    Unique(T* Input = nullptr)
+        : Raw(Input)
+    {}
+
+    T* Take() 
+    {
+        T* Ret = Raw;
+        Raw = nullptr;
+        return Ret;
+    }
+
+    ALWAYSINLINE const T* operator->() const { return Raw; }
+    ALWAYSINLINE T* operator->() { return Raw; }
+
+    ALWAYSINLINE const T operator*() const { ASSERT(Valid(), "Attempting to deref a null pointer"); return *Raw; }
+    ALWAYSINLINE T operator*() { ASSERT(Valid(), "Attempting to deref a null pointer"); return *Raw; }
+
+    ALWAYSINLINE bool Valid() const { return Raw != nullptr; }
+
+    ALWAYSINLINE operator bool() const { return Raw != nullptr; }
+
+    ~Unique()
+    {
+        TDeleter::Delete(Raw);
+    }
+
+    Unique(const Unique&) = delete;
+    Unique(const Unique&&) = delete;
+    Unique(const Unique*) = delete;
+
+private:
+
+    T* Raw;
+};
+
+}
+
+
+
+#if 0
 
 //TODO: document
 
@@ -46,3 +97,5 @@ public:
 };
 
 }
+
+#endif

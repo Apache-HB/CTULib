@@ -61,7 +61,7 @@ private:
     TRet(*Callback)(void*, TArgs...);
 };
 
-}
+} //Private
 
 template<typename TFunctor>
 struct Lambda : Private::LambdaBase<Lambda<TFunctor>, TFunctor>

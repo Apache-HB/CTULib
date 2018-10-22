@@ -13,35 +13,23 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/Array.h"
-#include "Core/Collections/CthulhuString.h"
-#include "Core/Collections/Optional.h"
+#include "Remove.h"
 
-#include "Utils/Build.h"
+#pragma once
 
-#include <cstdio>
-#include <stdlib.h>
-
-using Cthulhu::Array;
-using Cthulhu::String;
-using Cthulhu::Optional;
-
-int Main(Array<String> Args)
+namespace Cthulhu
 {
-    if(Args.Len() > 2)
-    {
-        printf("No tome provided\nExiting...\n");
-        exit(5);
-    }
 
-    Option<String> Compiler = Summon::GetCompiler();
+template<typename T> 
+struct DecayNonReference { using Type = typename RemoveQualifiers<T>::Type; };
 
-    Compiler.
+template<typename TRet, typename... TArgs>
+struct DecayNonReference<TRet(TArgs...)> { using Type = TRet(*)(TArgs...); };
 
-    return 0;
-}
-
-int main(int argc, char const *argv[])
+template<typename T>
+struct Decay
 {
-    return Main(Array<String>(argc, [argv](int argc) -> String { return argv[argc]; }));
+    using Type = typename DecayNonReference<typename RemoveReference<T>::Type>::Type;
+};
+
 }

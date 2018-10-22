@@ -13,35 +13,38 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/Array.h"
-#include "Core/Collections/CthulhuString.h"
-#include "Core/Collections/Optional.h"
+#include "Memory.h"
 
-#include "Utils/Build.h"
+#pragma once
 
-#include <cstdio>
-#include <stdlib.h>
-
-using Cthulhu::Array;
-using Cthulhu::String;
-using Cthulhu::Optional;
-
-int Main(Array<String> Args)
+namespace Cthulhu
 {
-    if(Args.Len() > 2)
+
+template<typename T>
+struct Deleter
+{
+    static void Delete(T* Item)
     {
-        printf("No tome provided\nExiting...\n");
-        exit(5);
+        delete Item;
     }
+};
 
-    Option<String> Compiler = Summon::GetCompiler();
-
-    Compiler.
-
-    return 0;
-}
-
-int main(int argc, char const *argv[])
+template<typename T>
+struct Deleter<T[]>
 {
-    return Main(Array<String>(argc, [argv](int argc) -> String { return argv[argc]; }));
+    static void Delete(T* Item)
+    {
+        delete[] Item;
+    }
+};
+
+template<typename T>
+struct Freeer
+{
+    static void Delete(T* Item)
+    {
+        if(!!Item) { Memory::Free<T>(Item); }
+    }
+};
+
 }
