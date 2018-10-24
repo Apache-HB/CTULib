@@ -2,9 +2,9 @@ NAME = cthulhu.o
 STD = -std=c++17
 
 #all C++ code sources
-DIRS = $(shell find ./Source -name '*.cpp')
+DIRS = $(shell find ./Cthulhu -name '*.cpp')
 
-PATHS = -I./Source
+PATHS = -I./Cthulhu
 
 #if you get an error that looks like
 #make: clang++: No such file or directory

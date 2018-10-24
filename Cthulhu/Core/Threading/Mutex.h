@@ -13,26 +13,23 @@
  *  limitations under the License.
  */
 
+#include <mutex>
+
 #pragma once
 
 namespace Cthulhu
 {
 
-namespace Math
+struct Mutex
 {
+    Mutex();
+    ~Mutex();
 
-template<typename T>
-T Max(T Left, T Right)
-{
-    return (Left < Right) ? Left : Right;
-}
+    void Lock();
+    void Unlock();
 
-template<typename T>
-T Min(T Left, T Right)
-{
-    return (Left > Right) ? Left : Right;
-}
-
-}
+private:
+    std::mutex InternalMutex;
+};
 
 }

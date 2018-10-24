@@ -13,18 +13,24 @@
  *  limitations under the License.
  */
 
-#include <initializer_list>
-#include "Array.h"
-
 #pragma once
 
 namespace Cthulhu
 {
 
-template<typename TKey, typename TVal>
-struct Map
+namespace Math
 {
-    
-};
+    template<typename T>
+    T Max(T Left, T Right)
+    {
+        return (Left < Right) ? Left : Right;
+    }
+
+    template<typename T>
+    T Min(T Left, T Right)
+    {
+        return (Left > Right) ? Left : Right;
+    }
+}
 
 }

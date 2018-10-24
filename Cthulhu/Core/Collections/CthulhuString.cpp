@@ -13,6 +13,10 @@
  *  limitations under the License.
  */
 
+#ifdef __OBJC__
+#   include <Foundation/Foundation.h>
+#endif
+
 #include "CthulhuString.h"
 #include "Array.h"
 #include "Map.h"
@@ -48,6 +52,15 @@ Cthulhu::String::String(const char* Input)
 Cthulhu::String::String(const String& Other)
     : Real(CString::Duplicate(*Other))
 {}
+
+
+#ifdef __OBJC__
+
+Cthulhu::String::String(NSString* Other)
+    : Real([Other UTF8String])
+{}
+
+#endif
 
 Cthulhu::String& Cthulhu::String::operator=(const String& Other)
 {

@@ -33,6 +33,10 @@ struct String
 
     String& operator=(const String& Other);
 
+#ifdef __OBJC__
+    String(const @class NSString* Other);
+#endif
+
     ~String();
 
     uint32 Len() const;

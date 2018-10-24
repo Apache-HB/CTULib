@@ -97,12 +97,39 @@ struct Array
         return Real[Index];
     }
 
+    Array operator+(const T& Item)
+    {
+        Array Ret = *this;
+        Ret.Append(Item);
+        return Ret;
+    }
+
+    Array operator+(const Array& Other)
+    {
+        Array Ret = *this;
+        Ret.Append(Other);
+        return Ret;
+    }
+    
+    Array& operator+=(const T& Item)
+    {
+        Append(Item);
+        return *this;
+    }
+
+    Array& operator+=(const Array& Other)
+    {
+        Append(Other);
+        return *this;
+    }
+
     void Append(const T& Item)
     {
         if(++Length >= Allocated)
         {
             Resize(Allocated + 1);
         }
+
         Real[Length] = Item;
     }
 
@@ -112,8 +139,8 @@ struct Array
         {
             Resize(Allocated + Other);
         }
+        
         const uint64 OldLength = Length;
-
         Length += Other;
         
         for(uint64 I = OldLength; I < Other.Length; I++)
@@ -173,20 +200,22 @@ struct Array
         for(uint64 I = 0; I < Length; I++)
         {
             const T& Item = Real[I];
-            if(Block(Item)) Ret += Item;
+            
+            if(Block(Item)) 
+                Ret += Item;
         }
 
         return Ret;
     }
     
     template<typename TCollector = Array<T>, typename TReturn = T>
-    TCollector Map(Lambda<T(const T&)> Block)
+    TCollector Map(Lambda<void(TCollector*, const T&)> Block)
     {
         TCollector Ret;
 
         for(uint64 I = 0; I < Length; I++)
         {
-            Ret += Block(Real[I]);
+            Block(&Ret, Real[I]);
         }
 
         return Ret;
