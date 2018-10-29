@@ -14,3 +14,8 @@
  */
 
 #pragma once
+
+namespace Cthulhu::Standard
+{
+    using TSize = unsigned long long;
+}

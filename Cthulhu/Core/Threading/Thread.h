@@ -34,7 +34,7 @@ struct Thread
 
     ~Thread();
 
-    uint64 ID() const;
+    U64 ID() const;
 
     void Detatch();
     void Join();

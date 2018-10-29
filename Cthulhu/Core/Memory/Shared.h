@@ -28,7 +28,7 @@ template<typename T>
 struct SharedContent
 {
     T* Content;
-    uint64 Refs;
+    U64 Refs;
 };
 
 } //Private
@@ -106,7 +106,7 @@ namespace Cthulhu
 template<typename T>
 class SharedContent
 {
-    uint32 Refs;
+    U32 Refs;
     T* Content;
 };
 

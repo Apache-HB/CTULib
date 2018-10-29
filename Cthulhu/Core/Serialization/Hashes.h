@@ -13,35 +13,28 @@
  *  limitations under the License.
  */
 
-#include "TestUtils.h"
+//a bunch of hash functions for different classes
 
-#include "Core/Types/Lambda.h"
+#include "Core/Collections/Map.h"
 
-using Cthulhu::Lambda;
+#include "Core/Collections/CthulhuString.h"
 
-bool Jeff(Lambda<bool(bool)> Fun) { return Fun(true); }
+#pragma once
 
-bool TestLambda()
+
+namespace Cthulhu
 {
-    bool Pass = true;
-    
-    Lambda<bool(bool)> L([](bool B){ return B; });
 
-    auto LL = Lambda<void()>([]{ printf("Yeet\n"); });
+template<> U32 Hash<String>(const String& Item)
+{
+    U32 Ret = 0;
 
-    LL();
+    for(U32 I = 0; I < Item.Len(); I++)
+    {
+        Ret ^= Item[I];
+    }
 
-    int I = 0;
-
-    Jeff([Pass, &I](bool B){ I++; return B && Pass; });
-
-    return Pass;
+    return Ret % MersenePrime;
 }
 
-int main(int argc, char const *argv[])
-{
-    bool Pass = true;
-    TEST_BLOCK(Pass, TestLambda, "lambda");
-    
-    TEST_RETURN(Pass, "lambda");
-}
+} // Cthulhu

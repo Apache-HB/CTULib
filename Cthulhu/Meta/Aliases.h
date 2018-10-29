@@ -29,7 +29,7 @@ namespace Cthulhu
  * 8 bytes, 64 bits
  * 
  */
-using uint64 = unsigned long long;
+using U64 = unsigned long long;
 
 /**unsigned long int
  * 
@@ -38,7 +38,7 @@ using uint64 = unsigned long long;
  * 4 bytes, 32 bits
  * 
  */
-using uint32 = unsigned long int;
+using U32 = unsigned long int;
 
 /**unsigned short
  * 
@@ -46,7 +46,7 @@ using uint32 = unsigned long int;
  * 
  * 2 bytes, 16 bits
  */
-using uint16 = unsigned short;
+using U16 = unsigned short;
 
 /**usngined char
  * 
@@ -54,7 +54,7 @@ using uint16 = unsigned short;
  * 
  * 1 byte, 8 bits
  */
-using uint8 = unsigned char;
+using U8 = unsigned char;
 
 
 /**signed long long
@@ -63,7 +63,7 @@ using uint8 = unsigned char;
  * 
  * 8 bytes, 64 bits
  */
-using int64 = signed long long;
+using I64 = signed long long;
 
 /**signed long
  * 
@@ -71,7 +71,7 @@ using int64 = signed long long;
  * 
  * 4 bytes, 32 bits
  */
-using int32 = signed long int;
+using I32 = signed long int;
 
 /**signed short
  * 
@@ -79,7 +79,7 @@ using int32 = signed long int;
  * 
  * 2 bytes, 16 bits
  */
-using int16 = signed short;
+using I16 = signed short;
 
 /**signed char
  * 
@@ -87,21 +87,21 @@ using int16 = signed short;
  * 
  * 1 byte, 8 bits
  */
-using int8 = signed char;
+using I8 = signed char;
 
 /**32 bit char, garunteed to be 4 bytes wide
  * 
  * can represent any unicode character
  * 
  */
-using char32 = int32;
+using C32 = I32;
 
 /**16 bit char, garunteed to be 2 bytes wide
  * 
  */
-using char16 = int16;
-//             ^^^^^
-//use int16 rather than char16_t because 
+using C16 = I16;
+//          ^^^^^
+//use I16 rather than char16_t because 
 //not all compilers support the full C++11 & C++17 standard
 //such as MSVC (as always)
 
@@ -110,16 +110,16 @@ using char16 = int16;
  * can represent any standard ascii char
  * 
  */
-using char8 = unsigned char;
+using C8 = unsigned char;
 
 /**32 bit wide char, unlike wchar_t is always 4 bytes wide
  * 
  */
-using WideChar = char32;
+using WideChar = C32;
 
 /**8 bit char that can represent any standard ascii char
  * 
  */
-using AsciiChar = char8;
+using AsciiChar = C8;
 
 }

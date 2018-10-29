@@ -15,70 +15,156 @@
 
 #include <initializer_list>
 #include "Array.h"
+#include "Pair.h"
+#include "Meta/Aliases.h"
 
 #pragma once
 
 namespace Cthulhu
 {
 
-constexpr uint32 MersenePrime = 8191;
+const U64 MersenePrime = 8191;
 
 namespace Private
 {
 
 template<typename TKey, typename TVal>
-struct MapPair { TKey Key; TVal Val; };
-
-template<typename TKey, typename TVal>
-struct MapItem : Array<MapPair<TKey, TVal>>
+struct MapNode
 {
-    using ThisPair = MapPair<TKey, TVal>;
-    using Super = Array<MapPair<TKey, TVal>>;
+    TKey Key;
+    TVal Value;
+    MapNode* Next;
 
-    TVal& operator=(const MapPair<TKey, TVal> Item)
+    MapNode(TKey InKey, TVal Val) 
+        : Key(InKey)
+        , Value(Val)
+        , Next(nullptr)
+    {}
+
+    TVal& operator=(const Pair<TKey, TVal> Item)
     {
-        for(uint64 I = 0; I < Super::Len(); I++)
+        if(Key == Item.First)
         {
-            if((*this)[I].Key == Item.Key)
-            {
-                (*this)[I].Val = Item.Val;
-                return Item.Val;
-            }
+            Value = Item.Second;
+            return Value;
         }
-        
-        Append(Item);
-
-        return Item.Val;
+        else if(!!Next)
+        {
+            return Next = Item;
+        }
+        else
+        {
+            Next = new MapNode(Item.First, Item.Second);
+            return Next->Value;
+        }
     }
+
+    operator TVal() { return Value; }
 };
 
 } //Private
 
-template<typename T> 
-uint64 Hash(const T&);
 
 template<typename TKey, typename TVal>
 struct Map
 {
-    using ItemPair = Private::MapItem<TKey, TVal>;
+    using Node = Private::MapNode<TKey, TVal>;
 
-    ItemPair& operator[](const TKey& Key) const
+    Map()
+        : Table(Array<Node*>(MersenePrime, true))
+    {}
+
+    Map(std::initializer_list<Pair<TKey, TVal>> InitList)
+        : Table(Array<Node*>(MersenePrime, true))
     {
-        return Data[Hash(Key)];
+        for(auto& I : InitList)
+        {
+            Table[Hash(I.First)] = new Node(I.First, I.Second);
+        }     
+    }
+
+    Node operator[](const TKey& Key)
+    {
+        ASSERT(Table[Hash(Key)] != nullptr, "Trying to access a null element");
+        return *Table[Hash(Key)];
+    }
+
+    TVal Get(const TKey& Key, const TVal Or)
+    {
+        Node* Hashed = Table[Hash(Key)];
+        
+        if(Hashed == nullptr)
+        {
+            return Or;
+        }
+        
+        return Hashed->Value;
+    }
+
+    Array<TKey> Keys() const
+    {
+        Array<TKey> Ret;
+
+        for(auto&& I : Table.Iterate())
+        {
+            auto Current = I;
+            while(!!Current)
+            {
+                Ret.Append(Current->Key);
+                Current = Current->Next;
+            }
+        }
+
+        return Ret;
+    }
+
+    Array<TVal> Values() const
+    {
+        Array<TVal> Ret;
+        
+        for(auto&& I : Table.Iterate())
+        {
+            auto Current = I;
+
+            while(!!Current)
+            {
+                Ret.Append(Current->Value);
+                Current = Current->Next;
+            }
+        }
+
+        return Ret;
+    }
+
+    Array<Pair<TKey, TVal>> Items() const
+    {
+        Array<Pair<TKey, TVal>> Ret;
+
+        for(auto&& I : Table.Iterate())
+        {
+            auto Current = I;
+            while(!!Current)
+            {
+                Ret.Append({ Current->Key, Current->Value});
+                Current = Current->Next;
+            }
+        }
     }
 
 private:
-    Array<ItemPair> Data;
+    Array<Node*> Table;
 };
 
-template<> uint64 Hash(const uint8& Num) { return Num % MersenePrime; }
-template<> uint64 Hash(const uint16& Num) { return Num % MersenePrime; }
-template<> uint64 Hash(const uint32& Num) { return Num % MersenePrime; }
-template<> uint64 Hash(const uint64& Num) { return Num % MersenePrime; }
+template<typename T> inline U32 Hash(const T&);
 
-template<> uint64 Hash(const int8& Num) { return Num % MersenePrime; }
-template<> uint64 Hash(const int16& Num) { return Num % MersenePrime; }
-template<> uint64 Hash(const int32& Num) { return Num % MersenePrime; }
-template<> uint64 Hash(const int64& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const U8& Num)  { return Num % MersenePrime; }
+template<> inline U32 Hash(const U16& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const U32& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const U64& Num) { return Num % MersenePrime; }
+
+template<> inline U32 Hash(const I8& Num)  { return Num % MersenePrime; }
+template<> inline U32 Hash(const I16& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
 
 } //Cthulhu

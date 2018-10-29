@@ -13,35 +13,35 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/Array.h"
-#include "Core/Collections/CthulhuString.h"
-#include "Core/Collections/Optional.h"
+#include <Core/Collections/CthulhuString.h>
 
-#include "Utils/Build.h"
+#include <Core/Serialization/Hashes.h>
+#include <Core/Collections/Map.h>
 
-#include <cstdio>
-#include <stdlib.h>
+#include <Core/Serialization/JSON.h>
 
-using Cthulhu::Array;
-using Cthulhu::String;
-using Cthulhu::Optional;
+using namespace Cthulhu;
 
-int Main(Array<String> Args)
+int main()
 {
-    if(Args.Len() > 2)
-    {
-        printf("No tome provided\nExiting...\n");
-        exit(5);
-    }
+    String S = "yort";
+    setbuf(stdout, NULL);
+    printf("%s\n", "Yeet");
+    char* Ret = S.Raw();
 
-    Option<String> Compiler = Summon::GetCompiler();
+    printf("%s\n", Ret);
+    printf("%s\n", *StringUtils::ToString((I64)-5342));
 
-    Compiler.
+    Map<String, int> Yeet = {
+        { "A", 1 },
+        { "B", 2 }
+    };
+
+    int I = Yeet["B"];
+
+    printf("%d\n", I);
+
+    JSON::Object Data();
 
     return 0;
-}
-
-int main(int argc, char const *argv[])
-{
-    return Main(Array<String>(argc, [argv](int argc) -> String { return argv[argc]; }));
 }

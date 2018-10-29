@@ -13,30 +13,7 @@
  *  limitations under the License.
  */
 
-#include <stdlib.h>
-#include <cstdio>
+#include "JSON.h"
 
-#include "Build.h"
+using namespace Cthulhu;
 
-using Cthulhu::String;
-using Cthulhu::Optional;
-using Cthulhu::NullOpt;
-
-const Cthulhu::Optional<Cthulhu::String> Summon::GetCompiler()
-{
-    //always prioritize clang as its the best compiler out of the 3
-    if(system("which clang++ > /dev/null 2>&1")) 
-    {
-        return Optional<String>("clang++");
-    }
-    else if(system("which g++ > /dev/null 2>&1"))
-    {
-        return Optional<String>("g++");
-    }
-    else if(system("MSBUILD.exe"))
-    {
-        return Optional<String>("MSBUILD.exe");
-    }
-
-    return NullOpt<String>();
-}

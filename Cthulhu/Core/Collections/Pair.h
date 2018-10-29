@@ -15,8 +15,6 @@
 
 #pragma once
 
-#if 0
-
 namespace Cthulhu
 {
 
@@ -27,14 +25,16 @@ struct Pair
     TSecond Second;
 };
 
-template<typename TFirst, typename TSecond, typename TThird>
+template<
+    typename TFirst,
+    typename TSecond,
+    typename TThird
+>
 struct Triplet
 {
     TFirst First;
     TSecond Second;
-    TThrid Third;
+    TThird Third;
 };
 
-}
-
-#endif 
+} //Cthulhu

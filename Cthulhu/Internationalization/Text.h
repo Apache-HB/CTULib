@@ -13,30 +13,22 @@
  *  limitations under the License.
  */
 
-#include "TestUtils.h"
+#include "Language.h"
 
-#include "Core/Collections/Result.h"
+#include "Meta/Aliases.h"
 
-using Cthulhu::Result;
-using Cthulhu::Pass;
-using Cthulhu::Fail;
+#pragma once
 
-bool TestConstructors()
+namespace Cthulhu::Internationalization
 {
-    bool TestPass = true;
 
-    TEST_ASSERT(TestPass, (Fail<int, int>(5).HasErr()));
-
-    TEST_ASSERT(TestPass, (Pass<int, int>(25).HasRes()));
-
-    return TestPass;
-}
-
-int main(int argc, char const *argv[])
+struct Text
 {
-    bool TestPass = true;
+    using TChar = C32;
 
-    TEST_BLOCK(TestPass, TestConstructors, "result constructors");
-    
-    TEST_RETURN(TestPass, "Result");
+private:
+
+
+};
+
 }

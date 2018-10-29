@@ -15,56 +15,54 @@
 
 #include "Core/Collections/CthulhuString.h"
 #include "Core/Collections/Array.h"
-
-#include "Meta/Aliases.h"
+#include "Core/Collections/Map.h"
 
 #pragma once
 
-namespace Cthulhu
+namespace Cthulhu::JSON
 {
 
-template<typename> struct Option;
-struct FILE;
-
-namespace FileSystem
+enum class Type : U8
 {
-
-struct BinaryFile
-{
-    BinaryFile();
-
-    BinaryFile(FILE* File, const String& Name);
-
-    Array<U8> Data;
-    const String Name;
-
-    void Append(const Array<U8> Data);
-    void Write(const Array<U8> NewData);
-    void Save(const Option<String> Name);
-    void Close();
-
-private:
-    FILE* RawFile;
+    Object,
+    Array,
+    Bool,
+    Null,
+    Int,
+    Float,
+    String
 };
 
-struct TextFile
+struct Object
 {
-    TextFile();
-    
-    TextFile(FILE* File, const String& Name);
+    Object();
+    ~Object();
 
-    String Content;
-    const String Name;
+    Object& operator=(const Object& Other);
 
-    void Append(const String& Text);
-    void Write(const String& NewText);
-    void Save(const Option<String> Name);
-    void Close();
+    Object& operator=(I64);
+    Object& operator=(bool);
+    Object& operator=(double);
+    Object& operator=(String);
+    Object& operator=(Array<Object>);
+    Object& operator=(Map<String, Object>);
+
+    Object& operator[](String& Name);
+    Object& operator[](I64 Index);
 
 private:
-    FILE* RawFile;
-};
 
-}
+    Type ContentType;
+
+    union
+    {
+        String Str;
+        I64 Int;
+        double Float;
+        bool Bool;
+        Map<String, Object> SubObjects;
+        Array<Object> ArrayObjects;
+    };
+};
 
 }

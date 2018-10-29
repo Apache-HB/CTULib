@@ -24,9 +24,9 @@ template<typename TContainer, typename TElement>
 struct Iterator
 {
     TContainer& Container;
-    uint64 Index;
+    U64 Index;
 public:
-    Iterator(TContainer& InContainer, uint64 StartIndex = 0)
+    Iterator(TContainer& InContainer, U64 StartIndex = 0)
         : Container(InContainer)
         , Index(StartIndex)
     {}
@@ -68,69 +68,4 @@ public:
     bool operator==(const Iterator& Other) { return Index == Other.Index; }
 };
 
-}
-
-#if 0
-
-#include "Meta/Aliases.h"
-#include "Meta/Macros.h"
-
-#pragma once
-
-//TODO document
-
-namespace Cthulhu
-{
-
-template<typename TContainer, typename TElement>
-class ArrayIterator
-{
-    TContainer& Container;
-    uint32 Index;
-public:
-    ArrayIterator(TContainer& InContainer, uint32 StartIndex = 0)
-        : Container(InContainer)
-        , Index(StartIndex)
-    {}
-
-    ALWAYSINLINE ArrayIterator begin() const { return ArrayIterator<TContainer, TElement>(Container); }
-    ALWAYSINLINE ArrayIterator end() const { return ArrayIterator<TContainer, TElement>(Container, Container.Len()); }
-
-    ArrayIterator& operator++()
-    {
-        Index++;
-        return *this;
-    }
-
-    ArrayIterator& operator++(int)
-    {
-        ArrayIterator& Temp(*this);
-        Index++;
-        return Temp;
-    }
-
-    ArrayIterator& operator--()
-    {
-        Index--;
-        return *this;
-    }
-
-    ArrayIterator& operator--(int)
-    {
-        ArrayIterator& Temp(*this);
-        Index--;
-        return Temp;
-    }
-
-    ALWAYSINLINE TElement& operator*() { return Container[Index]; }
-
-    ALWAYSINLINE TElement* operator->() { return &Container[Index]; }
-
-    ALWAYSINLINE friend bool operator!=(const ArrayIterator& Left, const ArrayIterator& Right) { return Left.Index == Right.Index; }
-
-    ALWAYSINLINE friend bool operator==(const ArrayIterator& Left, const ArrayIterator& Right) { return Left.Index == Right.Index; }
-};
-
-}
-
-#endif
+} //Cthulhu

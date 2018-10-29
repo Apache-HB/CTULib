@@ -13,47 +13,18 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/CthulhuString.h"
+#include "Core/Types/Lambda.h"
+#include "Meta/Aliases.h"
 
 #pragma once
 
-namespace Summon
+namespace Cthulhu::Standard
 {
 
-enum class Token : char
-{
-    None = '\0',
-    SquareOpen = '[',
-    SquareClose = ']',
-    Comma = ',',
-    Equals = '='
-};
+extern Lambda<void(U16)> ExitCallback;
 
-struct Lexeme
-{
-    Cthulhu::uint64 Line;
-    Cthulhu::uint64 Loc;
-    Token Tok;
-    Cthulhu::String& Identifier;
-};
+void OnExit(Lambda<void(U16)> Function);
 
-class Lexer
-{
-    const Cthulhu::String Content;
+void Exit(U16 Code);
 
-    Cthulhu::uint64 Distance;
-    Cthulhu::uint64 Line;
-    Cthulhu::uint64 Loc;
-
-    bool EOF;
-
-protected:
-    void SkipWhitespace();
-
-public:
-    Lexer(const Cthulhu::String& Path);
-
-    const Lexeme Next();
-};
-
-}
+} // Cthulhu::Standard

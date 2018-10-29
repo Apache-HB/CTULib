@@ -44,7 +44,7 @@ enum class MessageType : char
 
 struct ErrorInfo
 {
-    uint64 Retries;
+    U64 Retries;
     double WaitTime;
     int HttpStatus;
     String Reson;

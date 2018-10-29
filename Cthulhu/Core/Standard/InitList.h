@@ -13,42 +13,39 @@
  *  limitations under the License.
  */
 
-#include <initializer_list>
+#include "Meta/Macros.h"
+
+#include "Size.h"
 
 #pragma once
 
-namespace Cthulhu
-{
-
-namespace Private
+namespace Cthulhu::Standard
 {
 
 template<typename T>
-struct Node
+struct InitList
 {
-    T Content;
-    Node* Next;
-};
+    using Type = T;
+    
+    ALWAYSINLINE constexpr InitList() noexcept
+        : Front(nullptr)
+        , Length(0)
+    {}
 
-}
+    ALWAYSINLINE constexpr TSize Size() const noexcept { return Length; }
 
-template<typename T>
-struct List
-{
-    List();
-    List(std::initializer_list<T> InitList);
+    ALWAYSINLINE constexpr const T* begin() const noexcept { return Front; }
 
-    List(const List& Other);
-
-    void Push(const T& Item);
-    T Pop();
-
-    Private::Node<T>* Front() const;
-    Private::Node<T>* Back() const;
+    ALWAYSINLINE constexpr const T* End() const noexcept { return Front + Length; }
 
 private:
-    Private::Node<T> Head;
-    Private::Node<T> Tail;
+    const T* Front;
+    TSize Length;
+
+    ALWAYSINLINE constexpr InitList(const T* Begin, TSize Len) noexcept
+        : Front(Begin)
+        , Length(Len)
+    {}
 };
 
-} //Cthulhu
+} //Cthulhu::Standard

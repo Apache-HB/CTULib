@@ -13,6 +13,11 @@
  *  limitations under the License.
  */
 
+#include "Option.h"
+#include "Array.h"
+#include "Map.h"
+#include "Iterator.h"
+
 #include "Meta/Aliases.h"
 
 #pragma once
@@ -20,26 +25,16 @@
 namespace Cthulhu
 {
 
-template<typename> struct Array;
-template<typename, typename> struct Map;
-template<typename> struct Option;
-template<typename, typename> struct Iterator;
-
 struct String
 {
-    String();
-    String(const char* Input);
+    String(const char* Data = "");
     String(const String& Other);
 
     String& operator=(const String& Other);
 
-#ifdef __OBJC__
-    String(const @class NSString* Other);
-#endif
-
     ~String();
 
-    uint32 Len() const;
+    U32 Len() const;
 
     bool IsEmpty() const;
     operator bool() const;
@@ -48,814 +43,115 @@ struct String
     bool operator!=(const String& Other) const;
 
     String& operator+=(const String& Other);
-    String& operator+=(const char* Other);
     String& operator+=(const char Other);
 
     String operator+(const String& Other) const;
-    String operator+(const char* Other) const;
     String operator+(const char Other) const;
 
-    String& operator<<(uint64 Num);
+    String& operator<<(I64 Num);
     String& operator<<(double Num);
-    String& operator<<(bool Num);
+    String& operator<<(bool Val);
 
     void Append(const String& Other);
 
+    //push to front of string
+    void Push(const String& Other);
+    void Push(char Other);
+
     char* operator*() const;
+    char* Raw() const;
 
     bool StartsWith(const String& Pattern) const;
     bool EndsWith(const String& Pattern) const;
 
-    bool ValidIndex(uint32 Index) const;
+    bool ValidIndex(U32 Index) const;
 
-    char& operator[](uint32 Index);
+    char& operator[](U32 Index) const;
 
-    //dont use Option<char> because theres already an agreed upon \0 null char
-    char At(uint32 Index) const;
+    char At(U32 Index) const;
 
-    String Section(uint32 Start, uint32 End) const;
+    String SubSection(U32 Start, U32 End) const;
 
-    Option<uint32> Find(const String& Pattern) const;
-    
-    String Lower() const;
+    Option<U32> Find(const String& Pattern) const;
+
     String Upper() const;
+    String Lower() const;
 
-    String Trim(const String& Pattern = " ") const;
+    void Trim(const String& Pattern = " ");
     String Replace(const String& Search, const String& Substitute) const;
 
     String Format(const Array<String>& Args) const;
     String Format(const Map<String, String>& Args) const;
 
-    //cut from back
-    void Cut(uint32 Amount);
+    //cut from front
+    void Cut(U32 Amount);
 
-    //drop from front
-    void Drop(uint32 Amount);
-
-    Iterator<String, char> Iterate();
+    //drop from back
+    void Drop(U32 Amount);
 
     bool Has(const String& Pattern) const;
 
-    Option<double> Double() const;
-    Option<int64> Int() const;
-    Option<bool> Bool() const;
+    Iterator<Array<char>, char> Iterate();
+
+    String Reversed() const;
 
 private:
     char* Real;
 };
 
-namespace StringUtils
-{
-    String Padding(const String& Pattern, uint32 Repeat);
-    String Padding(const char Character, uint32 Repeat);
-    String ToString(double Value);
-    String ToString(uint64 Value);
-    String ToString(bool Value);
-};
-
 namespace CString
 {
     //dup
-    char* Duplicate(const char* Other);
-    char* DuplicateN(const char* Other, uint32 Limit);
+    char* Duplicate(const char* Data);
+    char* Duplicate(const char* Data, U32 Limit);
     
     //cpy
-    char* Copy(const char* From, char* To);
-    char* CopyN(const char* From, char* To, uint32 Limit);
+    char* Copy(const char* From, char* Into);
+    char* Copy(const char* From, char* Into, U32 Limit);
     
     char* Merge(const char* Left, const char* Right);
 
     //cat
-    char* Concat(char* Into, const char* From);
-    char* ConcatN(char* Into, const char* From, uint32 Limit);
+    char* Concat(char* From, const char* Into);
+    char* Concat(char* From, const char* Into, U32 Limit);
 
     //cmp
     int Compare(const char* Left, const char* Right);
-    int CompareN(const char* Left, const char* Right, uint32 Limit);
+    int Compare(const char* Left, const char* Right, U32 Limit);
     
     //strstr
-    char* Section(char* Haystack, const char* Needle);
+    char* Section(const char* Needle, char* Haystack);
 
     //len
-    uint32 Length(const char* Content);
-};
+    U32 Length(const char* Content);
 
+    char* Reverse(const char* Content);
 }
 
-#if 0
-
-#include "Meta/Aliases.h"
-#include "Meta/Macros.h"
-
-#include "Core/Types/Lambda.h"
-
-#ifdef __OBJC__
-@class NSString;
-#endif
-
-#pragma once
-//TODO more detailed docs on all functions
-namespace Cthulhu
+namespace StringUtils
 {
-
-//Forward declaration to prevent looping includes and reduce compile times
-template<typename T>
-class Array;
-
-template<typename TKey, typename TVal>
-class Map;
-
-template<typename T>
-class Optional;
-
-/**Dynamically sized string class
- * This class is a wrapper for a raw `char*` "character pointer"
- * It features a very similar frontend to java's String or C#'s String classes
- * 
- * @code{.cpp}
- * 
- * String S = "Content";
- * 
- * @endcode
- * 
- * @see operator*
- * @see Format
- */
-class String
-{
-    /**The raw C-String this string wraps around
-     * 
-     */
-    char* Real;
-public:
-
-    /**Default constructor
-     * sets the content to \0
-     */
-    String();
-
-    /**String constructor
-     * sets the content to a copy of the input
-     * The input is duplicated and is not owned by the string class
-     * so if it was allocated dynamically with `malloc` or `new char[]`
-     * you will have to `free` or `delete[]` it yourself
-     * 
-     * @code{.cpp}
-     * 
-     * char* C = "Bob";
-     * //Statically allocated, dont need to free
-     * 
-     * String CS = String(C);
-     * //creates a string with "Bob" as its contents
-     * 
-     * char* D = (char*)malloc(sizeof(char) * 25);
-     * 
-     * memset(D, '-', 5);
-     * D[5] = '\0';
-     * 
-     * String DS = String(D);
-     * //creates a string with the content "-----"
-     * //this was allocated dynamically so must be free'd to prevent leaks
-     * 
-     * free((void*)D);
-     * 
-     * char* E = new char[25];
-     * 
-     * memset(E, '#', 6);
-     * E[6] = '\0';
-     * 
-     * String ES = String(E);
-     * //creates a string with the content "######"
-     * //this was allocated with new[] so must be delete[]'d to prevent leaks
-     * 
-     * delete[] E;
-     * 
-     * // CS, DS, and ES all exit scope and delete their associated memory
-     * // no leaks happen when a String goes out of scope
-     * 
-     * @endcode
-     * 
-     * @param Content   the content to copy
-     */
-    String(const char* Content);
-
-    /**Reference copy constructor
-     * sets the content to a copy of the other classes content
-     * Performs a deep copy of the content so the new string can
-     * be modified without editing the old string
-     * 
-     * @code{.cpp}
-     * 
-     * String S = String("Some random content");
-     * 
-     * String J = String(S);
-     * 
-     * S += " More Content";
-     * 
-     * //S = "Some random content More Content"
-     * 
-     * //J = "Some random content"
-     * 
-     * @endcode
-     * 
-     * @param Other the string to copy
-     */
-    String(const String& Other);
-
-    /**pointer copy constructor
-     * copys the content from a pointer to a string
-     * performs a deep copy of the other strings content, 
-     * is not nullptr safe
-     * 
-     * @code{.cpp}
-     * 
-     * String* S = new String("Some content");
-     * 
-     * String D = String(S);
-     * 
-     * //D = "Some content"
-     * 
-     * String E = String(nullptr);
-     * 
-     * //BANG!
-     * //segmentation fault 11
-     * 
-     * @endcode
-     * 
-     * @param Other the pointer to copy from
-     */
-    String(const String* Other);
-
-#ifdef __OBJC__
-    String(const NSString* Other);
-#endif
-
-    /**Assignment operator overload
-     * copys the content from the other string to this string
-     * 
-     * @code{.cpp}
-     * 
-     * String S = String("Name jeff");
-     * 
-     * String J = S;
-     * 
-     * //S = "Name jeff"
-     * //J = "Name jeff"
-     * 
-     * @endcode
-     * 
-     * @param Other the string to copy from
-     * 
-     * @return      itself
-     */
-    String& operator=(const String& Other);
-
-    /**destructor
-     * 
-     */
-    ~String();
-
-    /**get the strings length, not including null terminator (\0)
-     * 
-     * @return the length of this string
-     */
-    ALWAYSINLINE int Len() const;
-
-    /**check if the string is empty
-     * equivilent to String.Len() == 0;
-     * 
-     * @code{.cpp}
-     * 
-     * @endcode
-     * 
-     * @return if the string is empty or not
-     */
-    ALWAYSINLINE bool IsEmpty() const;
-
-    /**Overloaded bool for string 
-     * equivilent to String.IsEmpty(); or String.Len() == 0;
-     * 
-     * @code{.cpp}
-     * 
-     * @endcode
-     * 
-     * @return if the string is empty or not
-     */
-    ALWAYSINLINE operator bool() const;
-
-    /**Check if an integer is inside the strings range
-     * 
-     * @param Index the index to search for
-     * 
-     * @return if the index is inside the string or not
-     */
-    ALWAYSINLINE bool ValidIndex(int Index) const;
-
-    /**checks if the content of thise string equals another
-     * 
-     * @param Other the string to compare to
-     * 
-     * @return if the strings are equal or not
-     */
-    bool operator==(const String& Other) const;
-
-    /**copares two strings to check content equality
-     * 
-     * @param Other the string to compare to
-     * 
-     * @return if the strings are not equal or are equal
-     */
-    bool operator!=(const String& Other) const;
-
-    /**Adds one string to this string and returns the content in a copy
-     * 
-     * @param Other the string to concat onto this one
-     * 
-     * @return a copy of this string with the concat'ed content
-     */
-    String operator+(const String& Other) const;
-
-    /**Adds a c-string to this string and returns a copy with the concat'ed content
-     * 
-     * @param Str   the c-string to concat
-     * 
-     * @return a copy of this string with the concat'ed content
-     */
-    String operator+(const char* Str) const;
-
-    /**Adds a single character to the string
-     * 
-     * @param C the character to add
-     * 
-     * @return a copy of the string with the extra character
-     */
-    String operator+(const char C) const;
-    
-    /**Append another string to the current string
-     * 
-     * @param Other the string to concat to this one
-     * 
-     * @return itself
-     */
-    String operator+=(const String& Other);
-
-    /**Append a c-string to this string
-     * 
-     * @param Str   the string to concat
-     * 
-     * @return itself
-     */
-    String operator+=(const char* Str);
-
-    /**Append a single character to the string
-     * 
-     * @param C the character to append
-     * 
-     * @return itself
-     */
-    String operator+=(const char C);
-
-    /**Append an int to the string after converting it to a string
-     * 
-     * @codeblock{.cpp}
-     * 
-     * String S = "Some integer: ";
-     * 
-     * S << 24;
-     * 
-     * // "Some integer: 24"
-     * 
-     * @endcode
-     * 
-     * @param I the int to append
-     * 
-     * @return itself
-     */
-    String& operator<<(int64 I);
-
-    /**Append a float to the string after converting it to a string
-     * 
-     * @code{.cpp}
-     * 
-     * String F = "Some float: ";
-     * 
-     * F << 673.342;
-     * 
-     * // "Some float: 673.342"
-     * 
-     * @endcode
-     * 
-     * @param F the float to append
-     * 
-     * @return itself
-     */
-    String& operator<<(float F);
-
-    /**Append a bool to the string after converting it to a string
-     * 
-     * @code{.cpp}
-     * 
-     * String S = "Some bool: ";
-     * 
-     * S << true;
-     * 
-     * // "Some bool: true";
-     * 
-     * String X = "Another bool: ";
-     * 
-     * X << false;
-     * 
-     * // "Another bool: false"
-     * 
-     * @endcode
-     * 
-     * @param B the bool to append
-     * 
-     * @return itself
-     */
-    String& operator<<(const bool B);
-
-    /**Append a double to the string after converting it to a string
-     * 
-     * @code{.cpp}
-     * 
-     * String S = "Some number: ";
-     * 
-     * S << 5.43;
-     * 
-     * // "Some number: 5.43"
-     * 
-     * @endcode
-     * 
-     * @param D the double to append
-     * 
-     * @return itself
-     */
-    String& operator<<(double D);
-
-    /**Append one string to another string using the OS file path seperator
-     * 
-     * @code{.cpp}
-     * 
-     * String Path = "Some"/"File"/"Path"/"File.txt";
-     * 
-     * //On OSX/Unix
-     * // "Some/File/Path/File.txt"
-     * 
-     * //On Windows
-     * // "Some\\File\\Path\\File.txt"
-     * 
-     * @endcode
-     * 
-     * @param Other the string to append
-     * 
-     * @return a copy of the string with the seperator and other string
-     */
-    String operator/(const String& Other) const;
-
-    /**Append a string using the OS file path seperator
-     * 
-     * @code{.cpp}
-     * 
-     * String Path = "Some";
-     * 
-     * Path /= "File";
-     * Path /= "Path";
-     * Path /= "File.txt";
-     * 
-     * //On OSX/Unix
-     * // "Some/File/Path/File.txt"
-     * 
-     * //On Windows
-     * // "Some\\File\\Path\\File.txt"
-     * 
-     * @endcode
-     * 
-     * @param Other the string to append
-     * 
-     * @return itself
-     */
-    String& operator/=(const String& Other);
-
-    /**overloaded [] operator
-     * returns a char at an index in the string unsafley
-     * 
-     * @param Index the location to retrive
-     * 
-     * @return the found char
-     */
-    ALWAYSINLINE char& operator[](int Index);
-
-    ALWAYSINLINE const char operator[](int Index) const;
-
-    /**Safley return a char at an index in the string
-     * 
-     * @param Index the index to retrive
-     * 
-     * @return the found char or \0 if out of range
-     */
-    char At(int Index) const;
-
-    /**overloaded derefernce operator
-     * 
-     * @return the raw c-string this string holds
-     */
-    ALWAYSINLINE const char* operator*() const;
-
-    /**
-     * 
-     */
-    ALWAYSINLINE const char* Raw() const;
-
-    /**Append another string to this string
-     * 
-     * @param Other the other string to append
-     */
-    void Append(const String& Other);
-
-    /**Append a c-string to this string
-     * 
-     * @param Str   the string to append
-     */
-    void Append(const char* Str);
-
-    /**Append a single char to this string
-     * 
-     * @param C the char to append
-     */
-    void Append(const char C);
-
-    /**Pop off a certain amount of chars from this string and return them
-     * 
-     * @param Len the amount of chars to pop
-     * 
-     * @return the popped chars
-     */
-    String Pop(int Len = 1);
-
-    /**Trim the front and back of this string using a string as a pattern
-     * 
-     * @param Pattern   the characters to trim
-     */
-    void Trim(const String& Pattern = " ");
-
-    /**Trim the front of the string of a certain pattern
-     * 
-     * @param Pattern   the characters to trim
-     */
-    void TrimFront(const String& Pattern = " ");
-
-    /**Trim the back of the string of a certain pattern
-     * 
-     * @param Pattern   the characters to trim
-     */
-    void TrimBack(const String& Pattern = " ");
-
-    /**Take a substring from within the string
-     * 
-     * @param Start the index to start from
-     * @param End   the index to end at
-     * 
-     * @return      the substring
-     */
-    String SubStr(int Start, int End) const;
-
-    /**TODO: implement map
-     * 
-     */
-    //String Format(const Map<String, String> Args) const;
-
-    /**TODO: document
-     * 
-     */
-    String Format(const Array<String> Args) const;
-
-    /**
-     * 
-     */
-    String Upper() const;
-
-    /**
-     * 
-     */
-    String Lower() const;
-
-    /**
-     * 
-     */
-    Array<String> Chunked(int Size) const;
-
-    /**
-     * 
-     */
-    Array<String> Split(const String& Delimiter) const;
-
-    /**
-     * 
-     */
-    Optional<int> Find(const String& Pattern) const;
-
-    /**
-     * 
-     */
-    bool Has(const String& Pattern) const;
-
-    /**
-     * 
-     */
-    void Replace(const String& Search, const String& Substitute);
-    
-    /**
-     * 
-     */
-    bool StartsWith(const String& Other) const;
-
-    /**
-     * 
-     */
-    bool EndsWith(const String& Other) const;
-
-    /**
-     * 
-     */
-    String Map(Lambda<const char(const char)> Transform) const;
-
-    /**
-     * 
-     */
-    String Filter(Lambda<bool(const char)> Predicate) const;
-
-    /**
-     * 
-     */
-    Array<char> CharArray() const;
-
-    /**
-     * 
-     */
-    Optional<double> ParseFloat() const;
-
-    /**
-     * 
-     */
-    Optional<bool> ParseBool() const;
-
-    /**
-     * 
-     */
-    Optional<int64> ParseInt() const;
-
-    /**
-     * 
-     */
-    static String ToString(bool B);
-    
-    /**
-     * 
-     */
-    static String ToString(float F);
-
-    /**
-     * 
-     */
-    static String ToString(int64 I);
-
-    /**
-     * 
-     */
-    static String ToString(double D);
-
-    /**
-     *
-     */
-    static ALWAYSINLINE String PathSeperator();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE String Whitespace();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE String UpperCase();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE String LowerCase();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE String OctDigits();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE String Digits();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE String HexDigits();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE String Chars();
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strcpy(char* Dest, const char* Source);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strncpy(char* Dest, const char* Source, int Len);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strcat(char* Dest, const char* Source);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strncat(char* Dest, const char* Source, int Len);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE int Strcmp(const char* First, const char* Second);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE int Strncmp(const char* First, const char* Second, int Len);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE const char* Strchr(const char* Source, int Character);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strchr(char* Source, int Character);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE int Strcspn(const char* First, const char* Second);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE const char* Strpbrk(const char* First, const char* Second);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strpbrk(char* First, const char* Second);
-    
-    /**
-     *
-     */
-    static ALWAYSINLINE const char* Strrchr(const char* First, int Character);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strrchr(char* First, int Character);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE int Strspn(const char* First, const char* Second);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE const char* Strstr(const char* First, const char* Second);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strstr(char* First, const char* Second);
-    
-    /**
-     * 
-     */
-    static ALWAYSINLINE int Strlen(const char* Str);
-
-    /**
-     * 
-     */
-    static ALWAYSINLINE char* Strdup(const char* Str);
-};
-
+    String Padding(const String& Text, U32 Repeat);
+    Option<I64> ParseInt(const String& Text);
+    Option<double> ParseDouble(const String& Text);
+    Option<bool> ParseBool(const String& Text);
+
+    String ToString(I64 Num);
+    String ToString(double Num);
+    String ToString(bool Val);
 }
 
-#endif
+namespace StringConstants
+{
+    const String PathSeperator();
+    const String Whitespace();
+    const String UpperCase();
+    const String LowerCase();
+    const String OctDigits();
+    const String HexDigits();
+    const String Digits();
+    const String Chars();
+    const String Punctuation();
+    const String Printable();
+}
+
+} //Cthulhu

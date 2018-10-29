@@ -25,41 +25,69 @@
 namespace Cthulhu
 {
 
+/**Typesafe memory mangment wrapper for the c-stdlib
+ * 
+ * 
+ */
 namespace Memory
 {
     template<typename T>
-    ALWAYSINLINE T* Set(T* Memory, int Value, size_t Len) { return (T*)memset((void*)Memory, Value, Len); }
+    ALWAYSINLINE T* Set(T* Memory, int Value, size_t Len) 
+    { 
+        return (T*)memset((void*)Memory, Value, Len); 
+    }
     
     template<typename T>
-    ALWAYSINLINE T* Move(const T* Source, T* Dest, size_t Len) { return (T*)memmove((void*)Dest, (void*)Source, Len); }
+    ALWAYSINLINE T* Move(const T* From, T* Into, size_t Len) 
+    { 
+        return (T*)memmove((void*)Into, (void*)From, Len); 
+    }
     
     template<typename T>
-    ALWAYSINLINE T* Copy(const T* Source, T* Dest, size_t Len) { return (T*)memcpy((void*)Dest, (void*)Source, Len); }
-
-    template<typename T>
-    ALWAYSINLINE int Compare(const T* Source, const T* Other, size_t Len) { return memcmp((void*)Source, (void*)Other, Len); }
-
-    template<typename T>
-    ALWAYSINLINE void* Zero(const T* Source, size_t Len) { return Memset(Source, 0, Len); }
-
-    template<typename T>
-    ALWAYSINLINE T* Duplicate(const T* Source, size_t Len)
-    {
-        T* Ret = (T*)malloc(Len);
-
-        Memcpy(Source, Ret, Len);
-
-        return Ret;
+    ALWAYSINLINE T* Copy(const T* From, T* Into, size_t Len) 
+    { 
+        return (T*)memcpy((void*)Into, (void*)From, Len); 
     }
 
     template<typename T>
-    ALWAYSINLINE T* Realloc(T* Source, size_t NewLen) { return (T*)realloc((void*)Source, NewLen); }
+    ALWAYSINLINE int Compare(const T* Left, const T* Right, size_t Len) 
+    { 
+        return memcmp((void*)Left, (void*)Right, Len); 
+    }
 
     template<typename T>
-    ALWAYSINLINE T* Alloc(size_t Len) { return (T*)malloc(Len); }
+    ALWAYSINLINE T* Zero(const T* Memory, size_t Len) 
+    {
+        return (T*)memset((void*)Memory, 0, Len); 
+    }
 
     template<typename T>
-    ALWAYSINLINE void Free(T* Data) { free((void*)Data); }
+    ALWAYSINLINE T* Realloc(T* Data, size_t NewLen) 
+    { 
+        return (T*)realloc((void*)Data, NewLen); 
+    }
+
+    template<typename T>
+    ALWAYSINLINE T* Alloc(size_t Len) 
+    { 
+        return (T*)malloc(Len); 
+    }
+
+    template<typename T>
+    ALWAYSINLINE void Free(T* Data) 
+    { 
+        free((void*)Data); 
+    }
+
+    template<typename T>
+    ALWAYSINLINE T* Duplicate(const T* Data, size_t Len)
+    {
+        T* Ret = Alloc<T>(Len);
+
+        Memcpy(Data, Ret, Len);
+
+        return Ret;
+    }
 }
 
 }

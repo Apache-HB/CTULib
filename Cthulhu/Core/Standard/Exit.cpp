@@ -12,3 +12,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+#include "Exit.h"
+
+using Cthulhu::U16;
+
+namespace 
+{
+
+void ExitStub(U16){}
+
+}
+
+Cthulhu::Lambda<void(U16)> Cthulhu::Standard::ExitCallback = ExitStub;
+
+void Cthulhu::Standard::OnExit(Cthulhu::Lambda<void(U16)> Function)
+{
+    ExitCallback = Function;
+}
+
+void Cthulhu::Standard::Exit(U16 Code)
+{
+    ExitCallback(Code);
+    //exit?
+}
