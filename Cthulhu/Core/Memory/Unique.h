@@ -25,7 +25,7 @@ namespace Cthulhu
 template<typename T, typename TDeleter = Deleter<T>>
 struct Unique
 {
-    Unique(T* Input = nullptr)
+    Unique(T* Input)
         : Raw(Input)
     {}
 

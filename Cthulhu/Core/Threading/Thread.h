@@ -29,10 +29,10 @@ struct Thread
     template<typename T, typename... TArgs>
     Thread(Lambda<T(TArgs...)> Start)
     {
-        InternalThread = std::thread(Start);
+        InternalThread = new std::thread(Start);
     }
 
-    ~Thread();
+    ~Thread() { delete InternalThread; }
 
     U64 ID() const;
 
@@ -41,7 +41,7 @@ struct Thread
     bool Joinable() const;
 
 private:
-    std::thread InternalThread;
+    std::thread* InternalThread;
 };
 
 }

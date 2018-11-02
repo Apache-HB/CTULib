@@ -17,15 +17,15 @@
 
 void Cthulhu::Thread::Detatch()
 {
-    InternalThread.detach();
+    InternalThread->detach();
 }
 
 void Cthulhu::Thread::Join()
 {
-    InternalThread.join();
+    InternalThread->join();
 }
 
 bool Cthulhu::Thread::Joinable() const
 {
-    return InternalThread.joinable();
+    return InternalThread->joinable();
 }
