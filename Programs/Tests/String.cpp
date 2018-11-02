@@ -26,11 +26,5 @@ int main()
 {
     setbuf(stdout, NULL);
 
-    JSON::Object Root(Map<String, JSON::Object>{{ "name", true }});
-
-    String Ret = JSON::Dump(Root);
-
-    //printf("%s\n", *Ret);
-
     return 0;
 }

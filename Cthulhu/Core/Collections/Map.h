@@ -13,82 +13,39 @@
  *  limitations under the License.
  */
 
-#if 0
-
-#include <initializer_list>
 #include "Array.h"
-#include "Pair.h"
 #include "Meta/Aliases.h"
+#include "Meta/Macros.h"
 
 #pragma once
 
 namespace Cthulhu
 {
 
-const U64 MersenePrime = 8191;
+const U32 MersenePrime = 8191;
 
-namespace Private
-{
-
-template<typename TKey, typename TVal>
-struct MapNode
-{
-    TKey Key;
-    TVal Value;
-    MapNode* Next;
-
-    MapNode(TKey InKey, TVal Val) 
-        : Key(InKey)
-        , Value(Val)
-        , Next(nullptr)
-    {}
-
-    TVal& operator=(const Pair<TKey, TVal> Item)
-    {
-        if(Key == Item.First)
-        {
-            Value = Item.Second;
-            return Value;
-        }
-        else if(!!Next)
-        {
-            return Next = Item;
-        }
-        else
-        {
-            Next = new MapNode(Item.First, Item.Second);
-            return Next->Value;
-        }
-    }
-
-    operator TVal() { return Value; }
-};
-
-} //Private
-
+template<typename, typename> struct MapNode;
 
 template<typename TKey, typename TVal>
 struct Map
 {
-    using Node = Private::MapNode<TKey, TVal>;
+    using Node = MapNode<TKey, TVal>;
 
     Map()
-        : Table(Array<Node*>(MersenePrime, true))
-    {}
-
-    Map(std::initializer_list<Pair<TKey, TVal>> InitList)
-        : Table(Array<Node*>(MersenePrime, true))
     {
-        for(auto& I : InitList)
-        {
-            Table[Hash(I.First)] = new Node(I.First, I.Second);
-        }     
+        #warning NO_IMPL()
+        NO_IMPL();
     }
 
-    Map(Array<Pair<TKey, TVal>> Start)
-        : Table(Array<Node*>(MersenePrime, true))
+    Map(const Map& Other)
     {
-        for(auto& I : Start.Iterate())
+        #warning NO_IMPL()
+        NO_IMPL();
+    }
+
+    Map(const Array<Node> Start)
+    {
+        for(const auto& I : Start.Iterate())
         {
             Table[Hash(I.First)] = new Node(I.First, I.Second);
         }
@@ -96,30 +53,26 @@ struct Map
 
     Node& operator[](const TKey& Key) const
     {
-        ASSERT(Table[Hash(Key)] != nullptr, "Trying to access a null element");
-        return *Table[Hash(Key)];
+        ASSERT(Table[Hash(Key)] != nullptr, "Trying to access an invalid key");
+        return Table[Hash(Key)];
     }
-
-    TVal Get(const TKey& Key, const TVal Or)
+    
+    TVal Get(const TKey& Key, const TVal& Or) const
     {
-        Node* Hashed = Table[Hash(Key)];
-        
-        if(Hashed == nullptr)
-        {
-            return Or;
-        }
-        
-        return Hashed->Value;
+        const U32 Hashed = Hash(Key);
+
+        return Table[Hashed] == nullptr ? Or : Table[Hashed]->Val;
     }
 
-    Array<TKey> Keys()
+    Array<TKey> Keys() const
     {
         Array<TKey> Ret;
 
-        for(auto&& I : Table.Iterate())
+        for(const auto* I : Table.Iterate())
         {
-            auto Current = I;
-            while(!!Current)
+            auto* Current = I;
+
+            while(Current != nullptr)
             {
                 Ret.Append(Current->Key);
                 Current = Current->Next;
@@ -129,17 +82,17 @@ struct Map
         return Ret;
     }
 
-    Array<TVal> Values()
+    Array<TVal> Values() const
     {
         Array<TVal> Ret;
-        
-        for(auto&& I : Table.Iterate())
-        {
-            auto Current = I;
 
-            while(!!Current)
+        for(const auto* I : Table.Iterate())
+        {
+            auto* Current = I;
+
+            while(Current != nullptr)
             {
-                Ret.Append(Current->Value);
+                Ret.Append(Current->Val);
                 Current = Current->Next;
             }
         }
@@ -147,25 +100,53 @@ struct Map
         return Ret;
     }
 
-    Array<Pair<TKey*, TVal*>> Items()
+    Array<Pair<TKey, TVal>> Items() const
     {
-        Array<Pair<TKey*, TVal*>> Ret;
+        Array<Pair<TKey, TVal>> Ret;
 
-        for(auto&& I : Table.Iterate())
+        for(const auto* I : Table.Iterate())
         {
             auto Current = I;
-            while(Current != nullptr)
-            {
-                Ret.Append(Pair<TKey*, TVal*>({ &Current->Key, &Current->Value}));
-                Current = Current->Next;
-            }
         }
-
-        return Ret;
     }
 
 private:
     Array<Node*> Table;
+};
+
+
+template<typename TKey, typename TVal>
+struct MapNode
+{
+    TKey Key;
+    TVal Val;
+    MapNode* Next;
+
+    MapNode(TKey InKey, TVal InVal)
+        : Key(InKey)
+        , Val(InVal)
+        , Next(nullptr)
+    {}
+
+    TVal& operator=(const Pair<TKey, TVal> Item)
+    {
+        if(Key == Item.First)
+        {
+            Val = Item.Second;
+            return Val;
+        }
+        else if(Next != nullptr)
+        {
+            return Next = Item;
+        }
+        else
+        {
+            Next = new MapNode(Item.First, Item.Second);
+            return Next->Val;
+        }
+    }
+    
+    ALWAYSINLINE operator TVal() { return Val; }
 };
 
 template<typename T> inline U32 Hash(const T&);
@@ -180,6 +161,4 @@ template<> inline U32 Hash(const I16& Num) { return Num % MersenePrime; }
 template<> inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
 template<> inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
 
-} //Cthulhu
-
-#endif
+}

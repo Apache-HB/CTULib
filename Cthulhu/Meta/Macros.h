@@ -54,7 +54,7 @@
 #elif defined(__INTEL_COMPILER)
 #   define ALWAYSINLINE __forceinline
 #   define CC_INTEL 1
-#   define DEPRECATED(Version, Message) //TODO: how to deprecate on the intel compiler?
+#   define DEPRECATED(Version, Message) //TODO: how does one deprecate on the intel compiler?
 #else
 #   error "Unrecognised compiler"
 #endif

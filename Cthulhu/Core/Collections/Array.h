@@ -72,8 +72,14 @@ struct Array
 
     Array& operator=(const Array& Other)
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        Length = Other.Length;
+        Allocated = Other.Allocated;
+        Slack = DefaultSlack;
+
+        Real = reinterpret_cast<T*>(new Byte[Allocated * sizeof(T)]);
+        Memory::Copy<T>(Other.Real, Real, Length * sizeof(T));
+
+        return *this;
     }
 
     U64 Len() const { return Length; }
@@ -118,17 +124,17 @@ struct Array
 
     void Append(const T& Item)
     {
-        if(++Length >= Allocated)
+        if(Length >= Allocated)
         {
             Resize(Allocated + 1);
         }
 
-        Real[Length] = Item;
+        Real[Length++] = Item;
     }
 
     void Append(const Array& Other)
     {
-        if(Length + Other >= Allocated)
+        if(Length + Other.Len() >= Allocated)
         {
             Resize(Allocated + Other.Len());
         }
@@ -141,6 +147,12 @@ struct Array
         {
             Real[I + OldLen] = Other[I];
         }
+    }
+
+    T Pop() 
+    {
+        ASSERT(Length > 0, "Trying to pop a value off of an empty array");
+        return Real[--Length];
     }
 
     Array Section(U64 From, U64 To) const
@@ -202,7 +214,7 @@ struct Array
 
 private:
 
-    void Resize(const T* NewContent, U64 PtrLen)
+    void Resize(U64 PtrLen)
     {
         Allocated = PtrLen + Slack;
         Byte* Temp = reinterpret_cast<Byte*>(Real);
