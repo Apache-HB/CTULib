@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include <initializer_list>
 
 #pragma once
@@ -52,3 +54,5 @@ private:
 };
 
 } //Cthulhu
+
+#endif

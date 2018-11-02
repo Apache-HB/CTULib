@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include "Core/Collections/CthulhuString.h"
 #include "Core/Collections/Array.h"
 
@@ -68,3 +70,5 @@ private:
 }
 
 }
+
+#endif
