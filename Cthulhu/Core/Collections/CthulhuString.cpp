@@ -14,15 +14,10 @@
  */
 
 #include "Array.h"
-//Array<T> Option<T> Iterator<TC, T>
+//Array<T> Option<T> Iterator<TC, T> Memory::* 
 
 #include "Core/Math/Math.h"
 //Math::Min Math::Max
-
-#include "Core/Memory/Memory.h"
-//Memory::Copy<T> 
-
-#include "Meta/Assert.h"
 
 #include "CthulhuString.h"
 
