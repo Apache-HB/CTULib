@@ -24,24 +24,13 @@ using namespace Cthulhu;
 
 int main()
 {
-    String S = "yort";
     setbuf(stdout, NULL);
-    printf("%s\n", "Yeet");
-    char* Ret = S.Raw();
 
-    printf("%s\n", Ret);
-    printf("%s\n", *StringUtils::ToString((I64)-5342));
+    JSON::Object Root(Map<String, JSON::Object>{{ "name", true }});
 
-    Map<String, int> Yeet = {
-        { "A", 1 },
-        { "B", 2 }
-    };
+    String Ret = JSON::Dump(Root);
 
-    int I = Yeet["B"];
-
-    printf("%d\n", I);
-
-    JSON::Object Data();
+    //printf("%s\n", *Ret);
 
     return 0;
 }

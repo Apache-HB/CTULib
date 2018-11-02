@@ -21,15 +21,8 @@
 #include "CthulhuString.h"
 #include "Meta/Macros.h"
 
-using Cthulhu::Option;
-using Cthulhu::Array;
-using Cthulhu::Map;
-using Cthulhu::String;
-using Cthulhu::U32;
-using Cthulhu::I64;
-using Cthulhu::Iterator;
-using Cthulhu::Math::Min;
-using Cthulhu::Math::Max;
+using namespace Cthulhu;
+using namespace Cthulhu::Math;
 
 Cthulhu::String::String(const char* Data)
     : Real(CString::Duplicate(Data))
@@ -150,13 +143,18 @@ String& Cthulhu::String::operator<<(bool Val)
 
 void Cthulhu::String::Append(const String& Other)
 {
-    CString::Concat(Real, Other.Real);
+    char* Temp = CString::Merge(Real, Other.Real);
+
+    delete[] Real;
+    
+    Real = Temp;
 }
 
 void Cthulhu::String::Push(const String& Other)
 {
     char* Temp = CString::Merge(*Other, Real);
     delete[] Real;
+
     Real = Temp;
 }
 
@@ -325,16 +323,38 @@ String Cthulhu::String::Replace(const String& Search, const String& Substitute) 
     return Ret;
 }
 
-String Cthulhu::String::Format(const Array<String>& Args) const
+String Cthulhu::String::Format(Array<String>& Args) const
 {
-    NO_IMPL();
-    return "";
+    String Ret = Real;
+
+    auto Iter = Args.Iterate().Enumerate();
+
+    for(const auto& I : Iter)
+    {
+        String Temp = "{";
+        Temp << (I64)I.Second;
+        Temp += "}";
+        Ret = Ret.Replace(Temp, I.First);
+    }
+    
+    return Ret;
 }
 
-String Cthulhu::String::Format(const Map<String, String>& Args) const
+String Cthulhu::String::Format(Map<String, String>& Args) const
 {
-    NO_IMPL();
-    return "";
+    String Ret = Real;
+
+    auto Iter = Args.Items().Iterate();
+
+    for(const auto& I : Iter)
+    {
+        String Temp = "{";
+        Temp += I.First;
+        Temp += "}";
+        Ret = Ret.Replace(Temp, I.First);
+    }
+
+    return Ret;
 }
 
 void Cthulhu::String::Cut(U32 Amount)
@@ -432,46 +452,32 @@ char* Cthulhu::CString::Merge(const char* Left, const char* Right)
     Memory::Copy(Left, Ret, LeftLen);
     Memory::Copy(Right, Ret + LeftLen, RightLen);
 
-    Ret[TotalLen] = '\0';
+    Ret[TotalLen-1] = '\0';
 
     return Ret;
 }
 
 //cat
-char* Cthulhu::CString::Concat(char* From, const char* Into)
+char* Cthulhu::CString::Concat(const char* From, char* Into)
 {
-    const U32 FirstLen = CString::Length(From),
-                 SecondLen = CString::Length(Into),
-                 TotalLen = FirstLen + SecondLen + 1;
-    
-    char* Ret = new char[TotalLen];
+    while(*From)
+    {
+        *Into++ = *From++;
+    }
 
-    Memory::Copy(Into, Ret, FirstLen);
-    Memory::Copy(From, Ret + FirstLen + 1, SecondLen);
-
-    delete[] Into;
-
-    Into = Ret;
-
-    return Ret;
+    return Into;
 }
 
-char* Cthulhu::CString::Concat(char* From, const char* Into, U32 Limit)
+//very quicc algo
+char* Cthulhu::CString::Concat(const char* From, char* Into, U32 Limit)
 {
-    const U32 FirstLen = CString::Length(From),
-                 SecondLen = CString::Length(Into),
-                 TotalLen = Min(FirstLen + SecondLen + 1, Limit);
-    
-    char* Ret = new char[TotalLen];
+    while(*From && Limit)
+    {
+        *Into++ = *From++;
+        Limit--;
+    }
 
-    Memory::Copy(Into, Ret, FirstLen);
-    Memory::Copy(From, Ret + FirstLen + 1, SecondLen);
-
-    delete[] Into;
-
-    Into = Ret;
-
-    return Ret;
+    return Into;
 }
 
 //cmp
@@ -528,9 +534,7 @@ U32 Cthulhu::CString::Length(const char* Content)
     U32 Len = 0;
 
     while(Content[Len])
-    {
         Len++;
-    }
 
     return Len;
 }
@@ -540,13 +544,11 @@ char* Cthulhu::CString::Reverse(const char* Content)
     const U32 Len = CString::Length(Content);
 
     char* Ret = new char[Len+1];
-    
     U32 Index = 0;
 
     for(int I = Len - 1; I >= 0; I--)
-    {
         Ret[Index++] = Content[I];
-    }
+
     Ret[Index] = '\0';
 
     return Ret;

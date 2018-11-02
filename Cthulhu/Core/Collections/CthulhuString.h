@@ -80,8 +80,8 @@ struct String
     void Trim(const String& Pattern = " ");
     String Replace(const String& Search, const String& Substitute) const;
 
-    String Format(const Array<String>& Args) const;
-    String Format(const Map<String, String>& Args) const;
+    String Format(Array<String>& Args) const;
+    String Format(Map<String, String>& Args) const;
 
     //cut from front
     void Cut(U32 Amount);
@@ -112,8 +112,8 @@ namespace CString
     char* Merge(const char* Left, const char* Right);
 
     //cat
-    char* Concat(char* From, const char* Into);
-    char* Concat(char* From, const char* Into, U32 Limit);
+    char* Concat(const char* From, char* Into);
+    char* Concat(const char* From, char* Into, U32 Limit);
 
     //cmp
     int Compare(const char* Left, const char* Right);

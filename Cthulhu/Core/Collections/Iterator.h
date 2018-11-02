@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#include "Pair.h"
+
 #include "Meta/Aliases.h"
 
 #pragma once
@@ -20,9 +22,12 @@
 namespace Cthulhu
 {
 
+template<typename, typename> struct EnumeratedIterator;
+
 template<typename TContainer, typename TElement>
-struct Iterator
+class Iterator
 {
+protected:
     TContainer& Container;
     U64 Index;
 public:
@@ -66,6 +71,26 @@ public:
 
     bool operator!=(const Iterator& Other) { return Index != Other.Index; }
     bool operator==(const Iterator& Other) { return Index == Other.Index; }
+
+    EnumeratedIterator<TContainer, TElement> Enumerate() { return EnumeratedIterator<TContainer, TElement>(Container); }
+};
+
+template<typename TContainer, typename TElement>
+struct EnumeratedIterator : public Iterator<TContainer, TElement>
+{
+    using Super = Iterator<TContainer, TElement>;
+
+    EnumeratedIterator(TContainer& InContainer, U64 StartIndex = 0)
+        : Super(InContainer, StartIndex)
+    {}
+
+    EnumeratedIterator begin() const { return EnumeratedIterator<TContainer, TElement>(Super::Container); }
+    EnumeratedIterator end() const { return EnumeratedIterator<TContainer, TElement>(Super::Container, Super::Container.Len()); }
+
+
+    Pair<TElement&, U64> operator*() { return Pair<TElement&, U64>{Super::Container[Super::Index], Super::Index}; }
+
+    Pair<TElement*, U64> operator->() { return Pair<TElement*, U64>{&Super::Container[Super::Index], Super::Index}; }
 };
 
 } //Cthulhu

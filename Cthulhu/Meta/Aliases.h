@@ -56,6 +56,7 @@ using U16 = unsigned short;
  */
 using U8 = unsigned char;
 
+using Byte = U8;
 
 /**signed long long
  * 

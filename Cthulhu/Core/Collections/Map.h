@@ -83,7 +83,16 @@ struct Map
         }     
     }
 
-    Node operator[](const TKey& Key)
+    Map(Array<Pair<TKey, TVal>> Start)
+        : Table(Array<Node*>(MersenePrime, true))
+    {
+        for(auto& I : Start.Iterate())
+        {
+            Table[Hash(I.First)] = new Node(I.First, I.Second);
+        }
+    }
+
+    Node& operator[](const TKey& Key) const
     {
         ASSERT(Table[Hash(Key)] != nullptr, "Trying to access a null element");
         return *Table[Hash(Key)];
@@ -101,7 +110,7 @@ struct Map
         return Hashed->Value;
     }
 
-    Array<TKey> Keys() const
+    Array<TKey> Keys()
     {
         Array<TKey> Ret;
 
@@ -118,7 +127,7 @@ struct Map
         return Ret;
     }
 
-    Array<TVal> Values() const
+    Array<TVal> Values()
     {
         Array<TVal> Ret;
         
@@ -136,7 +145,7 @@ struct Map
         return Ret;
     }
 
-    Array<Pair<TKey, TVal>> Items() const
+    Array<Pair<TKey, TVal>> Items()
     {
         Array<Pair<TKey, TVal>> Ret;
 
@@ -145,10 +154,12 @@ struct Map
             auto Current = I;
             while(!!Current)
             {
-                Ret.Append({ Current->Key, Current->Value});
+                Ret.Append(Pair<TKey, TVal>({ Current->Key, Current->Value}));
                 Current = Current->Next;
             }
         }
+
+        return Ret;
     }
 
 private:

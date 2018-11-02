@@ -17,25 +17,45 @@
 #include "Core/Collections/Array.h"
 #include "Core/Collections/Map.h"
 
+#include "Core/Types/Types.h"
+
 #pragma once
 
 namespace Cthulhu::JSON
 {
 
+enum class Error : U8
+{
+    Depth = 0,
+    Parse = 1
+};
+
 enum class Type : U8
 {
-    Object,
-    Array,
-    Bool,
-    Null,
-    Int,
-    Float,
-    String
+    Null = 0,
+    Object = 1,
+    Array = 2,
+    Bool = 3,
+    Int = 4,
+    Float = 5,
+    String = 6
 };
 
 struct Object
 {
-    Object();
+    Object(){};
+
+    Object(const Object& Other);
+
+    Object(I64);
+    Object(bool);
+    Object(double);
+    Object(String);
+    Object(Array<Object>);
+    Object(Map<String, Object>);
+    Object(Type ObjectType, String RawValue);
+    Object(TNull);
+
     ~Object();
 
     Object& operator=(const Object& Other);
@@ -46,9 +66,24 @@ struct Object
     Object& operator=(String);
     Object& operator=(Array<Object>);
     Object& operator=(Map<String, Object>);
+    Object& operator=(TNull);
 
     Object& operator[](String& Name);
     Object& operator[](I64 Index);
+
+    Object& operator()(String& Name);
+    Object& operator()(I64 Name);
+
+    String ToString(U32 Indent) const;
+
+    Type GetType() const { return ContentType; }
+
+    operator String() const;
+    operator I64() const;
+    operator double() const;
+    operator bool() const;
+    operator Map<String, Object>() const;
+    operator Array<Object>() const;
 
 private:
 
@@ -63,6 +98,11 @@ private:
         Map<String, Object> SubObjects;
         Array<Object> ArrayObjects;
     };
+
+    String Raw;
 };
+
+Object Load(String Content, U32 MaxDepth = 0);
+String Dump(Object& Data, U32 Indent = 0);
 
 }

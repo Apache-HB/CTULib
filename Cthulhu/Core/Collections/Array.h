@@ -33,7 +33,7 @@ struct Array
         : Length(32)
         , Allocated(32)
         , Slack(32)
-        , Real(new T[Slack])
+        , Real(new T[32])
     {}
 
     //init an array with a size
@@ -108,6 +108,21 @@ struct Array
     bool ValidIndex(U64 Index) const { return 0 <= Index && Index <= Length; }
 
     Option<T> At(U64 Index) const { return (ValidIndex(Index)) ? Some<T>(Real[Index]) : None<T>(); }
+
+    Array& operator=(const Array& Other)
+    {
+        Slack = 32;
+        Length = Other.Length;
+        Allocated = Other.Length + Slack;
+        Real = new T[Allocated];
+        
+        for(U64 I = 0; I < Length; I++)
+        {
+            Real[I] = Other[I];
+        }
+        
+        return *this;
+    }
 
     T& operator[](U64 Index) const
     {
@@ -265,12 +280,11 @@ private:
         T* Temp = Real;
         Real = new T[Allocated];
         
-        for(U64 I = 0; I < Length; I++)
-        {
-            Real[I] = Temp[I];
-        }
+        Memory::Move<T>(Temp, Real, (Length - 1) * sizeof(T));
         
-        delete[] Temp;
+        //delete[] reinterpret_cast<Byte*>(Temp);
+        //stop destructors from firing
+        //TODO: should probably free here to prevent memory leaks
     }
 
     T* Real;

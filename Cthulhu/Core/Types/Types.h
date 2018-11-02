@@ -13,27 +13,11 @@
  *  limitations under the License.
  */
 
-//a bunch of hash functions for different classes
-
-#include "Core/Collections/Map.h"
-
-#include "Core/Collections/CthulhuString.h"
-
 #pragma once
 
 namespace Cthulhu
 {
 
-template<> inline U32 Hash<String>(const String& Item)
-{
-    U32 Ret = 0;
+using TNull = decltype(nullptr);
 
-    for(U32 I = 0; I < Item.Len(); I++)
-    {
-        Ret ^= Item[I];
-    }
-
-    return Ret % MersenePrime;
 }
-
-} // Cthulhu

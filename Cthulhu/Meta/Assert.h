@@ -154,9 +154,11 @@
                                        }
 
 #   define NO_IMPL()                    { printf("CALLED NO IMPL |%s|%d|\n", __FILE__, __LINE__); exit(25); }
+#   define SEGFAULT()                      { printf("Crash reached [%s]:%d\n", __FILE__, __LINE__); char* __crasher = nullptr; if(*__crasher){} }
 #else
 #   define ASSERT(Expr, Message)        //all expands to nothing
 #   define ASSERT_NO_ENTRY(Message)     //Expands to nothing without debug
 #   define ASSERT_NO_REENTRY(Message)   //also expands to nothing
 #   define NO_IMPL()                    //still expands to nothing
+#   define SEGFAULT()
 #endif
