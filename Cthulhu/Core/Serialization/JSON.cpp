@@ -79,9 +79,7 @@ Cthulhu::JSON::Object::Object(TNull)
 Object& Cthulhu::JSON::Object::operator=(const Object& Other)
 {
     ContentType = Other.ContentType;
-    
-    printf("%hhu\n", Other.ContentType);
-    
+        
     switch(Other.ContentType)
     {
         case Type::Object:
@@ -227,19 +225,21 @@ namespace
 String DumpMap(Map<String, Object>&, U32, U32);
 String DumpArray(Array<Object>&, U32, U32);
 
-String DumpObject(Object& Data, U32 Indent, U32 Initial)
+String DumpObject(const Object& Data, U32 Indent, U32 Initial)
 {
     switch(Data.GetType())
     {
         case Type::Object: {
             Map<String, Object> Temp = Data;
-            return DumpMap(Temp, Indent, Initial);
+            String Ret = DumpMap(Temp, Indent + Initial, Initial);
+            return Ret;
         }
 
         case Type::Array: {
             Array<Object> Temp = Data;
             return DumpArray(Temp, Indent, Initial);
         }
+        
         case Type::Bool: return StringUtils::ToString((bool)Data);
         case Type::Null: return "null";
         case Type::Int: return StringUtils::ToString((I64)Data);
@@ -251,7 +251,9 @@ String DumpObject(Object& Data, U32 Indent, U32 Initial)
             return String("\"{0}\"").Format(Ret);
         }
 
-        default: return "";
+        default: 
+            ASSERT_NO_ENTRY("Object had no type");
+            return "";
     }
 }
 
@@ -259,24 +261,36 @@ String DumpMap(Map<String, Object>& Data, U32 Indent, U32 Initial)
 {
     String Ret = "{\n";
 
-    for(auto& Item : Data.Items().Iterate())
+    printf("Yeet\n");
+
+    auto Iter = Data.Items().Iterate();
+
+    printf("Yort\n");
+
+    for(const auto& Item : Iter)
     {
-        Ret += StringUtils::Padding(" ", Indent);
+        printf("Yet\n");
         
-        Ret += "\""; 
-        Ret += Item.First; 
-        Ret += "\"";
+        Array<String> Args;
         
-        Ret += ": ";
-        Ret += DumpObject(Item.Second, Indent + Initial, Initial);
-        Ret += ",\n";
+        Args.Append(StringUtils::Padding(" ", Indent));
+        Args.Append(*Item.First);
+        Args.Append(DumpObject(Item.Second, Indent + Initial, Initial));
+
+        printf("Bob\n");
+
+        Ret += String("{0}\"{1}\": {2},\n").Format(Args);
     }
+
+    printf("Yot\n");
 
     Ret.Drop(2);
 
     Ret += "\n";
     Ret += StringUtils::Padding(" ", Indent);
     Ret += "}";
+
+    printf("Yort\n");
 
     return Ret;
 }
