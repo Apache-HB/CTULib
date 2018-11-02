@@ -72,7 +72,7 @@ template<typename TORes, typename TOErr>
 Result<TORes, TOErr> Fail(TOErr Error)    
 {
     return Result<TORes, TOErr>(Error, '\0');
-    //                               ^^^^
+    //                                 ^^^^
     //the char there is dead and is only needed to distinguish constructors
     //when TRes is the same type as TErr
 }

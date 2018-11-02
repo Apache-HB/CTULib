@@ -13,7 +13,6 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
 #include "Core/Types/Lambda.h"
 
 #pragma once

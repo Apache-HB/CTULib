@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include <initializer_list>
 #include "Array.h"
 #include "Pair.h"
@@ -179,3 +181,5 @@ template<> inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
 template<> inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
 
 } //Cthulhu
+
+#endif

@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include "Core/Collections/Result.h"
 #include "File.h"
 #include "Core/Collections/CthulhuString.h"
@@ -51,3 +53,5 @@ Result<TextFile, IOError> TextOpen(const String& Path, const Mode FileMode);
 namespace FS = FileSystem;
 
 }
+
+#endif

@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include "Hashes.h"
 #include "JSON.h"
 
@@ -328,3 +330,5 @@ String Cthulhu::JSON::Object::ToString(U32 Indent) const
 {
     
 }
+
+#endif

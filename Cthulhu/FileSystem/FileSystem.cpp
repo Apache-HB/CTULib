@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#if 0
+
 #include "FileSystem.h"
 
 using Cthulhu::Result;
@@ -29,3 +31,5 @@ Result<TextFile, IOError> TextOpen(const String& Path, const Mode FileMode)
 {
     return Fail<TextFile, IOError>(IOError::NotFound);
 }
+
+#endif
