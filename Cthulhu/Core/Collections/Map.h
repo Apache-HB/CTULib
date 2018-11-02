@@ -145,16 +145,16 @@ struct Map
         return Ret;
     }
 
-    Array<Pair<TKey, TVal>> Items()
+    Array<Pair<TKey*, TVal*>> Items()
     {
-        Array<Pair<TKey, TVal>> Ret;
+        Array<Pair<TKey*, TVal*>> Ret;
 
         for(auto&& I : Table.Iterate())
         {
             auto Current = I;
-            while(!!Current)
+            while(Current != nullptr)
             {
-                Ret.Append(Pair<TKey, TVal>({ Current->Key, Current->Value}));
+                Ret.Append(Pair<TKey*, TVal*>({ &Current->Key, &Current->Value}));
                 Current = Current->Next;
             }
         }

@@ -340,7 +340,7 @@ String Cthulhu::String::Format(Array<String>& Args) const
     return Ret;
 }
 
-String Cthulhu::String::Format(Map<String, String>& Args) const
+String Cthulhu::String::Format(const Map<String, String>& Args) const
 {
     String Ret = Real;
 
@@ -349,9 +349,9 @@ String Cthulhu::String::Format(Map<String, String>& Args) const
     for(const auto& I : Iter)
     {
         String Temp = "{";
-        Temp += I.First;
+        Temp += *I.First;
         Temp += "}";
-        Ret = Ret.Replace(Temp, I.First);
+        Ret = Ret.Replace(Temp, *I.Second);
     }
 
     return Ret;

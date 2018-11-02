@@ -13,8 +13,6 @@
  *  limitations under the License.
  */
 
-#include "Core/Memory/Unique.h"
-
 #include "Hashes.h"
 #include "JSON.h"
 
@@ -224,18 +222,16 @@ Object Cthulhu::JSON::Load(String Content, U32 MaxDepth)
 namespace
 {
 
-using ObjectMap = Map<String, Object>;
-
-String DumpMap(Unique<ObjectMap>, U32, U32);
+String DumpMap(Map<String, Object>&, U32, U32);
 String DumpArray(Array<Object>&, U32, U32);
 
-String DumpObject(Object& Data, U32 Indent, U32 Initial)
+String DumpObject(const Object& Data, U32 Indent, U32 Initial)
 {
     switch(Data.GetType())
     {
         case Type::Object: {
-            Unique<ObjectMap> Temp(new ObjectMap(Data));
-            String Ret = DumpMap(Temp, Indent, Initial);
+            Map<String, Object> Temp = Data;
+            String Ret = DumpMap(Temp, Indent + Initial, Initial);
             return Ret;
         }
 
@@ -261,20 +257,25 @@ String DumpObject(Object& Data, U32 Indent, U32 Initial)
     }
 }
 
-String DumpMap(Unique<ObjectMap> Data, U32 Indent, U32 Initial)
+String DumpMap(Map<String, Object>& Data, U32 Indent, U32 Initial)
 {
     String Ret = "{\n";
 
     printf("Yeet\n");
 
-    for(auto& Item : Data->Items().Iterate())
+    auto Iter = Data.Items().Iterate();
+
+    printf("Yort\n");
+
+    for(const auto& Item : Iter)
     {
         printf("Yet\n");
-        Array<String> Args = {
-            StringUtils::Padding(" ", Indent),
-            Item.First,
-            DumpObject(Item.Second, Indent + Initial, Initial)
-        };
+        
+        Array<String> Args;
+        
+        Args.Append(StringUtils::Padding(" ", Indent));
+        Args.Append(*Item.First);
+        Args.Append(DumpObject(Item.Second, Indent + Initial, Initial));
 
         printf("Bob\n");
 
