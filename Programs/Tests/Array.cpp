@@ -46,8 +46,10 @@ int main()
 
     Array Temp = Test + Another;
 
-    printf("%llu", Temp.Len());
+    printf("yeet|%llu|\n", Temp.Len());
+    printf("|%llu|%llu|%llu|%llu|\n", Temp[0], Temp[1], Temp[2], Temp[3]);
 
-    //TEST_FAIL: Test failing
+    //TEST_FAIL: double free from `Array Temp = Test + Another` going out of 
+    //scope and calling the destructor
     ASSERT_TEST(Temp.Len() == 3);
 }
