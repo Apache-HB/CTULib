@@ -1,56 +1,74 @@
-NAME = cthulhu.o
+#add a flag to make quiet
+MAKEFLAGS += --silent
+
+#the name of the output library
+NAME = cthulhu
+
+#the C++ standard to use, should nearly always be C++17
 STD = -std=c++17
 
-#all C++ code sources
-DIRS = $(shell find ./Source -name '*.cpp')
+#the name of the source directory for all code
+SOURCE_DIR = Cthulhu
 
-PATHS = -I./Source
+#all C++ source files to compile
+DIRS = $(shell find ./$(SOURCE_DIR) -name '*.cpp')
 
-#if you get an error that looks like
-#make: clang++: No such file or directory
-#change this to your compiler of choice, (e.g g++)
-CC = clang++
+#extra include paths
+PATHS = -I./$(SOURCE_DIR)
 
-FRONT = $(CC) $(STD) $(DIRS) $(PATHS) -c
+#find out the compiler, use a shell script because its way simpler
+CC = $(shell sh Build/Scripts/GetCC.sh)
 
-TESTS = $(shell find ./Programs/Tests -name '*.cpp')
+BUILD_DIR = Build
 
-LIB_NAME = cthulhu.a
-
-BUILD_FILE = Build
-
-main:
-	#compile everything to object files
-	#merge object files into .a archive
-	$(FRONT) && make move
-	#remove object files
-
+#use for debug builds, enables asserts and better error checking
 DEBUG_FLAG = -DCTU_DEBUG
 
-debug:
-	$(FRONT) $(DEBUG_FLAG) -g3 -fsanitize=address -fno-omit-frame-pointer -g && make move
+FLAGS = -fno-exceptions -fno-rtti -arch i386
+
+#-fno-builtin -nostdinc -nostdlib
+
+all:
+	echo 'Building standard build' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c && \
+	make finalize
+
+#enable address sanatizer
+#disable all obfusacting optimizations to make debugging easier
+#generate all debug code
+DEBUG_ARGS = -fsanitize=address -g3 -g 
+
+MOVE = mv *.o $(BUILD_DIR)/Binaries/Objects
+
+debug: 
+	echo 'Building debug build' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c $(DEBUG_ARGS) $(DEBUG_FLAG) && \
+	make finalize
 
 release:
-	$(FRONT) -O3 && make move
+	echo 'Building release build' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c $(RELEASE_ARGS) && \
+	make finalize
 
-tests:
-	#create the binary, compile and run every test, then clean the last test
-	make debug && \
-	for test in $(TESTS); do $(CC) $(STD) $(PATHS) -fsanitize=address -fno-omit-frame-pointer -I./Programs/Tests $(BUILD_FILE)/$(LIB_NAME) $$test -o Test && ./Test; done; rm -rf Test
+STANDALONE_ARGS = -DCTU_STANDALONE
+
+standalone:
+	echo 'Building standalone build' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c $(STANDALONE_ARGS) && \
+	make finalize
 
 clean:
-	rm -rf ./Build
+	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
+	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-setup:
-	if [ ! -d "./$(BUILD_FILE)" ]; then mkdir $(BUILD_FILE); fi
+tests:
+	echo 'Running tests' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(DEBUG_ARGS) \
+	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
+	Programs/Tests/StringPerf.cpp -o $(NAME).o
 
-move:
-	make setup && ar cr $(BUILD_FILE)/$(LIB_NAME) *.o && rm -rf *.o
+finalize:
+	echo 'Moving Files to library' && \
+	sh Build/Scripts/MakeLibrary.sh
 
-SUMMON_NAME = summon
-SUMMON_PATH = Summon
-SUMMON_DIRS = $(shell find ./Programs/Summon -name '*.cpp')
-
-summon:
-	if [ ! -d "./$(BUILD_FILE)/$(SUMMON_PATH)" ]; then mkdir $(BUILD_FILE)/$(SUMMON_PATH); fi && \
-	make release && $(CC) $(STD) $(PATHS) -I./Programs/Summon $(BUILD_FILE)/$(LIB_NAME) $(SUMMON_DIRS) -o $(BUILD_FILE)/$(SUMMON_PATH)/$(SUMMON_NAME)
+.PHONY: all
