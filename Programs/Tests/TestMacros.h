@@ -17,4 +17,4 @@
 
 #pragma once
 
-#define ASSERT_TEST(Expr) if(!(Expr)) { printf("Test failed at [%s][%d]", __FILE__, __LINE__); }
+#define ASSERT_TEST(Expr) if(!(Expr)) { printf("Test failed at [%s][%d]\n", __FILE__, __LINE__); }

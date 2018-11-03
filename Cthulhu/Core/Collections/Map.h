@@ -51,30 +51,58 @@ struct Map
         }
     }
 
-    Node& operator[](const TKey& Key) const
+    void Add(const TKey& Key, const TVal& Value)
     {
-        ASSERT(Table[Hash(Key)] != nullptr, "Trying to access an invalid key");
-        return Table[Hash(Key)];
+        Node* ToAdd = new Node(Key, Value);
+
+        U32 Hashed = Hash(Key);
+
+        if(Table[Hashed] == nullptr)
+        {
+            Table[Hashed] = ToAdd;
+        }
+        else
+        {
+            Node* Current = Table[Hashed];
+            
+            while(Current != nullptr) 
+                Current = Current->Next;
+            
+            Current->Next = ToAdd;
+        }
+    }
+
+    TVal& operator[](const TKey& Key)
+    {
+        Node* Item = Retrive(Key);
+        
+        if(Item == nullptr)
+        {
+            TVal NewVal;
+            Add(Key, NewVal);
+        }
+
+        return Retrive(Key)->Val;
     }
     
-    TVal Get(const TKey& Key, const TVal& Or) const
+    TVal Get(const TKey& Key, const TVal& Or)
     {
         const U32 Hashed = Hash(Key);
 
         return Table[Hashed] == nullptr ? Or : Table[Hashed]->Val;
     }
 
-    Array<TKey> Keys() const
+    Array<TKey> Keys()
     {
         Array<TKey> Ret;
 
-        for(const auto* I : Table.Iterate())
+        for(Node* I : Table.Iterate())
         {
-            auto* Current = I;
+            Node* Current = I;
 
             while(Current != nullptr)
             {
-                Ret.Append(Current->Key);
+                Ret.Append(TKey(Current->Key));
                 Current = Current->Next;
             }
         }
@@ -82,13 +110,13 @@ struct Map
         return Ret;
     }
 
-    Array<TVal> Values() const
+    Array<TVal> Values()
     {
         Array<TVal> Ret;
 
-        for(const auto* I : Table.Iterate())
+        for(Node* I : Table.Iterate())
         {
-            auto* Current = I;
+            Node* Current = I;
 
             while(Current != nullptr)
             {
@@ -100,17 +128,44 @@ struct Map
         return Ret;
     }
 
-    Array<Pair<TKey, TVal>> Items() const
+    Array<Pair<TKey, TVal>> Items()
     {
         Array<Pair<TKey, TVal>> Ret;
 
-        for(const auto* I : Table.Iterate())
+        for(Node* I : Table.Iterate())
         {
-            auto Current = I;
+            Node* Current = I;
+            while(Current != nullptr)
+            {
+                Ret.Append(Pair<TKey, TVal>{ Current->Key, Current->Val });
+                Current = Current->Next;
+            }
         }
+
+        return Ret;
     }
 
 private:
+
+    Node* Retrive(const TKey& Key) const
+    {
+        Node* It = Table[Hash(Key)];
+
+        while(It != nullptr)
+        {
+            if(It->Key == Key)
+            {
+                return It;
+            }
+            else
+            {
+                It = It->Next;
+            }
+        }
+
+        return nullptr;
+    }
+
     Array<Node*> Table;
 };
 

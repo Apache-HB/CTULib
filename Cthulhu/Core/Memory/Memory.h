@@ -84,7 +84,17 @@ namespace Memory
     {
         T* Ret = Alloc<T>(Len);
 
-        Memcpy(Data, Ret, Len);
+        Copy(Data, Ret, Len);
+
+        return Ret;
+    }
+
+    template<typename T>
+    ALWAYSINLINE T* NewDuplicate(const T* Data, U64 Len)
+    {
+        T* Ret = (T*)new Byte[Len];
+
+        Copy(Data, Ret, Len);
 
         return Ret;
     }

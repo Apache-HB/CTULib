@@ -44,12 +44,24 @@ int main()
 
     ASSERT_TEST(Another[2] == 95ULL);
 
-    Array Temp = Test + Another;
+    Array<U64> First;
+    First.Append(5ULL);
+    First.Append(10ULL);
 
-    printf("yeet|%llu|\n", Temp.Len());
-    printf("|%llu|%llu|%llu|%llu|\n", Temp[0], Temp[1], Temp[2], Temp[3]);
+    Array<U64> Second;
+    Second.Append(15ULL);
+    Second.Append(20ULL);
 
-    //TEST_FAIL: double free from `Array Temp = Test + Another` going out of 
-    //scope and calling the destructor
-    ASSERT_TEST(Temp.Len() == 3);
+    Array<U64> Both = First + Second;
+
+    ASSERT_TEST(Both.Len() == 4);
+
+    ASSERT_TEST(Both[0] == 5);
+    ASSERT_TEST(Both[1] == 10);
+    ASSERT_TEST(Both[2] == 15);
+    ASSERT_TEST(Both[3] == 20);
+
+    Both.Pop();
+
+    ASSERT_TEST(Both.Len() == 3);
 }

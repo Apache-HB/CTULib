@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#include <vector>
+
 #include "Option.h"
 //Option<T>
 
@@ -35,60 +37,48 @@ template<typename T>
 struct Array
 {
     Array()
-        : Real(reinterpret_cast<T*>(new Byte[DefaultSlack * sizeof(T)]))
-        , Length(0)
-        , Allocated(DefaultSlack)
-        , Slack(DefaultSlack)
-    {}
-
-    Array(T* Data, U64 DataLen)
-        : Real(Data)
-        , Length(DataLen)
-        , Allocated(DataLen)
-        , Slack(DefaultSlack)
-    {}
-
-    Array(U64 StartLength, bool Zero = false)
-        : Real(reinterpret_cast<T*>(new Byte[StartLength * sizeof(T)]))
-        , Length(StartLength)
-        , Allocated(StartLength)
-        , Slack(DefaultSlack)
     {
-        if(Zero)    
-            Memory::Zero<T>(Real, StartLength * sizeof(T));
+        Construct((T*)new Byte[DefaultSlack * sizeof(T)], 0);
     }
 
-    Array(U64 Times, Lambda<T(U64)> Block)
-        : Real(reinterpret_cast<T*>(new Byte[Times * sizeof(T)]))
-        , Length(Times)
-        , Allocated(Times)
-        , Slack(DefaultSlack)
+    Array(const Array& Other)
     {
+        Construct(Memory::NewDuplicate(Other.Real, Other.Allocated * sizeof(T)), Other.Length);
+    }
+
+    Array(const T* Data, U64 PtrLen)
+    {
+        Construct(Data, PtrLen * sizeof(T));
+    }
+
+    Array(U64 Times, Lambda<T(U64)> Generator)
+    {
+        Slack = DefaultSlack;
+        Allocated = Times + DefaultSlack;
+        Length = Times;
+
+        Real = (T*)new Byte[Allocated * sizeof(T)];
+        
         for(U64 I = 0; I < Times; I++)
         {
-            Real[I] = Block(I);
+            Real[I] = Generator(I);
         }
+        
     }
 
     Array& operator=(const Array& Other)
     {
-        Length = Other.Length;
-        Allocated = Other.Allocated;
-        Slack = DefaultSlack;
-
-        Real = reinterpret_cast<T*>(new Byte[Allocated * sizeof(T)]);
-        Memory::Copy<T>(Other.Real, Real, Length * sizeof(T));
-
-        return *this;
+        #warning NO_IMPL()
+        NO_IMPL();
     }
 
-    U64 Len() const { return Length; }
+    ALWAYSINLINE U64 Len() const { return Length; }
 
     bool ValidIndex(U64 Index) const { return Index <= Length; }
 
     Option<T> At(U64 Index) const { return ValidIndex(Index) ? Some(Real[Index]) : None<T>(); }
 
-    T& operator[](U64 Index) const
+    ALWAYSINLINE T& operator[](U64 Index) const
     {
         ASSERT(ValidIndex(Index), "taking item from invalid index in operator[]");
         return Real[Index];
@@ -126,7 +116,7 @@ struct Array
     {
         if(Length >= Allocated)
         {
-            Resize(Allocated + 1);
+            Expand(1);
         }
 
         Real[Length++] = Item;
@@ -136,7 +126,7 @@ struct Array
     {
         if(Length + Other.Len() >= Allocated)
         {
-            Resize(Allocated + Other.Len());
+            Expand(Other.Len());
         }
 
         const U64 OldLen = Length;
@@ -149,7 +139,7 @@ struct Array
         }
     }
 
-    T Pop() 
+    ALWAYSINLINE T Pop() 
     {
         ASSERT(Length > 0, "Trying to pop a value off of an empty array");
         return Real[--Length];
@@ -172,7 +162,7 @@ struct Array
         return None<U64>();
     }
 
-    bool Has(const T& Item) const
+    ALWAYSINLINE bool Has(const T& Item) const
     {
         return Find(Item).Valid();
     }
@@ -210,26 +200,33 @@ struct Array
         NO_IMPL();
     }
 
-    ~Array() { delete[] Real; }
+    ~Array() 
+    { 
+        delete[] Real; 
+    }
 
 private:
 
-    void Resize(U64 PtrLen)
+    void Construct(T* Data, U64 InitialLen, U64 ExtraSlack = DefaultSlack)
     {
-        Allocated = PtrLen + Slack;
-        Byte* Temp = reinterpret_cast<Byte*>(Real);
+        Real = Data;
+        Length = InitialLen;
+        Allocated = InitialLen;
+        Slack = ExtraSlack;
+    }
 
-        //reinterpret cast it to avoid calling constructors and stuff
-        Byte* NewReal = new Byte[Allocated * sizeof(T)];
+    void Expand(U64 ExtraLen)
+    {
+        Allocated += ExtraLen + Slack;
+        T* Temp = Real;
+        Real = (T*)new Byte[Allocated * sizeof(T)];
         
-        for(U64 I = 0; I < Length * sizeof(T); I++)
+        for(U64 I = 0; I < Length; I++)
         {
-            NewReal[I] = Temp[I];
+            Real[I] = Temp[I];
         }
         
         delete[] Temp;
-
-        Real = reinterpret_cast<T*>(NewReal);
     }
 
     T* Real;
