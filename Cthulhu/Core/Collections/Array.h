@@ -46,9 +46,14 @@ struct Array
         Construct(Memory::NewDuplicate(Other.Real, Other.Allocated * sizeof(T)), Other.Length);
     }
 
-    Array(const T* Data, U64 PtrLen)
+    Array(T* Data, U64 PtrLen)
     {
         Construct(Data, PtrLen * sizeof(T));
+    }
+
+    Array(std::initializer_list<T> InitList)
+    {
+        Construct(InitList.begin(), InitList.size());
     }
 
     Array(U64 Times, Lambda<T(U64)> Generator)
@@ -119,7 +124,7 @@ struct Array
             Expand(1);
         }
 
-        Real[Length++] = Item;
+        Memory::Copy<T>(&Item, &Real[Length++], sizeof(T));
     }
 
     void Append(const Array& Other)
@@ -202,7 +207,7 @@ struct Array
 
     ~Array() 
     { 
-        delete[] Real; 
+        delete[] reinterpret_cast<Byte*>(Real); 
     }
 
 private:
@@ -221,12 +226,9 @@ private:
         T* Temp = Real;
         Real = (T*)new Byte[Allocated * sizeof(T)];
         
-        for(U64 I = 0; I < Length; I++)
-        {
-            Real[I] = Temp[I];
-        }
+        Memory::Copy<T>(Temp, Real, Length);
         
-        delete[] Temp;
+        delete[] (Byte*)Temp;
     }
 
     T* Real;

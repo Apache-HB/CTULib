@@ -393,13 +393,11 @@ bool Cthulhu::String::Has(const String& Pattern) const
 
 Iterator<Array<char>, char> Cthulhu::String::Iterate() const
 {
-    #warning NO_IMPL
-    NO_IMPL();
-    //char* Str = CString::Duplicate(Real);
+    char* Str = CString::Duplicate(Real);
 
-    //Array<char> Ret(Str, Len());
+    Array<char> Ret(Str, Len());
 
-    //return Iterator<Array<char>, char>(Ret);
+    return Iterator<Array<char>, char>(Ret);
 }
 
 

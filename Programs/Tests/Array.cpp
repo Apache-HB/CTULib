@@ -16,6 +16,7 @@
 #include "TestMacros.h"
 
 #include <Core/Collections/Array.h>
+#include <Core/Collections/CthulhuString.h>
 
 using namespace Cthulhu;
 
@@ -64,4 +65,31 @@ int main()
     Both.Pop();
 
     ASSERT_TEST(Both.Len() == 3);
+
+    Array<String> StrFirst;
+
+    //FIXME: this now triggers heap-use-after-free
+    StrFirst.Append("Name");
+    StrFirst.Append("is");
+
+    Array<String> StrSecond;
+
+    StrSecond.Append("Jeff");
+    StrSecond.Append("Funnymeme");
+
+    printf("[%x]\n", *StrFirst[0]);
+
+    String SFF = StrFirst[0];
+    String SSF = StrSecond[0];
+
+    ASSERT_TEST(SFF == "Name");
+    ASSERT_TEST(SSF == "Jeff");
+
+    ASSERT_TEST(StrFirst.Len() == 2);
+    ASSERT_TEST(StrSecond.Len() == 2);
+
+    Array<String> Third = StrFirst + StrSecond;
+
+    ASSERT_TEST(Third[0] == StrFirst[0]);
+    ASSERT_TEST(Third.Len() == 4);
 }

@@ -24,6 +24,7 @@ BUILD_DIR = Build
 #use for debug builds, enables asserts and better error checking
 DEBUG_FLAG = -DCTU_DEBUG
 
+#TODO: -arch i386 should only be for clang++
 FLAGS = -fno-exceptions -fno-rtti -arch i386
 
 #-fno-builtin -nostdinc -nostdlib
@@ -45,6 +46,8 @@ debug:
 	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c $(DEBUG_ARGS) $(DEBUG_FLAG) && \
 	make finalize
 
+RELEASE_ARGS = -Ofast 
+
 release:
 	echo 'Building release build' && \
 	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c $(RELEASE_ARGS) && \
@@ -61,7 +64,7 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = Map.cpp
+TEST_NAME = Array.cpp
 
 tests:
 	echo 'Running tests' && \

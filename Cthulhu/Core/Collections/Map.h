@@ -92,6 +92,7 @@ struct Map
         return Table[Hashed] == nullptr ? Or : Table[Hashed]->Val;
     }
 
+    //TODO: this mangles shit
     Array<TKey> Keys()
     {
         Array<TKey> Ret;
@@ -102,7 +103,7 @@ struct Map
 
             while(Current != nullptr)
             {
-                Ret.Append(TKey(Current->Key));
+                Ret += Current->Key;
                 Current = Current->Next;
             }
         }
@@ -110,6 +111,7 @@ struct Map
         return Ret;
     }
 
+    //TODO: this mangles shit
     Array<TVal> Values()
     {
         Array<TVal> Ret;
@@ -128,6 +130,7 @@ struct Map
         return Ret;
     }
 
+    //TODO: this mangles shit
     Array<Pair<TKey, TVal>> Items()
     {
         Array<Pair<TKey, TVal>> Ret;
@@ -166,6 +169,7 @@ private:
         return nullptr;
     }
 
+    //TODO: fixed size array
     Array<Node*> Table;
 };
 
