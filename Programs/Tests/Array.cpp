@@ -77,7 +77,7 @@ int main()
     StrSecond.Append("Jeff");
     StrSecond.Append("Funnymeme");
 
-    printf("[%x]\n", *StrFirst[0]);
+    //printf("[%x]\n", *StrFirst[0]);
 
     String SFF = StrFirst[0];
     String SSF = StrSecond[0];

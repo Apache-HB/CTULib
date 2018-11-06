@@ -33,18 +33,19 @@ struct Map
 
     Map()
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        Memory::Zero<Node*>(Table, sizeof(Node*) * TableSize);
     }
 
     Map(const Map& Other)
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        //TODO: better map copying
+        Memory::Copy<Node*>(Other.Table, Table, sizeof(Node*) * TableSize);
     }
 
     Map(const Array<Node> Start)
     {
+        Memory::Zero<Node*>(Table, sizeof(Node*) * TableSize);
+        
         for(const auto& I : Start.Iterate())
         {
             Table[Hash(I.First)] = new Node(I.First, I.Second);
@@ -53,28 +54,23 @@ struct Map
 
     void Add(const TKey& Key, const TVal& Value)
     {
-        Node* ToAdd = new Node(Key, Value);
-
         U32 Hashed = Hash(Key);
 
         if(Table[Hashed] == nullptr)
         {
-            Table[Hashed] = ToAdd;
+            Table[Hashed] = new Node(Key, Value);
+            //printf("made node, val at: %lx\n", Table[Hashed]->Val);
         }
         else
         {
-            Node* Current = Table[Hashed];
-            
-            while(Current != nullptr) 
-                Current = Current->Next;
-            
-            Current->Next = ToAdd;
+            Table[Hashed]->Assign(Pair<TKey, TVal>{Key, Value});
+            //printf("added\n");
         }
     }
 
     TVal& operator[](const TKey& Key)
     {
-        Node* Item = Retrive(Key);
+        Node* Item = Extract(Key);
         
         if(Item == nullptr)
         {
@@ -82,7 +78,8 @@ struct Map
             Add(Key, NewVal);
         }
 
-        return Retrive(Key)->Val;
+        //printf("extract:[%x]\n", Extract(Key));
+        return Extract(Key)->Val;
     }
     
     TVal Get(const TKey& Key, const TVal& Or)
@@ -97,9 +94,9 @@ struct Map
     {
         Array<TKey> Ret;
 
-        for(Node* I : Table.Iterate())
+        for(U32 I = 0; I < TableSize; I++)
         {
-            Node* Current = I;
+            Node* Current = Table[I];
 
             while(Current != nullptr)
             {
@@ -116,9 +113,9 @@ struct Map
     {
         Array<TVal> Ret;
 
-        for(Node* I : Table.Iterate())
+        for(U32 I = 0; I < TableSize; I++)
         {
-            Node* Current = I;
+            Node* Current = Table[I];
 
             while(Current != nullptr)
             {
@@ -135,9 +132,9 @@ struct Map
     {
         Array<Pair<TKey, TVal>> Ret;
 
-        for(Node* I : Table.Iterate())
+        for(U32 I = 0; I < TableSize; I++)
         {
-            Node* Current = I;
+            Node* Current = Table[I];
             while(Current != nullptr)
             {
                 Ret.Append(Pair<TKey, TVal>{ Current->Key, Current->Val });
@@ -150,14 +147,21 @@ struct Map
 
 private:
 
-    Node* Retrive(const TKey& Key) const
+    Node* Extract(const TKey& Key) const
     {
         Node* It = Table[Hash(Key)];
 
+        //printf("[%x]\n", It);
+
         while(It != nullptr)
         {
+            //printf("perhaps at %x\n", It);
+            
+            //printf("a %s b %s\n", *Key, *It->Key);
+
             if(It->Key == Key)
             {
+                //printf("found at: %x\n", It);
                 return It;
             }
             else
@@ -165,12 +169,45 @@ private:
                 It = It->Next;
             }
         }
-
+        //printf("Ret null %x\n", It);
         return nullptr;
     }
 
+    const U32 TableSize = MersenePrime;
+
     //TODO: fixed size array
-    Array<Node*> Table;
+    Node** Table = Memory::Alloc<Node*>(sizeof(Node*) * TableSize);
+    //Array<Node*> Table;
+
+    void FreeNodes(Node* Base)
+    {
+        if(Base != nullptr)
+        {
+            if(Base->Next != nullptr)
+            {
+                FreeNodes(Base->Next);
+            }
+            
+            delete Base;
+            //delete this but free the table itself 
+            //because nodes are allocated with new
+            //but the table is malloc'd
+        }
+    }
+
+public:
+    
+    ~Map()
+    {
+        for(U32 I = 0; I < TableSize; I++)
+        {
+            //free all items in the table
+            FreeNodes(Table[I]);
+        }
+        //free the table itself
+        Memory::Free(Table);
+    }
+
 };
 
 
@@ -187,7 +224,7 @@ struct MapNode
         , Next(nullptr)
     {}
 
-    TVal& operator=(const Pair<TKey, TVal> Item)
+    TVal& Assign(const Pair<TKey, TVal> Item)
     {
         if(Key == Item.First)
         {
@@ -196,7 +233,7 @@ struct MapNode
         }
         else if(Next != nullptr)
         {
-            return Next = Item;
+            return Next->Assign(Item);
         }
         else
         {

@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#include "Core/Algo/Dragon4.h"
+
 #include "Map.h"
 //Map<T, K> Array<T> Option<T> Iterator<TC, T> Memory::* 
 
@@ -38,9 +40,10 @@ Cthulhu::String::String(const String& Other)
 
 String& Cthulhu::String::operator=(const String& Other)
 {
-    delete[] Real;
+    //TODO: could leak
+    //delete[] Real;
     Real = CString::Duplicate(Other.Real);
-    
+
     return *this;
 }
 
@@ -331,44 +334,38 @@ String Cthulhu::String::Replace(const String& Search, const String& Substitute) 
 }
 
 
-String Cthulhu::String::Format(const Array<String>& Args) const
+String Cthulhu::String::Format(Array<String>& Args) const
 {
-    #warning NO_IMPL
-    NO_IMPL();
-    
-    // String Ret = Real;
+    String Ret = Real;
 
-    // auto Iter = Args.Iterate().Enumerate();
+    const auto Iter = Args.Iterate().Enumerate();
 
-    // for(const auto& I : Iter)
-    // {
-    //     String Temp = "{";
-    //     Temp << (I64)I.Second;
-    //     Temp += "}";
-    //     Ret = Ret.Replace(Temp, I.First);
-    // }
-    
-    // return Ret;
+    for(const auto& I : Iter)
+    {
+        String Temp = "{";
+        Temp << (I64)I.Second;
+        Temp += "}";
+        Ret = Ret.Replace(Temp, I.First);
+    }
+
+    return Ret;
 }
 
-String Cthulhu::String::Format(const Map<String, String>& Args) const
+String Cthulhu::String::Format(Map<String, String>& Args) const
 {
-    #warning NO_IMPL
-    NO_IMPL();
-    
-    // String Ret = Real;
+    String Ret = Real;
 
-    // auto Iter = Args.Items().Iterate();
+    const auto Iter = Args.Items().Iterate();
 
-    // for(const auto& I : Iter)
-    // {
-    //     String Temp = "{";
-    //     Temp += *I.First;
-    //     Temp += "}";
-    //     Ret = Ret.Replace(Temp, *I.Second);
-    // }
+    for(const auto& I : Iter)
+    {
+        String Temp = "{";
+        Temp += I.First;
+        Temp += "}";
+        Ret = Ret.Replace(Temp, I.Second);
+    }
 
-    // return Ret;
+    return Ret;
 }
 
 
@@ -730,8 +727,21 @@ String Cthulhu::StringUtils::ToString(I64 Num)
 
 String Cthulhu::StringUtils::ToString(double Num)
 {
-    #warning NO_IMPL
-    NO_IMPL();
+    return Algo::Dragon4(Num);
+}
+
+String Cthulhu::StringUtils::FastToString(double Num)
+{
+    Num *= 100;
+    String Ret = StringUtils::ToString((I64)Num);
+
+    String Temp = Ret.SubString(Ret.Len() - 2, Ret.Len());
+
+    Ret.Drop(2);
+    Ret += '.';
+    Ret += Temp;
+
+    return Ret;
 }
 
 String Cthulhu::StringUtils::ToString(bool Val)

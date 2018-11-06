@@ -35,12 +35,13 @@ int main()
 
     auto Keys = TestMap.Keys();
 
-    printf("[%x]\n", *Keys[0]);
+    //printf("[%x]\n", *Keys[0]);
 
     //TODO: for some reason segfaults here
     String F = Keys[0];
+    //make sure copying from a map doesnt segfault
 
-    printf("%s %s %llu\n", *F, *Keys[1], Keys.Len());
+    //printf("%s %s %llu\n", *F, *Keys[1], Keys.Len());
 
     ASSERT_TEST(TestMap.Keys().Len() == 2);
 

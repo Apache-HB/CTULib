@@ -37,7 +37,7 @@ all:
 #enable address sanatizer
 #disable all obfusacting optimizations to make debugging easier
 #generate all debug code
-DEBUG_ARGS = -fsanitize=address -g3 -g 
+DEBUG_ARGS = -g3 -g -fsanitize=leak -fsanitize=address 
 
 MOVE = mv *.o $(BUILD_DIR)/Binaries/Objects
 
@@ -64,7 +64,7 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = Array.cpp
+TEST_NAME = Map.cpp
 
 tests:
 	echo 'Running tests' && \

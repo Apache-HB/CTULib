@@ -39,6 +39,8 @@ struct Array
     Array()
     {
         Construct((T*)new Byte[DefaultSlack * sizeof(T)], 0);
+        Memory::Set<T>(Real, NULL, Allocated * sizeof(T));
+        //use NULL not nullptr because NULL can cast to int and nullptr cant
     }
 
     Array(const Array& Other)
@@ -73,8 +75,7 @@ struct Array
 
     Array& operator=(const Array& Other)
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        Construct(Memory::NewDuplicate<T>(Other.Real, sizeof(T) * Other.Length), Other.Length);
     }
 
     ALWAYSINLINE U64 Len() const { return Length; }
@@ -124,7 +125,7 @@ struct Array
             Expand(1);
         }
 
-        Memory::Copy<T>(&Item, &Real[Length++], sizeof(T));
+        Real[Length++] = Item;
     }
 
     void Append(const Array& Other)
@@ -152,8 +153,9 @@ struct Array
 
     Array Section(U64 From, U64 To) const
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        T* Temp = Memory::NewDuplicate<T>(Real + sizeof(T) * From, To - From);
+
+        return Array(Temp, To - From);
     }
 
     Option<U64> Find(const T& Item) const
@@ -187,22 +189,43 @@ struct Array
 
     Array Filter(Lambda<bool(const T&)> Block) const
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        Array Ret;
+        
+        for(U64 I = 0; I < Length; I++)
+        {
+            if(Block(Real[I]))
+            {
+                Ret += Real[I];
+            }
+        }
+        
+        return Ret;
     }
 
     Array Map(Lambda<T(const T&)> Transform) const
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        Array Ret;
+        
+        for(U64 I = 0; I < Length; I++)
+        {
+            Ret += Transform(Real[I]);
+        }
+        
+        return Ret;
     }
 
     Iterator<Array<T>, T> Iterate() { return Iterator<Array<T>, T>(*this); }
 
     Array Reverse() const
     {
-        #warning NO_IMPL()
-        NO_IMPL();
+        Array Ret;
+        
+        for(U64 I = Length - 1; I >= 0; I--)
+        {
+            Ret += Real[I];
+        }
+        
+        return Ret;
     }
 
     ~Array() 

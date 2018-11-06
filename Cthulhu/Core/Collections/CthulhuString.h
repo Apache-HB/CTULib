@@ -91,8 +91,8 @@ struct String
     void Trim(const String& Pattern = " ");
     String Replace(const String& Search, const String& Substitute) const;
 
-    String Format(const Array<String>& Args) const;
-    String Format(const Map<String, String>& Args) const;
+    String Format(Array<String>& Args) const;
+    String Format(Map<String, String>& Args) const;
 
     void Cut(U32 Amount);
     void Drop(U32 Amount);
@@ -167,6 +167,10 @@ namespace StringUtils
     String ToString(I64 Num);
     String ToString(double Num);
     String ToString(bool Val);
+
+    //a faster version of ToString(double) that trades off speed
+    //with accuracy
+    String FastToString(double Num);
 }
 
 /**String constants, such as all lowercase or uppercase letters
