@@ -64,6 +64,7 @@ Cthulhu::String::operator bool() const
 
 bool Cthulhu::String::operator==(const String& Other) const
 {
+    printf("[%x %x]\n", Other.Real, Real);
     return CString::Compare(Real, Other.Real) == 0;
 }
 
@@ -214,7 +215,7 @@ char& Cthulhu::String::operator[](U32 Index) const
 
 char Cthulhu::String::At(U32 Index) const
 {
-    return (ValidIndex(Index)) ? Real[Index] : '\0';
+    return ValidIndex(Index) ? Real[Index] : '\0';
 }
 
 

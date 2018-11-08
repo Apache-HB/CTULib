@@ -64,13 +64,20 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = Map.cpp
+TEST_NAME = Array.cpp
 
 tests:
 	echo 'Running tests' && \
 	$(CC) $(STD) $(FLAGS) $(PATHS) $(DEBUG_ARGS) \
 	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
 	Programs/Tests/$(TEST_NAME) -o $(NAME).o
+
+TIDY = clang-tidy
+TIDY_FLAGS = -checks=performance -checks=bugprone -checks=hicpp -checks=clang-analyzer
+
+tidy:
+	echo 'Running tidy' && \
+	$(TIDY) $(TIDY_FLAGS) $(PATHS) $(DEBUG_ARGS)
 
 finalize:
 	echo 'Moving Files to library' && \

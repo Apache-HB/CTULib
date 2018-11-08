@@ -101,7 +101,7 @@ using C32 = I32;
  * 
  */
 using C16 = I16;
-//          ^^^^^
+//          ^^^^
 //use I16 rather than char16_t because 
 //not all compilers support the full C++11 & C++17 standard
 //such as MSVC (as always)
@@ -122,5 +122,9 @@ using WideChar = C32;
  * 
  */
 using AsciiChar = C8;
+
+using F32 = float;
+
+using F64 = double;
 
 }

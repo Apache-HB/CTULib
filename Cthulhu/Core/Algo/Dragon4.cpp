@@ -19,6 +19,11 @@
 
 using namespace Cthulhu;
 
+namespace
+{
+    
+}
+
 String Cthulhu::Algo::Dragon4(double Num)
 {
     return "";
