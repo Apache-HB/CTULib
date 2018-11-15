@@ -72,12 +72,10 @@ tests:
 	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
 	Programs/Tests/$(TEST_NAME) -o $(NAME).o
 
-TIDY = clang-tidy
-TIDY_FLAGS = -checks=performance -checks=bugprone -checks=hicpp -checks=clang-analyzer
-
-tidy:
-	echo 'Running tidy' && \
-	$(TIDY) $(TIDY_FLAGS) $(PATHS) $(DEBUG_ARGS)
+angry:
+	echo 'Running angry compiler' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c -Weverything $(DEBUG_ARGS) $(DEBUG_FLAG) && \
+	make finalize
 
 finalize:
 	echo 'Moving Files to library' && \

@@ -44,31 +44,31 @@ namespace Memory
     }
     
     template<typename T>
-    ALWAYSINLINE T* Copy(const T* From, T* Into, size_t Len) 
+    ALWAYSINLINE T* Copy(const T* From, T* Into, U32 Len) 
     { 
         return (T*)memcpy((void*)Into, (void*)From, Len); 
     }
 
     template<typename T>
-    ALWAYSINLINE int Compare(const T* Left, const T* Right, size_t Len) 
+    ALWAYSINLINE int Compare(const T* Left, const T* Right, U32 Len) 
     { 
         return memcmp((void*)Left, (void*)Right, Len); 
     }
 
     template<typename T>
-    ALWAYSINLINE T* Zero(const T* Memory, size_t Len) 
+    ALWAYSINLINE T* Zero(const T* Memory, U32 Len) 
     {
         return (T*)memset((void*)Memory, 0, Len); 
     }
 
     template<typename T>
-    ALWAYSINLINE T* Realloc(T* Data, size_t NewLen) 
+    ALWAYSINLINE T* Realloc(T* Data, U32 NewLen) 
     { 
         return (T*)realloc((void*)Data, NewLen); 
     }
 
     template<typename T>
-    ALWAYSINLINE T* Alloc(size_t Len) 
+    ALWAYSINLINE T* Alloc(U32 Len) 
     { 
         return (T*)malloc(Len); 
     }
@@ -80,7 +80,7 @@ namespace Memory
     }
 
     template<typename T>
-    ALWAYSINLINE T* Duplicate(const T* Data, size_t Len)
+    ALWAYSINLINE T* Duplicate(const T* Data, U32 Len)
     {
         T* Ret = Alloc<T>(Len);
 
@@ -90,7 +90,7 @@ namespace Memory
     }
 
     template<typename T>
-    ALWAYSINLINE T* NewDuplicate(const T* Data, U64 Len)
+    ALWAYSINLINE T* NewDuplicate(const T* Data, U32 Len)
     {
         T* Ret = (T*)new Byte[Len];
 

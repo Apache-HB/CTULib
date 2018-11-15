@@ -64,7 +64,6 @@ Cthulhu::String::operator bool() const
 
 bool Cthulhu::String::operator==(const String& Other) const
 {
-    printf("[%x %x]\n", Other.Real, Real);
     return CString::Compare(Real, Other.Real) == 0;
 }
 
@@ -388,6 +387,20 @@ bool Cthulhu::String::Has(const String& Pattern) const
     return Find(Pattern).Valid();
 }
 
+bool Cthulhu::String::Has(char Item) const
+{
+    char C;
+    U32 Index = 0;
+
+    while((C = Real[Index]))
+    {
+        if(C == Item)
+            return true;
+        Index++;
+    }
+    
+    return false;
+}
 
 Iterator<Array<char>, char> Cthulhu::String::Iterate() const
 {
@@ -594,7 +607,8 @@ String Cthulhu::StringUtils::Padding(const String& Text, U32 Repeat)
     return Ret;
 }
 
-Option<I64> Cthulhu::StringUtils::ParseInt(const String& Text)
+template<>
+Option<I64> Cthulhu::StringUtils::Parse<I64>(const String& Text)
 {
     char* Real = *Text;
     I64 Ret = 0;
@@ -624,7 +638,8 @@ Option<I64> Cthulhu::StringUtils::ParseInt(const String& Text)
     return Some(Ret * Sign);
 }
 
-Option<double> Cthulhu::StringUtils::ParseDouble(const String& Text)
+template<>
+Option<double> Cthulhu::StringUtils::Parse<double>(const String& Text)
 {
     char* Real = *Text;
 
@@ -686,7 +701,8 @@ Option<double> Cthulhu::StringUtils::ParseDouble(const String& Text)
     return Some(Ret);
 }
 
-Option<bool> Cthulhu::StringUtils::ParseBool(const String& Text)
+template<>
+Option<bool> Cthulhu::StringUtils::Parse<bool>(const String& Text)
 {
     String Temp = Text.Lower();
     
@@ -701,7 +717,7 @@ Option<bool> Cthulhu::StringUtils::ParseBool(const String& Text)
 
 String Cthulhu::StringUtils::ToString(I64 Num)
 {
-    String Ret = "";
+    String Ret;
 
     bool Negative = false;
 

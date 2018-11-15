@@ -28,10 +28,10 @@ template<typename TContainer, typename TElement>
 class Iterator
 {
 protected:
-    TContainer& Container;
-    U64 Index;
+    const TContainer& Container;
+    U32 Index;
 public:
-    Iterator(TContainer& InContainer, U64 StartIndex = 0)
+    Iterator(const TContainer& InContainer, U32 StartIndex = 0)
         : Container(InContainer)
         , Index(StartIndex)
     {}
@@ -80,7 +80,7 @@ struct EnumeratedIterator : public Iterator<TContainer, TElement>
 {
     using Super = Iterator<TContainer, TElement>;
 
-    EnumeratedIterator(TContainer& InContainer, U64 StartIndex = 0)
+    EnumeratedIterator(const TContainer& InContainer, U32 StartIndex = 0)
         : Super(InContainer, StartIndex)
     {}
 
@@ -91,6 +91,57 @@ struct EnumeratedIterator : public Iterator<TContainer, TElement>
     Pair<TElement&, U64> operator*() { return Pair<TElement&, U64>{Super::Container[Super::Index], Super::Index}; }
 
     Pair<TElement*, U64> operator->() { return Pair<TElement*, U64>{&Super::Container[Super::Index], Super::Index}; }
+};
+
+struct Range
+{
+    Range(I64 Len)
+        : CurrentNum(-1)
+        , MaxNum(Len)
+    {}
+
+    Range(I64 Start, I64 End, I32 InStep = 1)
+        : CurrentNum(Start)
+        , MaxNum(End)
+        , Step(InStep)
+    {}
+
+    Range begin() const { return Range(CurrentNum, MaxNum, Step); }
+    Range end() const { return Range(MaxNum, MaxNum, Step); }
+
+    Range operator++()
+    {
+        CurrentNum++;
+        return *this;
+    }
+
+    Range operator++(int)
+    {
+        Range Temp(*this);
+        CurrentNum++;
+        return Temp;
+    }
+
+    Range operator--()
+    {
+        CurrentNum--;
+        return *this;
+    }
+
+    Range operator--(int)
+    {
+        Range Temp(*this);
+        CurrentNum--;
+        return Temp;
+    }
+
+    ALWAYSINLINE bool operator!=(const Range& Other) const { return CurrentNum != Other.CurrentNum; }
+    ALWAYSINLINE bool operator==(const Range& Other) const { return CurrentNum == Other.CurrentNum; }
+
+private:
+    I64 CurrentNum;
+    I64 MaxNum;
+    I32 Step = 1;
 };
 
 } //Cthulhu

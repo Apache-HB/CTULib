@@ -51,8 +51,8 @@ struct Limits<I32>
 template<> 
 struct Limits<I64>
 {
-    static I64 Max() { return 9223372036854775807; }
-    static I64 Min() { return -9223372036854775808; }
+    static I64 Max() { return 9223372036854775807LL; }
+    static I64 Min() { return -9223372036854775808LL; }
 };
 
 template<> 
@@ -79,7 +79,7 @@ struct Limits<U32>
 template<> 
 struct Limits<U64>
 {
-    static U64 Max() { return 18446744073709551615; }
+    static U64 Max() { return 18446744073709551615ULL; }
     static U64 Min() { return 0; }
 };
 

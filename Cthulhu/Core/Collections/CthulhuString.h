@@ -98,6 +98,7 @@ struct String
     void Drop(U32 Amount);
 
     bool Has(const String& Pattern) const;
+    bool Has(char Item) const;
 
     Iterator<Array<char>, char> Iterate() const;
 
@@ -159,10 +160,13 @@ namespace CString
  */
 namespace StringUtils
 {
+    template<typename T> Option<T> Parse(const String&);
+
     String Padding(const String& Text, U32 Repeat);
-    Option<I64> ParseInt(const String& Text);
-    Option<double> ParseDouble(const String& Text);
-    Option<bool> ParseBool(const String& Text);
+
+    template<> Option<I64> Parse<I64>(const String& Text);
+    template<> Option<double> Parse<double>(const String& Text);
+    template<> Option<bool> Parse<bool>(const String& Text);
 
     String ToString(I64 Num);
     String ToString(double Num);
