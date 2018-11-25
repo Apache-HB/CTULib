@@ -66,8 +66,9 @@ private:
 template<typename TFunctor>
 struct Lambda : Private::LambdaBase<Lambda<TFunctor>, TFunctor>
 {
-    friend struct Private::LambdaBase<Lambda<TFunctor>, TFunctor>;
     using Super = Private::LambdaBase<Lambda<TFunctor>, TFunctor>;
+
+    friend Super;
 
     template<typename TFunction>
     Lambda(TFunction& Other)

@@ -13,18 +13,18 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/CthulhuString.h"
+#pragma once
 
-#include "Dragon4.h"
+#define REFLECT(name) name##_REFLECTABLE
 
-using namespace Cthulhu;
-
-namespace
+namespace REFLECT(Cthulhu)
 {
-    
+
+namespace REFLECT(Reflection)
+{
+
+
+
 }
 
-String Cthulhu::Algo::Dragon4(double Num)
-{
-    return "";
 }

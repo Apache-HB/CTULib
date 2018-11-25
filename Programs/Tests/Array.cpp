@@ -55,31 +55,6 @@ int main()
 
     First.Append(Second);
 
-    printf("Yeet\n");
-    printf("%llu\n", First[2]);
-
-    //auto Both = First + Second;
-
-    //ASSERT_TEST((First + Second)[0] == 5);
-    //ASSERT_TEST(Both.Len() == 6);
-    //ASSERT_TEST(Both[0] == 5);
-    //printf("%llu\n", Both[0]);
-
-    //printf("[%llu %llu]\n", First[0], Both[0]);
-
-    //ASSERT_TEST(Both.Len() == 4);
-
-    ////printf("%llu\n", Both[0]);
-
-    //ASSERT_TEST(Both[0] == 5);
-    //ASSERT_TEST(Both[1] == 10);
-    //ASSERT_TEST(Both[2] == 15);
-    //ASSERT_TEST(Both[3] == 20);
-
-    //Both.Pop();
-
-    //ASSERT_TEST(Both.Len() == 3);
-
     Array<String> StrFirst;
 
     //FIXME: this now triggers heap-use-after-free
@@ -102,8 +77,4 @@ int main()
     ASSERT_TEST(StrFirst.Len() == 2);
     ASSERT_TEST(StrSecond.Len() == 2);
 
-    //Array<String> Third = StrFirst + StrSecond;
-
-    //ASSERT_TEST(Third[0] == StrFirst[0]);
-    //ASSERT_TEST(Third.Len() == 4);
 }

@@ -13,6 +13,50 @@
  *  limitations under the License.
  */
 
+#include "File.h"
+
+#pragma once
+
+namespace Cthulhu::FileSystem
+{
+
+enum class FileType
+{
+    Binary,
+    Text
+};
+
+using File = union {
+    BinaryFile Bin;
+    TextFile Text;
+    FileType Type;
+};
+
+struct Path
+{
+    Path(const String& FolderPath);
+    static bool Exists(const String& FolderPath);
+
+    Map<String, File> Files() const;
+    Map<String, Folder> Folders() const;
+
+    bool Add(const File& ToAdd);
+    bool Add(const Folder& ToAdd);
+
+    String& Name() const;
+
+    String FullPath() const;
+
+    Path Flatten() const;
+
+private:
+    Map<String, File> SubFiles;
+    Map<String, Folder> SubFolders;
+    String FolderName;
+};
+
+}
+
 #if 0
 
 #include "Core/Collections/Result.h"

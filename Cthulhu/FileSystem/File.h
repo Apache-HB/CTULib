@@ -13,62 +13,68 @@
  *  limitations under the License.
  */
 
-#if 0
-
 #include "Core/Collections/CthulhuString.h"
 #include "Core/Collections/Array.h"
-
-#include "Meta/Aliases.h"
+#include "Core/Memory/Unique.h"
+#include "Core/Types/Errno.h"
 
 #pragma once
 
-namespace Cthulhu
+namespace Cthulhu::FileSystem
 {
 
-template<typename> struct Option;
-struct FILE;
-
-namespace FileSystem
+enum class Mode : U8
 {
-
-struct BinaryFile
-{
-    BinaryFile();
-
-    BinaryFile(FILE* File, const String& Name);
-
-    Array<U8> Data;
-    const String Name;
-
-    void Append(const Array<U8> Data);
-    void Write(const Array<U8> NewData);
-    void Save(const Option<String> Name);
-    void Close();
-
-private:
-    FILE* RawFile;
+    Read,
+    ReadPlus,
+    Write,
+    WritePlus,
+    Append,
+    AppendPlus
 };
 
 struct TextFile
 {
-    TextFile();
-    
-    TextFile(FILE* File, const String& Name);
+    TextFile(const String& Name, Mode OpenMode);
+    ~TextFile();
 
-    String Content;
-    const String Name;
+    const String& Name() const;
+    Errno Rename(const String& NewName);
 
-    void Append(const String& Text);
-    void Write(const String& NewText);
-    void Save(const Option<String> Name);
-    void Close();
+    const String& Content() const;
+    bool Write(const String& NewData);
 
 private:
-    FILE* RawFile;
+    Mode FileMode;
+    String FileName;
+    String FileContent;
+    FILE* Real;
+};
+
+bool Exists(const String& Path);
+bool IsWriteable(const String& Path);
+bool IsReadable(const String& Path);
+bool IsExecutable(const String& Path);
+
+struct BinaryFile
+{
+    BinaryFile(const String& Name, Mode OpenMode = Mode::Read);
+    ~BinaryFile();
+
+    const String& Name() const;
+    Errno Rename(const String& NewName);
+
+    const Array<Byte>& Content() const;
+    bool Write(const Array<Byte>& NewData);
+
+    Byte operator[](U32 Index) const;
+
+private:
+    Mode FileMode;
+    String FileName;
+    Array<Byte> FileContent;
+    FILE* Real;
 };
 
 }
 
-}
-
-#endif

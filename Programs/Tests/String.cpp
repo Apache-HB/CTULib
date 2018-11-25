@@ -15,6 +15,8 @@
 
 #include <Core/Collections/CthulhuString.h>
 
+#include "TestMacros.h"
+
 #include <Core/Serialization/Hashes.h>
 #include <Core/Collections/Map.h>
 
@@ -25,6 +27,96 @@ using namespace Cthulhu;
 int main()
 {
     setbuf(stdout, NULL);
+
+    //test const char* constructor
+    String A = "A";
+
+    //test operator*
+    printf("%s\n", *A);
+
+    //test operator[]
+    ASSERT_TEST(A[0] == 'A');
+
+    //test operator+=(char) and Append(char)
+    A += 'B';
+
+    ASSERT_TEST(A[0] == 'A' && A[1] == 'B');
+
+    //test operator+=(String&) and Append(String&)
+    A += "CD";
+
+    printf("%s\n", *A);
+
+    //test Len()
+    ASSERT_TEST(A.Len() == 4);
+
+    //test char constructor
+    String B = 'A';
+
+    //test default constructor
+    String C;
+
+    //test copy constructor
+    String D = A;
+
+    //test IsEmpty() and operator bool()
+    ASSERT_TEST(C.IsEmpty());
+    ASSERT_TEST((bool)C);
+
+    //test operator==(String&)
+    ASSERT_TEST(D == "ABCD");
+
+    //test operator!=(String&)
+    ASSERT_TEST(D != "SDASDASD");
+    ASSERT_TEST(D != "");
+    ASSERT_TEST(D != "A");
+    ASSERT_TEST(D != "ABCC");
+
+    //test Push(char)
+    B.Push('C');
+    
+    ASSERT_TEST(B == "CA");
+
+    //test Push(String&)
+    B.Push("CC");
+
+    ASSERT_TEST(B == "CCCA");
+
+    //test StartsWith(String&)
+    ASSERT_TEST(B.StartsWith("CC"));
+    ASSERT_TEST(!B.StartsWith("AAAAAAAAA"));
+    ASSERT_TEST(B.StartsWith("C"));
+    ASSERT_TEST(!B.StartsWith("c"));
+    ASSERT_TEST(!B.StartsWith('D'));
+
+    printf("%s\n", *B);
+    ASSERT_TEST(B.EndsWith("CA"));
+    ASSERT_TEST(!B.EndsWith("HJGJGGASD"));
+
+    ASSERT_TEST(B.ValidIndex(2));
+    ASSERT_TEST(!B.ValidIndex(6));
+
+    ASSERT_TEST(B.At(2) == 'C');
+    ASSERT_TEST(B.At(6) == '\0');
+
+    auto Sub = B.SubString(1, 3);
+
+    printf("%s %x\n", *Sub, *Sub);
+    printf("%s %x\n", *B, *B);
+
+    ASSERT_TEST(Sub == "CC");
+    ASSERT_TEST(B.Find("CC").Valid());
+    ASSERT_TEST(B.Find("CC").Get() == 0);
+
+    ASSERT_TEST(B.Lower() == "ccca");
+    ASSERT_TEST(String("abcdef").Upper() == "ABCDEF");
+
+    ASSERT_TEST(String("aaa").Cut(2) == "a");
+    ASSERT_TEST(String("bbb").Drop(2) == "b");
+
+    ASSERT_TEST(String("  name  ").Trim() == "name");
+    ASSERT_TEST(String("aaanameaaa").Trim("aaa") == "name");
+    ASSERT_TEST(String("myaaanameaaajeff").Replace("aaa", ' ') == "my name jeff");
 
     return 0;
 }

@@ -14,17 +14,3 @@
  */
 
 #pragma once
-
-namespace Cthulhu
-{
-
-struct String;
-
-namespace Algo
-{
-
-String Dragon4(double Num);
-
-}
-
-}

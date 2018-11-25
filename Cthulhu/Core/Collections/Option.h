@@ -14,6 +14,7 @@
  */
 
 #include "Core/Types/Lambda.h"
+#include "Meta/Assert.h"
 
 #pragma once
 
@@ -35,7 +36,7 @@ struct Option
     const T Get() const { ASSERT(Valid(), "Attempting to Get() unset content is undefined behaviour"); return Content; }
     T Get() { ASSERT(Valid(), "Attempting to Get() unset content is undefined behaviour"); return Content; }
 
-    T Or(T Other) { return (Valid()) ? Content : Other; }
+    T Or(T Other) { return Valid() ? Content : Other; }
 
     template<typename TRet>
     TRet Fold(Lambda<TRet(T)> WhenValid, Lambda<TRet()> Otherwise) const
