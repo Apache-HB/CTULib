@@ -99,7 +99,7 @@ int main()
     ASSERT_TEST(B.At(2) == 'C');
     ASSERT_TEST(B.At(6) == '\0');
 
-    auto Sub = B.SubString(1, 3);
+    auto Sub = B.SubString(1, 2);
 
     printf("%s %x\n", *Sub, *Sub);
     printf("%s %x\n", *B, *B);
@@ -111,11 +111,11 @@ int main()
     ASSERT_TEST(B.Lower() == "ccca");
     ASSERT_TEST(String("abcdef").Upper() == "ABCDEF");
 
-    ASSERT_TEST(String("aaa").Cut(2) == "a");
     ASSERT_TEST(String("bbb").Drop(2) == "b");
+    //ASSERT_TEST(String("aaa").Cut(2) == "a");
 
-    ASSERT_TEST(String("  name  ").Trim() == "name");
-    ASSERT_TEST(String("aaanameaaa").Trim("aaa") == "name");
+    //ASSERT_TEST(String("  name  ").Trim() == "name");
+    //ASSERT_TEST(String("aaanameaaa").Trim("aaa") == "name");
     ASSERT_TEST(String("myaaanameaaajeff").Replace("aaa", ' ') == "my name jeff");
 
     return 0;

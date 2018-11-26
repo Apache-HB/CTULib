@@ -80,7 +80,7 @@ struct String
     String Upper() const;
     String Lower() const;
 
-    String& Trim(const String& Pattern = " ");
+    String Trim(const String& Pattern = " ");
     String Replace(const String& Search, const String& Substitute) const;
 
     String Format(Array<String>& Args) const;

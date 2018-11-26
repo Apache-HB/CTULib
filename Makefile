@@ -25,7 +25,7 @@ BUILD_DIR = Build
 DEBUG_FLAG = -DCTU_DEBUG
 
 #TODO: -arch i386 should only be for clang++
-FLAGS = -fno-exceptions -fno-rtti -arch i386
+FLAGS = -fno-exceptions -fno-rtti -arch x86_64
 
 #-fno-builtin -nostdinc -nostdlib
 
@@ -64,13 +64,13 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = String.cpp
+TEST_NAME = StringMisc.cpp
 
 tests:
 	echo 'Running tests' && \
 	$(CC) $(STD) $(FLAGS) $(PATHS) $(DEBUG_ARGS) \
 	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
-	Programs/Tests/$(TEST_NAME) -o $(NAME).o
+	Programs/Tests/$(TEST_NAME) -o $(NAME).test
 
 angry:
 	echo 'Running angry compiler' && \
