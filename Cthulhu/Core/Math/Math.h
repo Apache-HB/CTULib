@@ -23,13 +23,13 @@ namespace Math
     template<typename T>
     T Max(T Left, T Right)
     {
-        return (Left < Right) ? Left : Right;
+        return (Left > Right) ? Left : Right;
     }
 
     template<typename T>
     T Min(T Left, T Right)
     {
-        return (Left > Right) ? Left : Right;
+        return (Left < Right) ? Left : Right;
     }
 }
 

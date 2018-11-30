@@ -42,11 +42,21 @@ struct Map
         Memory::Copy<Node*>(Other.Table, Table, sizeof(Node*) * TableSize);
     }
 
-    Map(const Array<Node> Start)
+    Map(const Array<Pair<TKey, TVal>> Start)
     {
         Memory::Zero<Node*>(Table, sizeof(Node*) * TableSize);
         
         for(const auto& I : Start.Iterate())
+        {
+            Table[Hash(I.First)] = new Node(I.First, I.Second);
+        }
+    }
+
+    Map(std::initializer_list<Pair<TKey, TVal>> InitList)
+    {
+        Memory::Zero<Node*>(Table, sizeof(Node*) * TableSize);
+
+        for(auto& I : InitList)
         {
             Table[Hash(I.First)] = new Node(I.First, I.Second);
         }
@@ -127,17 +137,19 @@ struct Map
         return Ret;
     }
 
+    using MapPair = Pair<TKey*, TVal*>;
+
     //TODO: this mangles shit
-    Array<Pair<TKey, TVal>> Items()
+    Array<MapPair> Items()
     {
-        Array<Pair<TKey, TVal>> Ret;
+        Array<MapPair> Ret;
 
         for(U32 I = 0; I < TableSize; I++)
         {
             Node* Current = Table[I];
             while(Current != nullptr)
             {
-                Ret.Append(Pair<TKey, TVal>{ Current->Key, Current->Val });
+                Ret.Append(MapPair{ &Current->Key, &Current->Val });
                 Current = Current->Next;
             }
         }

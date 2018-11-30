@@ -18,7 +18,9 @@
 #include "TestMacros.h"
 
 #include <Core/Serialization/Hashes.h>
+#include <Core/Serialization/Stringify.h>
 #include <Core/Collections/Map.h>
+#include <Core/Collections/Array.h>
 
 #include <Core/Serialization/JSON.h>
 
@@ -32,7 +34,7 @@ int main()
     String A = "A";
 
     //test operator*
-    printf("%s\n", *A);
+    char* T = *A;
 
     //test operator[]
     ASSERT_TEST(A[0] == 'A');
@@ -45,7 +47,7 @@ int main()
     //test operator+=(String&) and Append(String&)
     A += "CD";
 
-    printf("%s\n", *A);
+    //printf("%s\n", *A);
 
     //test Len()
     ASSERT_TEST(A.Len() == 4);
@@ -58,13 +60,15 @@ int main()
 
     //test copy constructor
     String D = A;
+    D = "BCCD";
+    ASSERT_TEST(D == "BCCD");
 
     //test IsEmpty() and operator bool()
     ASSERT_TEST(C.IsEmpty());
     ASSERT_TEST((bool)C);
 
     //test operator==(String&)
-    ASSERT_TEST(D == "ABCD");
+    ASSERT_TEST(D == "BCCD");
 
     //test operator!=(String&)
     ASSERT_TEST(D != "SDASDASD");
@@ -89,7 +93,7 @@ int main()
     ASSERT_TEST(!B.StartsWith("c"));
     ASSERT_TEST(!B.StartsWith('D'));
 
-    printf("%s\n", *B);
+    //printf("%s\n", *B);
     ASSERT_TEST(B.EndsWith("CA"));
     ASSERT_TEST(!B.EndsWith("HJGJGGASD"));
 
@@ -101,8 +105,13 @@ int main()
 
     auto Sub = B.SubString(1, 2);
 
-    printf("%s %x\n", *Sub, *Sub);
-    printf("%s %x\n", *B, *B);
+    String E = "abcdefjhgshdfjksdf";
+
+    auto C1 = E.Cut(2);
+    auto C2 = E.Cut(3);
+
+    //printf("%s %x\n", *Sub, *Sub);
+    //printf("%s %x\n", *B, *B);
 
     ASSERT_TEST(Sub == "CC");
     ASSERT_TEST(B.Find("CC").Valid());
@@ -114,9 +123,28 @@ int main()
     ASSERT_TEST(String("bbb").Drop(2) == "b");
     //ASSERT_TEST(String("aaa").Cut(2) == "a");
 
-    //ASSERT_TEST(String("  name  ").Trim() == "name");
-    //ASSERT_TEST(String("aaanameaaa").Trim("aaa") == "name");
-    ASSERT_TEST(String("myaaanameaaajeff").Replace("aaa", ' ') == "my name jeff");
+    ASSERT_TEST(String("  name  ").Trim() == "name");
+    ASSERT_TEST(String("aaanameaaa").Trim("aaa") == "name");
+    String Temp = "myaaanameaaajeff";
+    //printf("%s\n", *Temp);
+    String Rep = Temp.Replace("aaa", ' ');
+    //printf("%s\n", *Rep);
+
+    ASSERT_TEST(Rep == "my name jeff");
+
+    Map<String, String> FmtArgs = {
+        { "name", "jeff" }
+    };
+
+    //ASSERT_TEST(String("my name is {name}").Format(FmtArgs) == "my name is jeff");
+
+    Array<String> FmtArr = {
+        "first", "middle", "last"
+    };
+
+    String Fmt = String("my name is {0}.{1}.{2}").Format(FmtArr);
+
+    ASSERT_TEST(Fmt == "my name is first.middle.last");
 
     return 0;
 }

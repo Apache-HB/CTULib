@@ -210,61 +210,59 @@ String Cthulhu::String::Trim(const String& Pattern)
 
 String Cthulhu::String::Replace(const String& Search, const String& Substitute) const
 {
-    U32 Idx = 0,
-        Count = 0,
-        SearchLen = Search.Len(),
-        SubLen = Substitute.Len();
+    U32 I = 0, 
+        Count = 0;
 
-    for(U32 I = 0; Real[I] != '\0'; I++)
+    const U32 OldLen = Search.Len(),
+              NewLen = Substitute.Len();
+
+    for(; Real[I]; I++)
     {
-        if(CString::Section(Real + I, Search.Real) == Real + I)
+        if(CString::Section(&Real[I], Search.Real) == &Real[I])
         {
             Count++;
-            Idx += SearchLen - 1;
+
+            I += OldLen - 1;
         }
     }
 
-    char* Result = new char[Length + (Count * (SubLen - SearchLen)) + 1];
-    Idx = 0;
+    char* Result = new char[I + (Count * (NewLen - OldLen)) + 1],
+          *Temp = Real;
 
-    char* Temp = CString::Duplicate(Real);
+    I = 0;
 
     while(*Temp)
     {
-        if(CString::Section(Result + Idx, Substitute.Real) == Temp)
+        if(CString::Section(Temp, Search.Real) == Temp)
         {
-            CString::Copy(Result + Idx, Substitute.Real);
-            Idx += SubLen;
-            Temp += SearchLen;
+            CString::Copy(Substitute.Real, &Result[I]);
+            I += NewLen;
+            Temp += OldLen;
         }
         else
         {
-            Result[Idx++] = *Temp++;
+            Result[I++] = *Temp++;
         }
     }
 
-    Result[Idx] = '\0';
-    String Ret = Temp;
+    Result[I] = '\0';
+    String Ret = Result;
 
-    delete[] Temp;
     delete[] Result;
 
     return Ret;
-
 }
 
 String Cthulhu::String::Format(Array<String>& Args) const
 {
     String Ret = Real;
 
-    const auto Iter = Args.Iterate().Enumerate();
-
-    for(const auto& I : Iter)
+    for(U32 I = 0; I < Args.Len(); I++)
     {
         String Temp = "{";
-        Temp << (I64)I.Second;
+        Temp << (I64)I;
         Temp += "}";
-        Ret = Ret.Replace(Temp, I.First);
+        Ret = Ret.Replace(Temp, Args[I]);
     }
 
     return Ret;
@@ -279,9 +277,9 @@ String Cthulhu::String::Format(Map<String, String>& Args) const
     for(const auto& I : Iter)
     {
         String Temp = "{";
-        Temp << (I64)I.Second;
+        Temp << (I64)*I.Second;
         Temp += "}";
-        Ret = Ret.Replace(Temp, I.First);
+        Ret = Ret.Replace(Temp, *I.First);
     }
 
     return Ret;
@@ -290,8 +288,13 @@ String Cthulhu::String::Format(Map<String, String>& Args) const
 //cut from front
 String& Cthulhu::String::Cut(U32 Amount)
 {
-    ASSERT(Amount <= Length, "Trying to cut beyond the end of the string");
-    Real += Amount;
+    ASSERT(Amount < Length, "Trying to cut beyond the end of the string");
+    
+    char* Temp = CString::Duplicate(Real + Amount);
+    
+    delete[] Real;
+    Real = Temp;
+
     Length -= Amount;
 
     return *this;
@@ -347,8 +350,12 @@ String Cthulhu::String::Reversed() const
 
 String& Cthulhu::String::operator=(const String& Other)
 {
-    delete[] Real;
-    Real = CString::Duplicate(Other.Real);
+    //TODO: memory leaks
+    //delete[] Real;
+    //printf("%x\n", *Other);
+    
+    Real = CString::Duplicate(!!Other.Real ? Other.Real : "");
+    
     Length = Other.Length;
 
     return *this;
@@ -550,6 +557,7 @@ I32 Cthulhu::CString::Compare(const char* Left, const char* Right, U32 Limit)
 //strstr
 char* Cthulhu::CString::Section(char* Haystack, char* Needle)
 {
+    //TODO: remove this
     return strstr(Haystack, Needle);
 
     // const I32 Len = Length(Needle);
@@ -721,6 +729,9 @@ String Cthulhu::Utils::ToString(I64 Num)
 
     bool Negative = false;
 
+    if(Num == 0)
+        return "0";
+
     if(Num < 0)
     {
         Num = -Num;
@@ -754,30 +765,17 @@ String Cthulhu::Utils::ToString(bool Val)
 
 namespace
 {
-
-char HexChar(I64 Num)
-{
-    Num &= 15;
-    return Num > 10 ? Num + 48 : Num + 55;
+    const char HexChars[] = {
+        '0', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9',
+        'A', 'B', 'C', 'D', 'E',
+        'F'
+    };
 }
-
-} // namespace
 
 String Cthulhu::Utils::HexToString(I64 HexNum)
 {
-    char* Temp = new char[8];
-    
-    for(U32 I = 0; I < 8; I++)
-    {
-        Temp[7 - I] = HexChar(HexNum);
-        HexNum >>= 4;
-    }
-    
-    String Ret = Temp;
 
-    delete[] Temp;
-
-    return Ret;
 }
 
 String Cthulhu::Utils::FastToString(float Num)

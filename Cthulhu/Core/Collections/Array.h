@@ -55,8 +55,9 @@ struct Array
     {}
     
     Array(std::initializer_list<T> InitList)
-        : Allocated(0)
+        : Allocated(InitList.size()+1)
         , Length(0)
+        , Real(new T[InitList.size()+1])
     {
         for(auto& I : InitList)
         {
@@ -65,7 +66,7 @@ struct Array
     }
 
     void Append(const T& Item)
-    {
+    {        
         if(Length + 1 >= Allocated)
         {
             Resize(Length + DefaultSlack);
@@ -124,6 +125,7 @@ struct Array
     //cut from back
     void Cut(U32 Amount)
     {
+        //TODO: this doesnt work you muppet
         ASSERT(Amount <= Length, "Cutting beyond end of array");
         Real += (sizeof(T) * Amount);
         Length -= Amount;
@@ -203,20 +205,22 @@ private:
     {
         T* Temp = Real;
         Real = new T[NewSize];
-
         
-        for(U32 I = 0; I < Math::Min(Length, NewSize); I++)
+        const U32 NewLen = Math::Min(Length, NewSize);
+        
+        for(U32 I = 0; I < NewLen; I++)
         {
             Real[I] = Temp[I];
         }
         
         delete[] Temp;
         Allocated = NewSize;
+        Length = NewLen;
     }
 
     T* Real;
-    U32 Length{0}, Allocated{DefaultSlack};
-    U16 Slack{DefaultSlack};
+    U32 Length, Allocated;
+    U16 Slack;
 };
 
 }

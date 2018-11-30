@@ -57,7 +57,7 @@ int main()
 
     Array<String> StrFirst;
 
-    //FIXME: this now triggers heap-use-after-free
+    //FIXME: segfaults oh boy
     StrFirst.Append("Name");
     StrFirst.Append("is");
 
@@ -77,4 +77,7 @@ int main()
     ASSERT_TEST(StrFirst.Len() == 2);
     ASSERT_TEST(StrSecond.Len() == 2);
 
+    Array<String> Temp = { "one", "two", "three", "four" };
+
+    for(String& I : Temp.Iterate());
 }

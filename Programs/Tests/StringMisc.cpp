@@ -34,11 +34,11 @@ int main()
     ASSERT_TEST(Utils::ToString(true) == "true");
     ASSERT_TEST(Utils::ToString(false) == "false");
 
-    ASSERT_TEST(Utils::HexToString(0x0111) == "0x0111");
+    ASSERT_TEST(Utils::HexToString(0xF) == "0x0111");
 
     ASSERT_TEST(Utils::IsSpace(' '));
     ASSERT_TEST(Utils::IsUpper('A'));
     ASSERT_TEST(Utils::IsLower('a'));
 
-    printf("end\n");
+    //printf("end\n");
 }
