@@ -38,7 +38,7 @@ template<typename T>
 struct Array
 {
     Array()
-        : Real(Memory::Alloc<T>(sizeof(T) * DefaultSlack))
+        : Real(new T[DefaultSlack])
         , Length(0)
         , Allocated(DefaultSlack)
     {}
@@ -204,20 +204,39 @@ private:
 
     void Resize(U32 NewSize)
     {
-        T* Temp = Real;
-        Real = new T[NewSize];
-        
-        const U32 NewLen = Math::Min(Length, NewSize);
-        
-        for(U32 I = 0; I < NewLen; I++)
-        {
-            Real[I] = Temp[I];
-        }
-        
-        delete[] Temp;
+        //TODO: test this more
         Allocated = NewSize;
-        Length = NewLen;
+
+        //figure out how much to copy
+        Length = Math::Min(Length, NewSize);
+        
+        T* Temp = new T[NewSize];
+
+        for(U32 I = 0; I < Length; I++)
+        {
+            Temp[I] = Real[I];
+        }
+
+        delete[] Real;
+
+        Real = Temp;
     }
+
+    // {
+    //     T* Temp = Real;
+    //     Real = new T[NewSize];
+        
+    //     const U32 NewLen = Math::Min(Length, NewSize);
+        
+    //     for(U32 I = 0; I < NewLen; I++)
+    //     {
+    //         Real[I] = Temp[I];
+    //     }
+        
+    //     delete[] Temp;
+    //     Allocated = NewSize;
+    //     Length = NewLen;
+    // }
 
     T* Real;
     U32 Length, Allocated;
