@@ -49,6 +49,11 @@ int main()
     First.Append(5ULL);
     First.Append(10ULL);
 
+    for(U64 I = 0; I < 999; I++)
+    {
+        First.Append(I);
+    }
+
     Array<U64> Second;
     Second.Append(15ULL);
     Second.Append(20ULL);
@@ -61,6 +66,13 @@ int main()
     StrFirst.Append("Name");
     StrFirst.Append("is");
 
+    Array<String> BigArr;
+    
+    for(I64 I = 0; I < 500; I++)
+    {
+        BigArr.Append(*(String("Num=") << I));
+    }
+    
     Array<String> StrSecond;
 
     StrSecond.Append("Jeff");

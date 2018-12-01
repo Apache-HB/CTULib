@@ -40,6 +40,7 @@ struct Array
     Array()
         : Real(Memory::Alloc<T>(sizeof(T) * DefaultSlack))
         , Length(0)
+        , Allocated(DefaultSlack)
     {}
 
     Array(const Array& Other)
