@@ -200,6 +200,11 @@ struct Array
 
     static const U32 DefaultSlack = 32;
 
+    ~Array()
+    {
+        delete[] Real;
+    }
+
 private:
 
     void Resize(U32 NewSize)

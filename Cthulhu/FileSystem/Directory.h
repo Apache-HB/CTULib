@@ -17,5 +17,10 @@
 
 namespace Cthulhu::FileSystem
 {
-    
+
+struct Directory
+{
+
+};
+
 }

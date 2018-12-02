@@ -48,14 +48,23 @@ enum class Mode : U8
     WriteBinary
 };
 
+using FileData = union { const String& String; const Array<Byte>& Data; };
+
+bool CHMod(const String& Name, Permissions NewPermissions);
+bool Exists(const String& Name);
+bool Delete(const String& Name);
+
 struct File
 {
-    const String& Read() const;
+    Type FileType() const;
+
+    FileData Read(Type& ReadType) const;
+    
     bool Write(const String& Data);
     bool Write(const Array<Byte>& Data);
 
     const String& Name() const;
-    bool Rename(const String& NewName);
+    bool Rename(const String& NewName);    
 
 private:
     String Name;
