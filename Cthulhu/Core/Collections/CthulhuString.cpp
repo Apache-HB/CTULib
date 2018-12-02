@@ -765,17 +765,32 @@ String Cthulhu::Utils::ToString(bool Val)
 
 namespace
 {
-    const char HexChars[] = {
-        '0', '1', '2', '3', '4',
-        '5', '6', '7', '8', '9',
-        'A', 'B', 'C', 'D', 'E',
-        'F'
-    };
+    const char HexChars[] = "0123456789ABCDEF";
+
+    char ToHexChar(I32 I)
+    {
+        I &= 15;
+        return I < 10 ? I + 48 : I + 55;
+    }
 }
 
 String Cthulhu::Utils::HexToString(I64 HexNum)
 {
+    char* Ret = new char[9]();
 
+    for(I32 I = 0; I < 8; I++)
+    {
+        Ret[7-I] = ToHexChar(HexNum);
+        HexNum >>= 4;
+    }
+
+    String Temp = Ret;
+
+    Temp.Push("0x");
+
+    delete[] Ret;
+
+    return Temp;
 }
 
 String Cthulhu::Utils::FastToString(float Num)

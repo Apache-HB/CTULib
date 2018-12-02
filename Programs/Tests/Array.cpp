@@ -91,5 +91,6 @@ int main()
 
     Array<String> Temp = { "one", "two", "three", "four" };
 
-    for(String& I : Temp.Iterate());
+    for(String& I : Temp.Iterate())
+        ;
 }
