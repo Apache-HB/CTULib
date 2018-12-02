@@ -755,6 +755,7 @@ String Cthulhu::Utils::ToString(I64 Num)
 
 String Cthulhu::Utils::ToString(float Num)
 {
+    return FastToString(Num);
     //TODO: implement dragon4 at some point
 }
 

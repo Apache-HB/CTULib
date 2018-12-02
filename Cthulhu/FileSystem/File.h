@@ -15,66 +15,60 @@
 
 #include "Core/Collections/CthulhuString.h"
 #include "Core/Collections/Array.h"
-#include "Core/Memory/Unique.h"
-#include "Core/Types/Errno.h"
 
 #pragma once
 
 namespace Cthulhu::FileSystem
 {
 
+enum class Type
+{
+    Text,
+    Binary
+};
+
+enum class Permissions : U16
+{
+    OwnerRead = (1 << 0),
+    OwnerWrite = (1 << 1),
+    OwnerExecute = (1 << 2),
+    GroupRead = (1 << 3),
+    GroupWrite = (1 << 4),
+    GroupExecute = (1 << 5),
+    OtherRead = (1 << 6),
+    OtherWrite = (1 << 7),
+    OtherExecute = (1 << 8)
+};
+
 enum class Mode : U8
 {
     Read,
-    ReadPlus,
     Write,
-    WritePlus,
-    Append,
-    AppendPlus
+    ReadBinary,
+    WriteBinary
 };
 
-struct TextFile
+struct File
 {
-    TextFile(const String& Name, Mode OpenMode);
-    ~TextFile();
+    const String& Read() const;
+    bool Write(const String& Data);
+    bool Write(const Array<Byte>& Data);
 
     const String& Name() const;
-    Errno Rename(const String& NewName);
-
-    const String& Content() const;
-    bool Write(const String& NewData);
+    bool Rename(const String& NewName);
 
 private:
-    Mode FileMode;
-    String FileName;
-    String FileContent;
-    FILE* Real;
-};
+    String Name;
 
-bool Exists(const String& Path);
-bool IsWriteable(const String& Path);
-bool IsReadable(const String& Path);
-bool IsExecutable(const String& Path);
+    Type Type;
 
-struct BinaryFile
-{
-    BinaryFile(const String& Name, Mode OpenMode = Mode::Read);
-    ~BinaryFile();
+    Permissions FilePermissions;
 
-    const String& Name() const;
-    Errno Rename(const String& NewName);
-
-    const Array<Byte>& Content() const;
-    bool Write(const Array<Byte>& NewData);
-
-    Byte operator[](U32 Index) const;
-
-private:
-    Mode FileMode;
-    String FileName;
-    Array<Byte> FileContent;
-    FILE* Real;
+    union
+    {
+        String Content;
+        Array<Byte> Bytes;
+    };
 };
 
 }
-

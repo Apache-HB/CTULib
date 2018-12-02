@@ -47,4 +47,22 @@ int main()
 
     ASSERT_TEST(TestMap.Values().Len() == 2);
     ASSERT_TEST(TestMap.Items().Len() == 2);
+
+    Map<U32, String> Numbers = {
+        { 0, "zero" },
+        { 1, "one" },
+        { 2, "two" },
+        { 3, "three" },
+        { 4, "four" },
+        { 5, "five" },
+        { 6, "six" },
+        { 7, "seven" },
+        { 8, "eight" },
+        { 9, "nine" },
+        { 10, "ten" }
+    };
+
+    ASSERT_TEST(Numbers[0] == "zero");
+    ASSERT_TEST(Numbers[10] == "ten");
+
 }

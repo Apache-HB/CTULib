@@ -24,6 +24,18 @@ namespace Cthulhu
 
 const U32 MersenePrime = 8191;
 
+template<typename T> inline U32 Hash(const T&);
+
+template<> inline U32 Hash(const U8& Num)  { return Num % MersenePrime; }
+template<> inline U32 Hash(const U16& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const U32& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const U64& Num) { return Num % MersenePrime; }
+
+template<> inline U32 Hash(const I8& Num)  { return Num % MersenePrime; }
+template<> inline U32 Hash(const I16& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
+template<> inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
+
 template<typename, typename> struct MapNode;
 
 template<typename TKey, typename TVal>
@@ -256,17 +268,5 @@ struct MapNode
     
     ALWAYSINLINE operator TVal() { return Val; }
 };
-
-template<typename T> inline U32 Hash(const T&);
-
-template<> inline U32 Hash(const U8& Num)  { return Num % MersenePrime; }
-template<> inline U32 Hash(const U16& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const U32& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const U64& Num) { return Num % MersenePrime; }
-
-template<> inline U32 Hash(const I8& Num)  { return Num % MersenePrime; }
-template<> inline U32 Hash(const I16& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
 
 }
