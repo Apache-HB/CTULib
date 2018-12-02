@@ -227,22 +227,6 @@ private:
         Real = Temp;
     }
 
-    // {
-    //     T* Temp = Real;
-    //     Real = new T[NewSize];
-        
-    //     const U32 NewLen = Math::Min(Length, NewSize);
-        
-    //     for(U32 I = 0; I < NewLen; I++)
-    //     {
-    //         Real[I] = Temp[I];
-    //     }
-        
-    //     delete[] Temp;
-    //     Allocated = NewSize;
-    //     Length = NewLen;
-    // }
-
     T* Real;
     U32 Length, Allocated;
     U16 Slack;

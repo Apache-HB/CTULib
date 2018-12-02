@@ -351,7 +351,7 @@ String Cthulhu::String::Reversed() const
 String& Cthulhu::String::operator=(const String& Other)
 {
     //TODO: memory leaks
-    //delete[] Real;
+    delete[] Real;
     //printf("%x\n", *Other);
     
     Real = CString::Duplicate(!!Other.Real ? Other.Real : "");
