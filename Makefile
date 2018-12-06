@@ -64,7 +64,7 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = Files/File.cpp
+TEST_NAME = String.cpp
 
 tests:
 	echo 'Running tests' && \
@@ -76,6 +76,15 @@ angry:
 	echo 'Running angry compiler' && \
 	$(CC) $(STD) $(FLAGS) $(PATHS) $(DIRS) -c -Weverything $(DEBUG_ARGS) $(DEBUG_FLAG) && \
 	make finalize
+
+LANG_DIRS = $(shell find ./Programs/Lang -name '*.cpp')
+LANG_NAME = ccthulhu
+
+lang:
+	echo 'Building compiler' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(LANG_DIRS) \
+	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
+	-o $(LANG_NAME)
 
 finalize:
 	echo 'Moving Files to library' && \

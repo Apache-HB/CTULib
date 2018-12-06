@@ -253,7 +253,7 @@ String Cthulhu::String::Replace(const String& Search, const String& Substitute) 
     return Ret;
 }
 
-String Cthulhu::String::Format(const Array<String>& Args) const
+String Cthulhu::String::ArrayFormat(const Array<String>& Args) const
 {
     String Ret = Real;
 

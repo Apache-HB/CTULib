@@ -85,7 +85,7 @@ struct String
     String Trim(const String& Pattern = " ");
     String Replace(const String& Search, const String& Substitute) const;
 
-    String Format(const Array<String>& Args) const;
+    String ArrayFormat(const Array<String>& Args) const;
     String Format(const Map<String, String>& Args) const;
 
     //cut from front

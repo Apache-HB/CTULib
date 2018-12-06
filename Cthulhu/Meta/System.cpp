@@ -49,7 +49,7 @@ U64 TotalRam()
 bool FunctionExists(const String& Name)
 {
     Array<String> Temp = { *Name };
-    return system(*String("which {0} > /dev/null 2>&1").Format(Temp));
+    return system(*String("which {0} > /dev/null 2>&1").ArrayFormat(Temp));
 }
 
 bool HasCommandPromt()

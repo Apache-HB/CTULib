@@ -142,7 +142,7 @@ int main()
         "first", "middle", "last"
     };
 
-    String Fmt = String("my name is {0}.{1}.{2}").Format(FmtArr);
+    String Fmt = String("my name is {0}.{1}.{2}").ArrayFormat(FmtArr);
 
     ASSERT_TEST(Fmt == "my name is first.middle.last");
 
