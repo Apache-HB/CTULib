@@ -34,7 +34,7 @@ struct FastFile
 
 private:
 
-    struct FILE* Real;
+    FILE* Real;
 };
 
 }

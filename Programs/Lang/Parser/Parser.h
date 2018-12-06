@@ -13,26 +13,14 @@
  *  limitations under the License.
  */
 
-#include <Core/Collections/CthulhuString.h>
-#include <Core/Collections/Array.h>
+#pragma once
 
-#include "Utils/FastFile/FastFile.h"
-
-using namespace Cthulhu;
-using namespace Cthulhu::Lang;
-
-int Main(Array<String> Args)
+namespace Cthulhu::Lang
 {
-    FastFile F = FastFile(Args[1]);
-    return 0;
-}
 
-int main(int argc, char const *argv[])
+struct Parser
 {
-    Array<String> Args;
-    
-    for(U32 I = 0; I < argc; I++)
-        Args.Append(argv[I]);
-    
-    return Main(Args);
-}
+
+};
+
+} // Cthulhu::Lang
