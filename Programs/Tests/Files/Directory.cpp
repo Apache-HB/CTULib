@@ -13,16 +13,9 @@
  *  limitations under the License.
  */
 
-#include "Meta/Aliases.h"
+#include "FileSystem/Directory.h"
 
-#pragma once
-
-namespace Cthulhu
+int main()
 {
-
-struct Date
-{
-    static Date Now();
-};
 
 }

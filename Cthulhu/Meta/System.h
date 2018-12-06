@@ -13,23 +13,18 @@
  *  limitations under the License.
  */
 
-#if 0
+#include "Core/Collections/CthulhuString.h"
 
-#include "FileSystem.h"
+#pragma once
 
-using Cthulhu::Result;
-using Cthulhu::Fail;
-
-using Cthulhu::String;
-
-using Cthulhu::FileSystem::TextFile;
-using Cthulhu::FileSystem::BinaryFile;
-using Cthulhu::FileSystem::IOError;
-using Cthulhu::FileSystem::Mode;
-
-Result<TextFile, IOError> TextOpen(const String& Path, const Mode FileMode)
+namespace Cthulhu::System
 {
-    return Fail<TextFile, IOError>(IOError::NotFound);
-}
 
-#endif
+U32 CoreCount();
+U64 TotalRam();
+bool FunctionExists(const String& Name);
+bool HasCommandPromt();
+String Exec(const String& Command);
+Option<String> CurrentDirectory();
+
+}

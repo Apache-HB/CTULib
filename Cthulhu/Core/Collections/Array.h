@@ -56,7 +56,7 @@ struct Array
     {}
     
     Array(std::initializer_list<T> InitList)
-        : Allocated(InitList.size()+1)
+        : Allocated(InitList.size())
         , Length(0)
         , Real(new T[InitList.size()+1])
     {

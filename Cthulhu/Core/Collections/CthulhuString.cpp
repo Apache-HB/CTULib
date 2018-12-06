@@ -253,7 +253,7 @@ String Cthulhu::String::Replace(const String& Search, const String& Substitute) 
     return Ret;
 }
 
-String Cthulhu::String::Format(Array<String>& Args) const
+String Cthulhu::String::Format(const Array<String>& Args) const
 {
     String Ret = Real;
 
@@ -268,16 +268,16 @@ String Cthulhu::String::Format(Array<String>& Args) const
     return Ret;
 }
 
-String Cthulhu::String::Format(Map<String, String>& Args) const
+String Cthulhu::String::Format(const Map<String, String>& Args) const
 {
     String Ret = Real;
 
-    const auto Iter = Args.Items().Iterate();
+    const auto Iter = Args.Items().ConstIterate();
 
     for(const auto& I : Iter)
     {
         String Temp = "{";
-        Temp << (I64)*I.Second;
+        Temp << (I64)I.Second;
         Temp += "}";
         Ret = Ret.Replace(Temp, *I.First);
     }
@@ -342,6 +342,18 @@ String Cthulhu::String::Reversed() const
     delete[] Temp;
 
     return Ret;
+}
+
+void Cthulhu::String::Claim(char* NewData)
+{
+    delete[] Real;
+    Real = NewData;
+    Length = CString::Length(NewData);
+}
+
+bool Cthulhu::String::Equals(const String& Other) const
+{
+    return CString::Compare(Real, Other.Real) == 0;
 }
 
 /*================================================================*/

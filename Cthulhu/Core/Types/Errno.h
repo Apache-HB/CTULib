@@ -153,7 +153,6 @@ enum class Errno : U8
     ExpiredKey              = 127,
     RevokedKey              = 128,
     RejectedKey             = 129,
-
     OwnerDied               = 130,
     NotRecoverable          = 131,
 };

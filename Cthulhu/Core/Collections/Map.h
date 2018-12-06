@@ -104,7 +104,7 @@ struct Map
         return Extract(Key)->Val;
     }
     
-    TVal Get(const TKey& Key, const TVal& Or)
+    TVal Get(const TKey& Key, const TVal& Or) const
     {
         const U32 Hashed = Hash(Key);
 
@@ -112,9 +112,9 @@ struct Map
     }
 
     //TODO: this mangles shit
-    Array<TKey> Keys()
+    Array<TKey*> Keys() const
     {
-        Array<TKey> Ret;
+        Array<TKey*> Ret;
 
         for(U32 I = 0; I < TableSize; I++)
         {
@@ -122,7 +122,7 @@ struct Map
 
             while(Current != nullptr)
             {
-                Ret += Current->Key;
+                Ret.Append(&Current->Key);
                 Current = Current->Next;
             }
         }
@@ -131,9 +131,9 @@ struct Map
     }
 
     //TODO: this mangles shit
-    Array<TVal> Values()
+    Array<TVal*> Values() const
     {
-        Array<TVal> Ret;
+        Array<TVal*> Ret;
 
         for(U32 I = 0; I < TableSize; I++)
         {
@@ -141,7 +141,7 @@ struct Map
 
             while(Current != nullptr)
             {
-                Ret.Append(Current->Val);
+                Ret.Append(&Current->Val);
                 Current = Current->Next;
             }
         }
@@ -152,7 +152,7 @@ struct Map
     using MapPair = Pair<TKey*, TVal*>;
 
     //TODO: this mangles shit
-    Array<MapPair> Items()
+    Array<MapPair> Items() const
     {
         Array<MapPair> Ret;
 

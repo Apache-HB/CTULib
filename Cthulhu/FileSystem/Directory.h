@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#include "File.h"
+
 #pragma once
 
 namespace Cthulhu::FileSystem

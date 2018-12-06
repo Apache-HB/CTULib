@@ -43,7 +43,8 @@ struct Result
     }
 
 private:
-    
+    //TODO: make this work with stuff that doesnt have default constructors
+    //TODO: also make it work with stuff with non-trivial destructors
     Result(TRes Input)
         : Val(Input)
         , HasError(false)
