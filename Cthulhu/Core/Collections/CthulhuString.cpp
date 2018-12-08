@@ -19,6 +19,8 @@
 #include "Core/Math/Math.h"
 //Math::Min Math::Max
 
+#include "Core/Math/Limits.h"
+
 #include "CthulhuString.h"
 
 using namespace Cthulhu;
@@ -660,6 +662,59 @@ Option<I64> Cthulhu::Utils::ParseInt(const String& Text)
     return Some(Ret * Sign);
 }
 
+Option<I64> Cthulhu::Utils::ParseBits(const String& Text)
+{
+    I64 Ret = 0;
+    const char* Str = *Text;
+    
+    while(*Str)
+    {
+        if(Ret >= (Limits<I64>::Max() / 2))
+            return None<I64>();
+        else if(*Str == '1')
+            Ret = (Ret * 2) + 1;
+        else if(*Str == '0')
+            Ret *= 2;
+        else
+            return None<I64>();
+        Str++;
+    }
+
+    return Some(Ret);
+}
+
+namespace
+{
+
+const I8 HexTable[] = {
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1, 0,1,2,3,4,5,6,7,8,9,-1,-1,-1,-1,-1,-1,-1,10,11,12,13,14,15,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,10,11,12,13,14,15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+};
+
+}
+
+Option<I64> Cthulhu::Utils::ParseHex(const String& Text)
+{
+    I64 Ret = 0;
+    const char* T = *Text;
+    while(*T && Ret >= 0) 
+        Ret = (Ret << 4) | HexTable[*T++];
+    
+    if(Ret == -1 || Ret == (sizeof(I64) * 8) - 1)
+        return None<I64>();
+    
+    return Some(Ret);
+}
+
 Option<float> Cthulhu::Utils::ParseFloat(const String& Text)
 {
     char* Real = *Text;
@@ -833,6 +888,31 @@ bool Cthulhu::Utils::IsUpper(char C)
 bool Cthulhu::Utils::IsLower(char C)
 {
     return Consts::LowerCase()->Has(C);
+}
+
+bool Cthulhu::Utils::IsNum(char C)
+{
+    return Consts::Digits()->Has(C);
+}
+
+bool Cthulhu::Utils::IsAlpha(char C)
+{
+    return Consts::Chars()->Has(C);
+}
+
+bool Cthulhu::Utils::IsPrintable(char C)
+{
+    return Consts::Printable()->Has(C);
+}
+
+bool Cthulhu::Utils::IsAlnum(char C)
+{
+    return IsAlpha(C) || IsNum(C);
+}
+
+bool Cthulhu::Utils::IsEOF(char C)
+{
+    return C == -1 || C == '\0';
 }
 
 /*================================================================*/

@@ -17,13 +17,25 @@
 #include <Core/Collections/Array.h>
 
 #include "Utils/FastFile/FastFile.h"
+#include "Lexer/Lexer.h"
 
 using namespace Cthulhu;
 using namespace Cthulhu::Lang;
 
-int Main(Array<String> Args)
+int Main(Array<String>* Args)
 {
-    FastFile F = FastFile(Args[1]);
+    FastFile F = FastFile((*(Args))[1]);
+    Lexer L = Lexer(F);
+
+    Lexeme Lex = L.Next();
+
+    while(Lex.Type != LexType::End)
+    {
+        Lex = L.Next();
+    }
+
+    printf("End of file\n");
+
     return 0;
 }
 
@@ -32,7 +44,7 @@ int main(int argc, char const *argv[])
     Array<String> Args;
     
     for(U32 I = 0; I < argc; I++)
-        Args.Append(argv[I]);
+        Args.Append(String(argv[I]));
     
-    return Main(Args);
+    return Main(&Args);
 }

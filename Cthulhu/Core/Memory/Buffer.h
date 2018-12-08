@@ -13,28 +13,36 @@
  *  limitations under the License.
  */
 
-#include <Core/Collections/CthulhuString.h>
+#include "Meta/Aliases.h"
 
 #pragma once
 
-namespace Cthulhu::Lang
+namespace Cthulhu
 {
 
-struct FastFile
+template<typename T, I32 Size>
+struct Buffer
 {
-    FastFile(const String& Name);
+    Buffer() : Index(0) {}
+    
+    void Push(T Item)
+    {
+        Real[Index++] = Item;
+    }
 
-    ALWAYSINLINE char Next();
+    T Pop()
+    {
+        return Real[--Index];
+    }
 
-    ALWAYSINLINE char Peek() const;
+    I32 Length() const { return Index; }
+    T* Data() const { return Real; }
+    T* operator*() const { return Real; }
 
-    ALWAYSINLINE void Close();
-
-    ALWAYSINLINE bool Valid() const;
-
+    ~Buffer() { delete[] Real; }
 private:
-
-    FILE* Real;
+    T* Real = new T[Size];
+    I32 Index;
 };
 
 }

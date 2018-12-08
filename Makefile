@@ -86,6 +86,12 @@ lang:
 	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
 	-o $(LANG_NAME)
 
+debug_lang:
+	echo 'Building debug compiler' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(LANG_DIRS) $(DEBUG_ARGS) \
+	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
+	-o $(LANG_NAME)
+
 finalize:
 	echo 'Moving Files to library' && \
 	sh Build/Scripts/MakeLibrary.sh

@@ -21,7 +21,10 @@ using namespace Cthulhu::Lang;
 
 FastFile::FastFile(const String& Name)
     : Real(fopen(*Name, "r"))
-{}
+{
+    if(Real)
+        fputs("\n\0", Real);
+}
 
 char FastFile::Next()
 {

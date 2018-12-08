@@ -177,6 +177,8 @@ namespace Utils
     String Padding(const String& Text, U32 Repeat);
 
     Option<I64> ParseInt(const String& Text);
+    Option<I64> ParseBits(const String& Text);
+    Option<I64> ParseHex(const String& Text);
     Option<float> ParseFloat(const String& Text);
     Option<bool> ParseBool(const String& Text);
 
@@ -188,9 +190,14 @@ namespace Utils
 
     String FastToString(float Num);
 
-    bool IsSpace(char C);
-    bool IsUpper(char C);
-    bool IsLower(char C);
+    ALWAYSINLINE bool IsSpace(char C);
+    ALWAYSINLINE bool IsUpper(char C);
+    ALWAYSINLINE bool IsLower(char C);
+    ALWAYSINLINE bool IsNum(char C);
+    ALWAYSINLINE bool IsAlpha(char C);
+    ALWAYSINLINE bool IsPrintable(char C);
+    ALWAYSINLINE bool IsAlnum(char C);
+    ALWAYSINLINE bool IsEOF(char C);
 }
 
 namespace Consts

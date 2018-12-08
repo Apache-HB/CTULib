@@ -19,21 +19,54 @@
 
 #pragma once
 
+namespace Cthulhu
+{
+    template<typename, I32> struct Buffer;
+}
+
 namespace Cthulhu::Lang
 {
+
+#define KW(V, _) V,
+#define OP(V, _) V,
+
+enum class Keyword : U8
+{
+#   include "Keywords.inc"
+};
+
+#undef KW
+#undef OP
+
+enum class LexType : U8
+{
+    Ident,
+    Keyword,
+    Float,
+    Int,
+    String,
+    End,
+};
 
 struct Lexeme
 {
     U64 Line;
     U16 Distance;
 
-    String Ident;
+    LexType Type;
 
     union
     {
+        String* Ident;
+        Keyword Key;
         float F;
         I64 Num;
     };
+
+
+    Lexeme() : Type(LexType::Int) {}
+    Lexeme(LexType LType);
+    ~Lexeme();
 };
 
 struct Lexer
@@ -44,14 +77,16 @@ struct Lexer
 
     Lexer(FastFile InFile);
 
-    U64 CurrentLine() const;
-    U16 CurrentDistance() const;
-    U64 GetRealDistance() const;
+    U64 CurrentLine() const { return Line; }
+    U16 CurrentDistance() const { return Distance; }
+    U64 GetRealDistance() const { return RealDistance; }
 
 private:
-    Lexeme Current;
-    Lexeme Next;
-    Lexeme Next2;
+    Lexeme ParseNum(Buffer<char, 512>* NumBuf, char& C);
+
+    Lexeme CurrentLex;
+    Lexeme NextLex;
+    Lexeme Next2Lex;
 
     U64 Line;
     U16 Distance;
