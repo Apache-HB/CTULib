@@ -15,14 +15,11 @@
 
 #include <Meta/Aliases.h>
 #include <Core/Collections/CthulhuString.h>
+#include <Core/Memory/Buffer.h>
+
 #include "../Utils/FastFile/FastFile.h"
 
 #pragma once
-
-namespace Cthulhu
-{
-    template<typename, I32> struct Buffer;
-}
 
 namespace Cthulhu::Lang
 {
@@ -32,6 +29,7 @@ namespace Cthulhu::Lang
 
 enum class Keyword : U8
 {
+    None,
 #   include "Keywords.inc"
 };
 
@@ -82,6 +80,11 @@ struct Lexer
     U64 GetRealDistance() const { return RealDistance; }
 
 private:
+    Lexeme LexNext();
+    void ParseOperator();
+    static Keyword IsOperator(Buffer<char, 512>* Buf);
+    static Keyword IsKeyword(Buffer<char, 512>* Buf);
+
     Lexeme ParseNum(Buffer<char, 512>* NumBuf, char& C);
 
     Lexeme CurrentLex;
@@ -92,6 +95,10 @@ private:
     U16 Distance;
     U64 RealDistance;
     FastFile File;
+
+    Buffer<char, 512> Buf;
+
+    bool FoundEOF = false;
 };
 
 }

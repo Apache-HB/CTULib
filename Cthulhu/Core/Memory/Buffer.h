@@ -38,6 +38,9 @@ struct Buffer
     I32 Length() const { return Index; }
     T* Data() const { return Real; }
     T* operator*() const { return Real; }
+    void Wipe() { Index = 0; }
+
+    T& operator[](I32 Index) const { return Real[Index]; }
 
     ~Buffer() { delete[] Real; }
 private:
