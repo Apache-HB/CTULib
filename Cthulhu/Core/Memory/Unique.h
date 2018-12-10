@@ -14,7 +14,6 @@
  */
 
 #include "Meta/Assert.h"
-#include "Meta/Macros.h"
 #include "Deleter.h"
 
 #pragma once

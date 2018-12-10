@@ -52,7 +52,7 @@ template<>
 struct Limits<I64>
 {
     static I64 Max() { return 9223372036854775807LL; }
-    static I64 Min() { return -9223372036854775808LL; }
+    static I64 Min() { return -9223372036854775807LL; }
 };
 
 template<> 
