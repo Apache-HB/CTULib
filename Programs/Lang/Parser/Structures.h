@@ -13,19 +13,30 @@
  *  limitations under the License.
  */
 
+#include <Core/Memory/Buffer.h>
 #include <Core/Collections/CthulhuString.h>
-#include <Core/Collections/Map.h>
-
-#include "../Lexer/Lexer.h"
+#include <Core/Collections/Option.h>
+#include <Core/Collections/Array.h>
 
 #pragma once
 
 namespace Cthulhu::Lang
 {
 
-struct Parser
+struct Import
 {
-
+    Buffer<String, 32> Path;
 };
 
-} // Cthulhu::Lang
+struct Imports
+{
+    Import* Path;
+    Array<String>* Exposes;
+};
+
+struct Program
+{
+    Imports* Imported;
+};
+
+}

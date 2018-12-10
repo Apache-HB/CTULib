@@ -32,6 +32,8 @@ struct FastFile
 
     ALWAYSINLINE bool Valid() const;
 
+    ALWAYSINLINE void Push(char C);
+
 private:
 
     FILE* Real;

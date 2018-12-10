@@ -14,6 +14,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 
 #include <Core/Collections/Option.h>
 
@@ -122,11 +123,9 @@ Keyword Lexer::IsOperator(Buffer<char, 512>* Buf)
 {
     Buf->Push('\0');
 
-    printf("OpBuf = %s\n", Buf->Data());
-
 #define KW(...)
 
-#define OP(O, S) if(CString::Compare(Buf->Data(), S) == 0) return Keyword::O;
+#define OP(O, S) if(CString::Compare(Buf->Data(), S) == 0) { Buf->Pop(); return Keyword::O; }
 #   include "Keywords.inc"
 #undef OP
 
@@ -145,7 +144,7 @@ Keyword Lexer::IsKeyword(Buffer<char, 512>* Buf)
 
 #define OP(...)
 
-#define KW(W, S) if(CString::Compare(Buf->Data(), S) == 0) return Keyword::W;
+#define KW(W, S) if(CString::Compare(Buf->Data(), S) == 0) { Buf->Pop(); return Keyword::W; }
 #   include "Keywords.inc"
 #undef KW
 
@@ -158,10 +157,17 @@ Keyword Lexer::IsKeyword(Buffer<char, 512>* Buf)
 
 void Lexer::ParseOperator()
 {
+    char C;
+    
     while(IsOperator(&Buf) != Keyword::None)
     {
         Buf.Push(File.Peek());
+        C = File.Next();
     }
+
+    File.Push(C);
+
+    Buf.Pop();
 }
 
 Lexeme Lexer::Next()
@@ -321,19 +327,17 @@ Lexeme Lexer::LexNext()
         Buf.Wipe();
         Buf.Push(C);
 
-        //TODO: this seems hacky
-        Buf[1] = '\0';
-
-        printf("Buf = %c%c\n", Buf.Data()[0], Buf.Data()[1]);
-
         ParseOperator();
 
         auto Ret = Lexeme(LexType::Keyword);
         Ret.Key = IsOperator(&Buf);
 
-        return Ret;
+        if(Ret.Key == Keyword::None)
+            return Lexeme(LexType::End);
 
-        //TODO: Make operator lexing work proplery
+        printf("Op = %hhu\n", Ret.Key);
+
+        return Ret;
     }
 
     return Lexeme(LexType::End);
@@ -341,11 +345,16 @@ Lexeme Lexer::LexNext()
 
 Lexeme Lexer::Peek() const
 {
-
+    return CurrentLex;
 }
 
 Lexeme Lexer::Peek2() const
 {
+    return NextLex;
+}
 
+Lexeme Lexer::Peek3() const
+{
+    return Next2Lex;
 }
 

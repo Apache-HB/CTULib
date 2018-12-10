@@ -50,3 +50,8 @@ void FastFile::Close()
 {
     fclose(Real);
 }
+
+void FastFile::Push(char C)
+{
+    ungetc(C, Real);
+}

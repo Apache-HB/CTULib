@@ -72,6 +72,7 @@ struct Lexer
     Lexeme Next();
     Lexeme Peek() const;
     Lexeme Peek2() const;
+    Lexeme Peek3() const;
 
     Lexer(FastFile InFile);
 
