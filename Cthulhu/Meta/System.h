@@ -17,14 +17,56 @@
 
 #pragma once
 
+/**
+ * 
+ */
 namespace Cthulhu::System
 {
 
+/**
+ * @brief 
+ * 
+ * @return U32 
+ */
 U32 CoreCount();
+
+/**
+ * @brief 
+ * 
+ * @return U64 
+ */
 U64 TotalRam();
+
+/**
+ * @brief 
+ * 
+ * @param Name 
+ * @return true 
+ * @return false 
+ */
 bool FunctionExists(const String& Name);
+
+/**
+ * @brief 
+ * 
+ * @return true 
+ * @return false 
+ */
 bool HasCommandPromt();
+
+/**
+ * @brief 
+ * 
+ * @param Command 
+ * @return String 
+ */
 String Exec(const String& Command);
+
+/**
+ * @brief 
+ * 
+ * @return Option<String> 
+ */
 Option<String> CurrentDirectory();
 
 }

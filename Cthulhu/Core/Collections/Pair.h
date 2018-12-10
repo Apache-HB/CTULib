@@ -18,6 +18,32 @@
 namespace Cthulhu
 {
 
+/**
+ * @brief A type to represent a pair of values
+ * 
+ * @description cuts down on boilerplate code as you can do
+ * 
+ * @code{.cpp}
+ * 
+ * using Person = Pair<String, I32>;
+ * 
+ * @endcode
+ * 
+ * instead of
+ * 
+ * @code{.cpp}
+ * 
+ * struct Person
+ * {
+ *     String First;
+ *     I32 Second;
+ * };
+ * 
+ * @endcode
+ * 
+ * @tparam TFirst the first item in the pair
+ * @tparam TSecond the second item in the pair
+ */
 template<typename TFirst, typename TSecond>
 struct Pair
 {
@@ -25,6 +51,43 @@ struct Pair
     TSecond Second;
 };
 
+/**
+ * @brief A type that represents a trio of values 
+ * 
+ * @description as most libraries have a disturbing lack of this type
+ * allows you to further cut down on boilerplate code with using statements instead of structs
+ * 
+ * @code{.cpp}
+ * 
+ * using Human = Triplet<String, I32, float>;
+ * //                    ^^^^^^  ^^^  ^^^^^
+ * // Name --------------/       |    |
+ * // Age -----------------------/    |
+ * // Gender -------------------------/
+ * 
+ * @endcode
+ * 
+ * instead of 
+ * 
+ * @code{.cpp}
+ * 
+ * using Human = Pair<String, Pair<I32, float>>;
+ * 
+ * // or
+ * 
+ * struct Human
+ * {
+ *     String Name;
+ *     I32 Age;
+ *     float Gender;
+ * };
+ * 
+ * @endcode
+ * 
+ * @tparam TFirst the first type 
+ * @tparam TSecond the second type
+ * @tparam TThird the third type
+ */
 template<
     typename TFirst,
     typename TSecond,

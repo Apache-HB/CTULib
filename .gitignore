@@ -13,3 +13,9 @@
 !*.md
 !LICENSE
 !*.sh
+
+#dont ignore the doxygen build file
+!CthulhuLib
+
+#ignore the generated docs
+Build/Docs

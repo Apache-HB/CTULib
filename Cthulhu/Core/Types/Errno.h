@@ -21,7 +21,12 @@
 namespace Cthulhu
 {
 
-//based off of http://www.virtsync.com/c-error-codes-include-errno
+/**
+ * @brief mirrors the cstdlib errno #defines
+ * 
+ * @description identical to the lists from <a href="http://www.virtsync.com/c-error-codes-include-errno">Virtsync.com</a>
+ * 
+ */
 enum class Errno : U8
 {
     None                    = 0,
@@ -157,6 +162,12 @@ enum class Errno : U8
     NotRecoverable          = 131,
 };
 
+/**
+ * @brief Turn an Errno into a string to print
+ * 
+ * @param Err The errno to turn into a string
+ * @return String the errno as a string
+ */
 String ToString(Errno Err);
 
 }

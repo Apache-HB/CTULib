@@ -72,7 +72,7 @@ File::File(const File& Other)
 File::File(const String& Path, Mode ReadMode)
     : FileName(basename(*Path))
     , FileType(ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary)
-    , Real(fopen(Path.CStr(), ModeToString(ReadMode).CStr()))
+    , Real(fopen(Path.CStr(), Private::ModeToString(ReadMode).CStr()))
 {
     Memory::Zero<String>(&Content, sizeof(String));
 

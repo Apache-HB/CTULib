@@ -25,40 +25,62 @@
 #include "Core/Collections/Array.h"
 #include "Core/Types/Errno.h"
 #include "Core/Collections/Result.h"
-//#include "Core/Types/Date.h"
 
 #pragma once
 
+/**
+ * @brief The namespace for the Cthulhu filespace system
+ * 
+ */
 namespace Cthulhu::FileSystem
 {
 
+/**
+ * @brief The type of a file
+ * 
+ */
 enum class Type
 {
-    Text,
-    Binary
+    Text, ///< A text file, such as .txt or .cpp
+    Binary ///< A binary file, such as a .o or .a
 };
 
+/**
+ * @brief the permissions of a file
+ * 
+ */
 enum class Permissions : U16
 {
-    OwnerRead = (1 << 8),
-    OwnerWrite = (1 << 7),
-    OwnerExecute = (1 << 6),
-    GroupRead = (1 << 5),
-    GroupWrite = (1 << 4),
-    GroupExecute = (1 << 3),
-    OtherRead = (1 << 2),
-    OtherWrite = (1 << 1),
-    OtherExecute = (1 << 0)
+    OwnerRead = (1 << 8), ///< The owner of the file can read from it
+    OwnerWrite = (1 << 7), ///< The owner of the file can write to it
+    OwnerExecute = (1 << 6), ///< The owner of the file can try to execute the contents of the file
+    GroupRead = (1 << 5), ///< The group can read from this file
+    GroupWrite = (1 << 4), ///< The group can write to this file
+    GroupExecute = (1 << 3), ///< The group can execute this file
+    OtherRead = (1 << 2), ///< Other can read from this file
+    OtherWrite = (1 << 1), ///< Other can write to this file
+    OtherExecute = (1 << 0) ///< Other can execute this file
 };
 
+/**
+ * @brief The file opening mode
+ * 
+ */
 enum class Mode : U8
 {
-    ReadText = (1 << 0),
-    WriteText = (1 << 1),
-    ReadBinary = (1 << 2),
-    WriteBinary = (1 << 3)
+    ReadText = (1 << 0), ///< Open a file in readonly for text
+    WriteText = (1 << 1), ///< Open a file in readwrite for text
+    ReadBinary = (1 << 2), ///< Open a file in readonly for binary
+    WriteBinary = (1 << 3) ///< Open a file in readwrite for binary
 };
 
+/**
+ * @brief 
+ * 
+ * @param Left 
+ * @param Right 
+ * @return Mode 
+ */
 inline Mode operator|(const Mode Left, const Mode Right)
 { 
     return static_cast<Mode>(
@@ -66,6 +88,13 @@ inline Mode operator|(const Mode Left, const Mode Right)
     ); 
 }
 
+/**
+ * @brief 
+ * 
+ * @param Left 
+ * @param Right 
+ * @return Mode 
+ */
 inline Mode operator&(const Mode Left, const Mode Right)
 {
     return static_cast<Mode>(
@@ -73,41 +102,155 @@ inline Mode operator&(const Mode Left, const Mode Right)
     );
 }
 
+/**
+ * @brief 
+ * 
+ */
 struct FileData
 {
     const String* Str;
     const Array<Byte>* Data;
 };
 
+/**
+ * @brief 
+ * 
+ * @param Name 
+ * @param NewPermissions 
+ * @return Errno 
+ */
 Errno CHMod(const String& Name, Permissions NewPermissions);
+
+/**
+ * @brief 
+ * 
+ * @param Name 
+ * @return true 
+ * @return false 
+ */
 bool Exists(const String& Name);
+
+/**
+ * @brief 
+ * 
+ * @param Name 
+ * @return Errno 
+ */
 Errno Delete(const String& Name);
 
+/**
+ * @brief 
+ * 
+ * @param Name 
+ * @return Result<U64, Errno> 
+ */
 Result<U64, Errno> LastEdited(const String& Name);
 
+/**
+ * @brief 
+ * 
+ */
 struct File
 {
+    /**
+     * @brief 
+     * 
+     * @param Name 
+     * @param ReadMode 
+     * @return Result<File*, Errno> 
+     */
     friend Result<File*, Errno> Open(const String& Name, Mode ReadMode);
+    
+    /**
+     * @brief Get the Type object
+     * 
+     * @return Type 
+     */
     Type GetType() const;
 
+    /**
+     * @brief 
+     * 
+     * @return const Array<Byte>* 
+     */
     const Array<Byte>* ReadBinary() const;
+
+    /**
+     * @brief 
+     * 
+     * @return const String* 
+     */
     const String* ReadText() const;
     
+    /**
+     * @brief 
+     * 
+     * @param Data 
+     */
     void Write(const String& Data);
+
+    /**
+     * @brief 
+     * 
+     * @param Data 
+     */
     void Write(const Array<Byte>& Data);
 
+    /**
+     * @brief 
+     * 
+     * @return const String& 
+     */
     const String& Name() const;
+
+    /**
+     * @brief 
+     * 
+     * @param NewName 
+     * @return Errno 
+     */
     Errno Rename(const String& NewName);    
 
+    /**
+     * @brief Destroy the File object
+     * 
+     */
     ~File();
 
+    /**
+     * @brief 
+     * 
+     * @return true 
+     * @return false 
+     */
     bool Valid() const;
 
+    /**
+     * @brief 
+     * 
+     * @return U64 
+     */
     U64 LastModified() const;
+
+    /**
+     * @brief Get the Permissions object
+     * 
+     * @return Permissions 
+     */
     Permissions GetPermissions() const;
 
+    /**
+     * @brief Construct a new File object
+     * 
+     * @param Other 
+     */
     File(const File& Other);
 
+    /**
+     * @brief 
+     * 
+     * @return String 
+     */
     String AbsolutePath() const;
 
 private:
@@ -134,7 +277,7 @@ private:
 };
 
 
-namespace 
+namespace Private
 {
 
 String ModeToString(Mode Input)
@@ -182,11 +325,11 @@ Array<Byte> ReadBinaryFile(FILE* Ptr)
     return Array<Byte>(Buffer, Len);
 }
 
-}
+} // namespace
 
 inline Result<File*, Errno> Open(const String& Name, Mode ReadMode)
 {
-    FILE* Data = fopen(*Name, *ModeToString(ReadMode));
+    FILE* Data = fopen(*Name, *Private::ModeToString(ReadMode));
 
     if(!Data)
         return Fail<File*, Errno>(Errno(errno));
@@ -205,11 +348,11 @@ inline Result<File*, Errno> Open(const String& Name, Mode ReadMode)
 
         if(Ret->GetType() == Type::Text)
         {
-            Ret->Content.Claim(ReadFile(Data));
+            Ret->Content.Claim(Private::ReadFile(Data));
         }
         else
         {
-            Ret->Bytes = ReadBinaryFile(Data);
+            Ret->Bytes = Private::ReadBinaryFile(Data);
         }
         return Pass<File*, Errno>(Ret);
     }
@@ -217,27 +360,4 @@ inline Result<File*, Errno> Open(const String& Name, Mode ReadMode)
     return Fail<File*, Errno>(Errno(errno));
 }
 
-}
-
-/*
-FILE* Data = fopen(*Name, *ModeToString(ReadMode));
-    
-    if(Data == nullptr)
-    {
-        return Fail<File*, Errno>(Errno(errno));
-    }
-
-    struct stat Stats;
-    
-    if(stat(*Name, &Stats) == 0)
-    {
-        File* Ret = new File();
-        Ret->Real = Data;
-        Ret->FilePermissions = (Permissions)Stats.st_mode;
-        Ret->Epoch = Stats.st_atimespec.tv_sec;
-        return Pass<File*, Errno>(Ret);
-    }
-    else
-    {
-        return Fail<File*, Errno>(Errno(errno));
-    }*/
+} // Cthulhu

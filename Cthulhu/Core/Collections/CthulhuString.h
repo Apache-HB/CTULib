@@ -29,6 +29,12 @@ template<typename> struct Array;
 template<typename, typename> struct Map;
 template<typename, typename> struct Iterator;
 
+/**Dynamically sized string class
+ * this class wraps a null terminated char*
+ * simmilar to <a href="https://api.unrealengine.com/INT/API/Runtime/Core/Containers/FString/index.html">FString</a> from unreal
+ * <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> from kotlin or
+ * C#'s <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string?view=netframework-4.7.2">System.String</a>
+ */
 struct String
 {
     String();
@@ -113,6 +119,12 @@ private:
 
 namespace CString
 {
+    /**
+     * @brief Duplicate a string with a new piece of allocated memory
+     * 
+     * @param Data the string to duplicate
+     * @return char* the copies string
+     */
     char* Duplicate(const char* Data);
     char* Duplicate(const char* Data, U32 Limit);
 
