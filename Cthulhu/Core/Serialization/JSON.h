@@ -13,100 +13,117 @@
  *  limitations under the License.
  */
 
-#if 0
-
-#include "Core/Collections/CthulhuString.h"
-#include "Core/Collections/Array.h"
+#include "Hashes.h"
 #include "Core/Collections/Map.h"
-
+#include "Core/Collections/CthulhuString.h"
 #include "Core/Types/Types.h"
+#include "Core/Collections/Result.h"
 
-#pragma once
+#include "FileSystem/File.h"
 
+/**
+ * @brief 
+ * 
+ */
 namespace Cthulhu::JSON
 {
 
-enum class Error : U8
-{
-    Depth = 0,
-    Parse = 1
-};
-
+/**
+ * @brief all the types a json object can be
+ * 
+ */
 enum class Type : U8
 {
-    Null = 0,
-    Object = 1,
-    Array = 2,
-    Bool = 3,
-    Int = 4,
-    Float = 5,
-    String = 6
+    Map, ///< a map of names to subobjects
+    Array, ///< an array of values
+    Int, ///< an integer value
+    Float, ///< a floating point value
+    String, ///< a string
+    Bool, ///< a true/false boolean value
+    Null, ///< a nothing
 };
 
 struct Object
 {
-    Object(){};
+    Object();
+    Object(Type T);
 
-    Object(const Object& Other);
-
-    Object(I64);
-    Object(bool);
-    Object(double);
-    Object(String);
-    Object(Array<Object>);
-    Object(Map<String, Object>);
-    Object(Type ObjectType, String RawValue);
+    Object(Map<String, Object>* Data);
+    Object(Array<Object>* Data);
+    Object(String* Str);
+    Object(I64 Num);
+    Object(float Num);
+    Object(bool Val);
     Object(TNull);
+
+    Object operator[](const String& Key) const;
+    Object operator[](I64 Index) const;
+
+    ALWAYSINLINE Type ItemType() const { return ObjectType; }
+
+    void Append(Object& Item);
+
+    Object& operator=(const Object& Other);
+    Object& operator=(Map<String, Object>* Data);
+    Object& operator=(Array<Object>* Data);
+    Object& operator=(String* Data);
+    Object& operator=(I64 Num);
+    Object& operator=(float Num);
+    Object& operator=(bool Val);
+    Object& operator=(TNull);
+
+    operator Map<String, Object>() const;
+    operator Array<Object>() const;
+    operator String() const;
+    operator I64() const;
+    operator float() const;
+    operator bool() const;
 
     ~Object();
 
-    Object& operator=(const Object& Other);
+    friend String ToString(const Object& Data);
 
-    Object& operator=(I64);
-    Object& operator=(bool);
-    Object& operator=(double);
-    Object& operator=(String);
-    Object& operator=(Array<Object>);
-    Object& operator=(Map<String, Object>);
-    Object& operator=(TNull);
-
-    Object& operator[](String& Name);
-    Object& operator[](I64 Index);
-
-    Object& operator()(String& Name);
-    Object& operator()(I64 Name);
-
-    String ToString(U32 Indent) const;
-
-    Type GetType() const { return ContentType; }
-
-    operator String() const;
-    operator I64() const;
-    operator double() const;
-    operator bool() const;
-    operator Map<String, Object>() const;
-    operator Array<Object>() const;
+    String DumpObject() const;
 
 private:
+    
+    void Clear();
 
-    Type ContentType;
+    bool StructureEquals(const Object& Other) const;
+
+    Type ObjectType;
 
     union
     {
-        String Str;
-        I64 Int;
-        double Float;
-        bool Bool;
-        Map<String, Object> SubObjects;
-        Array<Object> ArrayObjects;
+        //All non-trivial types are pointers so the constructors
+        //and destructors dont break stuff
+        Map<String, Object>* MappedObjects;
+        Array<Object>* ObjectList;
+        String* StringVal;
+        I64 IntVal;
+        float FloatVal;
+        bool BoolVal;
     };
-
-    String Raw;
 };
 
-Object Load(String Content, U32 MaxDepth = 0);
-String Dump(Object& Data, U32 Indent = 0);
+enum class ErrorType : U8
+{
+    Depth,
+    BadToken,
+    Overflow,
+    Malformed
+};
 
-}
+struct ParseError
+{
+    I64 Distance;
+    I64 Line;
+    ErrorType ErrType;
+};
 
-#endif
+Result<Object, ParseError> Parse(const String& Data);
+Result<Object, ParseError> Load(const String& Path);
+
+FileSystem::File* Dump(const Object& Data, const String& Path);
+
+} // Cthulhu::JSON

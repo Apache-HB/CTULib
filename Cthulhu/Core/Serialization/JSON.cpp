@@ -13,322 +13,334 @@
  *  limitations under the License.
  */
 
-#if 0
+#include "Meta/Assert.h"
 
-#include "Hashes.h"
 #include "JSON.h"
 
 using namespace Cthulhu;
 using namespace Cthulhu::JSON;
 
-Cthulhu::JSON::Object::~Object()
+Object::Object()
 {
-
+    ObjectType = Type::Map;
+    MappedObjects = new Map<String, Object>();
 }
 
-Cthulhu::JSON::Object::Object(const Object& Other)
+Object::Object(Type T)
 {
-    *this = Other;
-}
-
-Cthulhu::JSON::Object::Object(I64 Val)
-{
-    ContentType = Type::Int;
-    Int = Val;
-}
-
-Cthulhu::JSON::Object::Object(bool Val)
-{
-    ContentType = Type::Bool;
-    Bool = Val;
-}
-
-Cthulhu::JSON::Object::Object(double Val)
-{
-    ContentType = Type::Float;
-    Float = Val;
-}
-
-Cthulhu::JSON::Object::Object(String Val)
-{
-    ContentType = Type::String;
-    Str = Val;
-}
-
-Cthulhu::JSON::Object::Object(Array<Object> Val)
-{
-    ContentType = Type::Array;
-    ArrayObjects = Val;
-}
-
-Cthulhu::JSON::Object::Object(Map<String, Object> Val)
-{
-    ContentType = Type::Object;
-    SubObjects = Val;
-}
-
-Cthulhu::JSON::Object::Object(Type ObjectType, String RawValue)
-{
-    ContentType = ObjectType;
-    Raw = RawValue;
-}
-
-Cthulhu::JSON::Object::Object(TNull)
-{
-    ContentType = Type::Null;
-}
-
-Object& Cthulhu::JSON::Object::operator=(const Object& Other)
-{
-    ContentType = Other.ContentType;
-        
-    switch(Other.ContentType)
+    ObjectType = T;
+    switch(T)
     {
-        case Type::Object:
-            SubObjects = Other.SubObjects;
-            return *this;
+        case Type::Map:
+            MappedObjects = new Map<String, Object>();
+            break;
         case Type::Array:
-            ArrayObjects = Other.ArrayObjects;
-            return *this;
-        case Type::Bool:
-            Bool = Other.Bool;
-            return *this;
-        case Type::Null:
-            return *this;
+            ObjectList = new Array<Object>();
+            break;
         case Type::Int:
-            Int = Other.Int;
-            return *this;
+            IntVal = 0;
+            break;
         case Type::Float:
-            Float = Other.Float;
-            return *this;
+            FloatVal = 0.f;
+            break;
         case Type::String:
-            Str = Other.Str;
-            return *this;
+            StringVal = new String();
+            break;
+        case Type::Bool:
+            BoolVal = false;
+            break;
+        
+        case Type::Null: break;
+        
         default:
-            SEGFAULT();
-            printf("%hhu\n", Other.ContentType);
-            ASSERT_NO_ENTRY("Object didnt have a type");
-            return *this;
+            ASSERT_NO_ENTRY("Bad json type");
     }
 }
 
-Object& Cthulhu::JSON::Object::operator=(I64 Val)
+Object::Object(Map<String, Object>* Data)
+    : ObjectType(Type::Map)
+    , MappedObjects(Data)
+{}
+
+Object::Object(Array<Object>* Data)
+    : ObjectType(Type::Array)
+    , ObjectList(Data)
+{}
+
+Object::Object(String* Str)
+    : ObjectType(Type::String)
+    , StringVal(Str)
+{}
+
+Object::Object(I64 Num)
+    : ObjectType(Type::Int)
+    , IntVal(Num)
+{}
+
+Object::Object(float Num)
+    : ObjectType(Type::Float)
+    , FloatVal(Num)
+{}
+
+Object::Object(bool Val)
+    : ObjectType(Type::Bool)
+    , BoolVal(Val)
+{}
+
+Object::Object(TNull)
+    : ObjectType(Type::Null)
+{}
+
+Object::~Object()
 {
-    ContentType = Type::Int;
-    Int = Val;
-
-    return *this;
-}
-
-Object& Cthulhu::JSON::Object::operator=(bool Val)
-{
-    ContentType = Type::Bool;
-    Bool = Val;
-    return *this;
-}
-
-Object& Cthulhu::JSON::Object::operator=(double Val)
-{
-    ContentType = Type::Float;
-    Float = Val;
-
-    return *this;
-}
-
-Object& Cthulhu::JSON::Object::operator=(String Val)
-{
-    ContentType = Type::String;
-    Str = Val;
-
-    return *this;
-}
-
-Object& Cthulhu::JSON::Object::operator=(Array<Object> Val)
-{
-    ContentType = Type::Array;
-    ArrayObjects = Val;
-
-    return *this;
-}
-
-Object& Cthulhu::JSON::Object::operator=(Map<String, Object> Val)
-{
-    ContentType = Type::Object;
-    SubObjects = Val;
-
-    return *this;
-}
-
-Object& Cthulhu::JSON::Object::operator=(TNull)
-{
-    ContentType = Type::Null;
-    return *this;
-}
-
-Object& Cthulhu::JSON::Object::operator[](String& Name)
-{
-    if(ContentType == Type::Object)
+    switch(ObjectType)
     {
-        return SubObjects[Name].Value;
+        case Type::Map:
+            delete MappedObjects;
+            break;
+        case Type::Array:
+            delete ObjectList;
+            break;
+        case Type::String:
+            delete StringVal;
+            break;
+        default: break;
     }
-
-    ASSERT_NO_ENTRY("trying to take a object from something that isnt an object");
 }
 
-Object& Cthulhu::JSON::Object::operator[](I64 Index)
+Object Object::operator[](const String& Key) const
 {
-    if(ContentType == Type::Array)
+    if(ObjectType == Type::Map)
+        return MappedObjects->Get(Key, Object());
+    return Object();
+}
+
+Object Object::operator[](I64 Index) const
+{
+    if(ObjectType == Type::Array)
+        return ObjectList->At(Index).Or(Object());
+    return Object();
+}
+
+void Object::Append(Object& Item)
+{
+    ASSERT(ObjectType == Type::Array, "Trying to append to something that isnt an array");
+
+    ObjectList->Append(Item);
+}
+
+Object& Object::operator=(const Object& Other)
+{
+    Clear();
+
+    ObjectType = Other.ObjectType;
+
+    switch(Other.ObjectType)
     {
-        return ArrayObjects[Index];
+        case Type::Array:
+            ObjectList = Other.ObjectList;
+            break;
+        case Type::Map:
+            MappedObjects = Other.MappedObjects;
+            break;
+        case Type::String:
+            StringVal = Other.StringVal;
+            break;
+        case Type::Int:
+            IntVal = Other.IntVal;
+            break;
+        case Type::Bool:
+            BoolVal = Other.BoolVal;
+            break;
+        default: break;
     }
 
-    ASSERT_NO_ENTRY("Trying to access an indexed array that isnt an index");
+    return *this;
 }
 
-Cthulhu::JSON::Object::operator String() const
+Object& Object::operator=(Map<String, Object>* Data)
 {
-    return Str;
+    Clear();
+    ObjectType = Type::Map;
+    MappedObjects = Data;
+    return *this;
 }
 
-Cthulhu::JSON::Object::operator I64() const
+Object& Object::operator=(Array<Object>* Data)
 {
-    return Int;
+    Clear();
+    ObjectType = Type::Array;
+    ObjectList = Data;
+    return *this;
 }
 
-Cthulhu::JSON::Object::operator double() const
+Object& Object::operator=(String* Data)
 {
-    return Float;
+    Clear();
+    ObjectType = Type::String;
+    StringVal = Data;
+    return *this;
 }
 
-Cthulhu::JSON::Object::operator bool() const
+Object& Object::operator=(I64 Num)
 {
-    return Bool;
+    Clear();
+    ObjectType = Type::Int;
+    IntVal = Num;
+    return *this;
 }
 
-Cthulhu::JSON::Object::operator Map<String, Object>() const
+Object& Object::operator=(float Num)
 {
-    return SubObjects;
+    Clear();
+    ObjectType = Type::Float;
+    FloatVal = Num;
+    return *this;
 }
 
-Cthulhu::JSON::Object::operator Array<Object>() const
+Object& Object::operator=(bool Val)
 {
-    return ArrayObjects;
+    Clear();
+    ObjectType = Type::Bool;
+    BoolVal = Val;
+    return *this;
 }
 
-
-Object Cthulhu::JSON::Load(String Content, U32 MaxDepth)
+Object& Object::operator=(TNull)
 {
+    Clear();
+    ObjectType = Type::Null;
+    return *this;
+}
 
+Object::operator Map<String, Object>() const
+{
+    ASSERT(ObjectType == Type::Map, "Trying to cast a non map type to a map");
+
+    return *MappedObjects;
+}
+
+Object::operator Array<Object>() const
+{
+    ASSERT(ObjectType == Type::Array, "Trying to cast a non array type to an array");
+
+    return *ObjectList;
+}
+
+Object::operator String() const
+{
+    ASSERT(ObjectType == Type::String, "Trying to cast a non string type to a string");
+
+    return *StringVal;
+}
+
+Object::operator I64() const
+{
+    ASSERT(ObjectType == Type::Int, "Trying to cast a non int type to an int");
+
+    return IntVal;
+}
+
+Object::operator float() const
+{
+    ASSERT(ObjectType == Type::Float, "Trying to cast a non float type to a float");
+
+    return FloatVal;
+}
+
+Object::operator bool() const
+{
+    ASSERT(ObjectType == Type::Bool, "Trying to cast a non bool type to a bool");
+
+    return BoolVal;
+}
+
+void Object::Clear()
+{
+    switch(ObjectType)
+    {
+        case Type::Array:
+            delete ObjectList;
+            break;
+        case Type::Map:
+            delete MappedObjects;
+            break;
+        case Type::String:
+            delete StringVal;
+            break;
+        default: break;
+    }
+}
+
+bool Object::StructureEquals(const Object& Other) const
+{
+    NO_IMPL();
+    return false;
 }
 
 namespace
 {
 
-String DumpMap(Map<String, Object>&, U32, U32);
-String DumpArray(Array<Object>&, U32, U32);
+String ObjectToString(const Object&);
 
-String DumpObject(const Object& Data, U32 Indent, U32 Initial)
+String MapToJSON(const Map<String, Object>& Data)
 {
-    switch(Data.GetType())
+    String Ret = "{";
+
+    for(const auto& I : Data.Items().ConstIterate())
     {
-        case Type::Object: {
-            Map<String, Object> Temp = Data;
-            String Ret = DumpMap(Temp, Indent + Initial, Initial);
-            return Ret;
-        }
-
-        case Type::Array: {
-            Array<Object> Temp = Data;
-            return DumpArray(Temp, Indent, Initial);
-        }
-        
-        case Type::Bool: return StringUtils::ToString((bool)Data);
-        case Type::Null: return "null";
-        case Type::Int: return StringUtils::ToString((I64)Data);
-        case Type::Float: return StringUtils::ToString((double)Data);
-        
-        case Type::String: {
-            Array<String> Ret = Array<String>();
-            Ret.Append(Data);
-            return String("\"{0}\"").Format(Ret);
-        }
-
-        default: 
-            ASSERT_NO_ENTRY("Object had no type");
-            return "";
+        Ret += '"';
+        Ret += *I.First;
+        Ret += "\": ";
+        Ret += ObjectToString(*I.Second);
+        Ret += ", ";
     }
-}
-
-String DumpMap(Map<String, Object>& Data, U32 Indent, U32 Initial)
-{
-    String Ret = "{\n";
-
-    printf("Yeet\n");
-
-    auto Iter = Data.Items().Iterate();
-
-    printf("Yort\n");
-
-    for(const auto& Item : Iter)
-    {
-        printf("Yet\n");
-        
-        Array<String> Args;
-        
-        Args.Append(StringUtils::Padding(" ", Indent));
-        Args.Append(*Item.First);
-        Args.Append(DumpObject(Item.Second, Indent + Initial, Initial));
-
-        printf("Bob\n");
-
-        Ret += String("{0}\"{1}\": {2},\n").Format(Args);
-    }
-
-    printf("Yot\n");
 
     Ret.Drop(2);
-
-    Ret += "\n";
-    Ret += StringUtils::Padding(" ", Indent);
     Ret += "}";
-
-    printf("Yort\n");
 
     return Ret;
 }
 
-String DumpArray(Array<Object>& Data, U32 Indent, U32 Initial)
+String ArrayToJSON(const Array<Object>& Data)
 {
-    String Ret = "[\n";
-    for(auto& I : Data.Iterate())
-    {
-        Ret += StringUtils::Padding(" ", Indent);
-        Ret += DumpObject(I, Indent + Initial, Initial);
-        Ret += ",\n";
-    }
+    String Ret = "[";
 
+    for(U32 I = 0; I < Data.Len(); I++)
+    {
+        Ret.Append(ObjectToString(Data[I]) + String(", "));
+    }
+    
     Ret.Drop(2);
-    Ret += "\n";
-    Ret += StringUtils::Padding(" ", Indent);
     Ret += "]";
 
     return Ret;
 }
 
-}
-
-String Cthulhu::JSON::Dump(Object& Data, U32 Indent)
+String ObjectToString(const Object& Data)
 {
-    String Ret = "{\n";
-    Ret += StringUtils::Padding(" ", Indent);
-    Ret += DumpObject(Data, Indent, Indent);
-    Ret += "}\n";
-    return Ret;
+    switch(Data.ItemType())
+    {
+        case Type::Int: return Utils::ToString((I64)Data);
+        case Type::Float: return Utils::ToString((float)Data);
+        case Type::Bool: return Utils::ToString((bool)Data);
+        case Type::Null: return "null";
+        case Type::Array: return ArrayToJSON((Array<Object>)Data);
+        case Type::Map: return MapToJSON((Map<String, Object>)Data);
+        case Type::String: return (String)Data;
+        default:
+            ASSERT_NO_ENTRY("Invalid JSON object type");
+    }
 }
 
-String Cthulhu::JSON::Object::ToString(U32 Indent) const
+}
+
+String Object::DumpObject() const
 {
-    
+    return ObjectToString(*this);
 }
 
-#endif
+String ToString(const Object& Data)
+{
+    return ObjectToString(Data);
+}

@@ -23,6 +23,15 @@
 namespace Cthulhu
 {
 
+/**
+ * @brief invoke a callable object such as a lambda
+ * 
+ * @tparam TObject the type of the object to call
+ * @tparam TArgs the types of the arguments
+ * @param Object the object to call
+ * @param Args the args to call the object with
+ * @return auto the return value of Object
+ */
 template<typename TObject, typename... TArgs>
 ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
 {

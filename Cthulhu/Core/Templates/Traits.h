@@ -22,6 +22,11 @@
 namespace Cthulhu
 {
 
+/**
+ * @brief compile time meta-template to check if a type is a pointer
+ * 
+ * @tparam T the object to check for a pointer on
+ */
 template<typename T>
 struct IsPointer { static const bool Value = false; };
 

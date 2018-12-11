@@ -91,6 +91,32 @@ int main()
 
     Array<String> Temp = { "one", "two", "three", "four" };
 
+    I32 Loop = 0;
+
     for(String& I : Temp.Iterate())
-        ;
+    {
+        if(Loop == 0)
+        {
+            ASSERT_TEST(I == "one");
+        }
+        else if(Loop == 1)
+        {
+            ASSERT_TEST(I == "two");
+        }
+        else if(Loop == 2)
+        {
+            ASSERT_TEST(I == "three");
+        }
+        else if(Loop == 3)
+        {
+            ASSERT_TEST(I == "four");
+        }
+        else 
+        {
+            ASSERT_TEST(false);
+        }
+        Loop++;
+    }
+
+    ASSERT_TEST(Loop == Temp.Len());
 }

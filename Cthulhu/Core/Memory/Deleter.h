@@ -20,30 +20,60 @@
 namespace Cthulhu
 {
 
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ */
 template<typename T>
 struct Deleter
 {
-    static void Delete(T* Item)
+    /**
+     * @brief 
+     * 
+     * @param Item 
+     */
+    ALWAYSINLINE static void Delete(T* Item)
     {
         delete Item;
     }
 };
 
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ */
 template<typename T>
 struct Deleter<T[]>
 {
-    static void Delete(T* Item)
+    /**
+     * @brief delete an array allocated with new[]
+     * 
+     * @param Item the array to delete
+     */
+    ALWAYSINLINE static void Delete(T* Item)
     {
         delete[] Item;
     }
 };
 
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ */
 template<typename T>
 struct Freeer
 {
+    /**
+     * @brief free memory that was allocated using Memory::Alloc instead of new
+     * 
+     * @param Item the item to free
+     */
     static void Delete(T* Item)
     {
-        if(!!Item) { Memory::Free<T>(Item); }
+        if(Item) Memory::Free<T>(Item);
     }
 };
 

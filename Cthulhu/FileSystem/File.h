@@ -280,7 +280,7 @@ private:
 namespace Private
 {
 
-String ModeToString(Mode Input)
+inline String ModeToString(Mode Input)
 {
     switch(Input)
     {
@@ -293,7 +293,7 @@ String ModeToString(Mode Input)
     }    
 }
 
-char* ReadFile(FILE* Ptr)
+inline char* ReadFile(FILE* Ptr)
 {
     fseek(Ptr, 0, SEEK_END);
     U32 Len = ftell(Ptr);
@@ -312,7 +312,7 @@ char* ReadFile(FILE* Ptr)
     return Buffer;
 }
 
-Array<Byte> ReadBinaryFile(FILE* Ptr)
+inline Array<Byte> ReadBinaryFile(FILE* Ptr)
 {
     Byte* Buffer;
     fseek(Ptr, 0, SEEK_END);

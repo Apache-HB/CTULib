@@ -21,6 +21,13 @@
 namespace Cthulhu
 {
 
+/**
+ * @brief forward types to add references
+ * 
+ * @tparam T the type to forward
+ * @param Obj the argument to forward
+ * @return T&& the forwarded type
+ */
 template<typename T>
 ALWAYSINLINE T&& Forward(typename RemoveReference<T>::Type& Obj)
 {

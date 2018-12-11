@@ -22,17 +22,17 @@ namespace Cthulhu
 
 const U32 MersenePrime = 8191;
 
-template<typename T> inline U32 Hash(const T&);
+template<typename T> constexpr inline U32 Hash(const T&);
 
-template<> inline U32 Hash(const U8& Num)  { return Num % MersenePrime; }
-template<> inline U32 Hash(const U16& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const U32& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const U64& Num) { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const U8& Num)  { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const U16& Num) { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const U32& Num) { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const U64& Num) { return Num % MersenePrime; }
 
-template<> inline U32 Hash(const I8& Num)  { return Num % MersenePrime; }
-template<> inline U32 Hash(const I16& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
-template<> inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const I8& Num)  { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const I16& Num) { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
+template<> constexpr inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
 
 template<typename, typename> struct MapNode;
 
@@ -48,7 +48,6 @@ struct Map
 
     Map(const Map& Other)
     {
-        //TODO: better map copying
         Memory::Copy<Node*>(Other.Table, Table, sizeof(Node*) * TableSize);
     }
 
@@ -79,12 +78,10 @@ struct Map
         if(Table[Hashed] == nullptr)
         {
             Table[Hashed] = new Node(Key, Value);
-            //printf("made node, val at: %lx\n", Table[Hashed]->Val);
         }
         else
         {
             Table[Hashed]->Assign(Pair<TKey, TVal>{Key, Value});
-            //printf("added\n");
         }
     }
 
@@ -97,8 +94,7 @@ struct Map
             TVal NewVal;
             Add(Key, NewVal);
         }
-
-        //printf("extract:[%x]\n", Extract(Key));
+        
         return Extract(Key)->Val;
     }
     
@@ -109,7 +105,20 @@ struct Map
         return Table[Hashed] == nullptr ? Or : Table[Hashed]->Val;
     }
 
-    //TODO: this mangles shit
+    void Remove(const TKey& Key)
+    {
+        const U32 Hashed = Hash(Key);
+
+        Node* Current = Table[Hashed];
+
+        if(Current != nullptr)
+        {
+            Table[Hashed] = Current->Next;
+
+            delete Current;
+        }
+    }
+
     Array<TKey*> Keys() const
     {
         Array<TKey*> Ret;
@@ -127,8 +136,7 @@ struct Map
 
         return Ret;
     }
-
-    //TODO: this mangles shit
+    
     Array<TVal*> Values() const
     {
         Array<TVal*> Ret;
@@ -149,7 +157,7 @@ struct Map
 
     using MapPair = Pair<TKey*, TVal*>;
 
-    //TODO: this mangles shit
+    
     Array<MapPair> Items() const
     {
         Array<MapPair> Ret;
@@ -165,6 +173,11 @@ struct Map
         }
 
         return Ret;
+    }
+
+    bool HasKey(const TKey& Key) const
+    {
+        return Table[Hash(Key)] != nullptr;
     }
 
 private:

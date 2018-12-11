@@ -184,6 +184,10 @@ namespace CString
     }
 }
 
+/**
+ * @brief 
+ * 
+ */
 namespace Utils
 {
     String Padding(const String& Text, U32 Repeat);
@@ -212,18 +216,87 @@ namespace Utils
     ALWAYSINLINE bool IsEOF(char C);
 }
 
+/**
+ * @brief all constant values or static functions inside of cthulhu
+ * 
+ */
 namespace Consts
 {
-    const String* PathSeperator();
-    const String* Whitespace();
-    const String* UpperCase();
-    const String* LowerCase();
-    const String* OctDigits();
-    const String* HexDigits();
-    const String* Digits();
-    const String* Chars();
-    const String* Punctuation();
-    const String* Printable();
+    /**
+     * @brief the platform specific path seperator
+     * 
+     * @description / on mac or linux and \ on windows
+     * 
+     * @see OS_WINDOWS
+     * @see OS_LINUX
+     * @see OS_APPLE
+     * 
+     * @return const String* the current platforms path seperator
+     */
+    ALWAYSINLINE const String* PathSeperator();
+
+    /**
+     * @brief returns all whitespace characters
+     * 
+     * @return const String* whitespace characters
+     */
+    ALWAYSINLINE const String* Whitespace();
+
+    /**
+     * @brief returns all uppercase characters
+     * 
+     * @return const String* all uppercase characters
+     */
+    ALWAYSINLINE const String* UpperCase();
+
+    /**
+     * @brief returns all lowercase characters
+     * 
+     * @return const String* all lowercase characters
+     */
+    ALWAYSINLINE const String* LowerCase();
+
+    /**
+     * @brief returns all valid characters for a string representation of an octal number
+     * 
+     * @return const String* all valid octal digits
+     */
+    ALWAYSINLINE const String* OctDigits();
+
+    /**
+     * @brief returns all valid characters for a string representation of a hex number
+     * 
+     * @return const String* all valid hex digits
+     */
+    ALWAYSINLINE const String* HexDigits();
+
+    /**
+     * @brief return a string containing all number characters
+     * 
+     * @return const String* all digit characters
+     */
+    ALWAYSINLINE const String* Digits();
+
+    /**
+     * @brief return a string containing every character
+     * 
+     * @return const String* all characters
+     */
+    ALWAYSINLINE const String* Chars();
+    
+    /**
+     * @brief return a string of all punctuation characters
+     * 
+     * @return const String* all punctuation characters
+     */
+    ALWAYSINLINE const String* Punctuation();
+
+    /**
+     * @brief return a string of all printable characters
+     * 
+     * @return const String* all printable characters
+     */
+    ALWAYSINLINE const String* Printable();
 }
 
 }

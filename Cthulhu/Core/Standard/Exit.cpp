@@ -15,16 +15,17 @@
 
 #include "Exit.h"
 
-using Cthulhu::U16;
+using namespace Cthulhu;
+using namespace Cthulhu::Standard;
 
-namespace 
+namespace Private
 {
 
 void ExitStub(U16){}
 
 }
 
-Cthulhu::Lambda<void(U16)> Cthulhu::Standard::ExitCallback = ExitStub;
+Cthulhu::Lambda<void(U16)> Cthulhu::Standard::ExitCallback = ::Private::ExitStub;
 
 void Cthulhu::Standard::OnExit(Cthulhu::Lambda<void(U16)> Function)
 {

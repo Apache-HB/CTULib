@@ -20,12 +20,39 @@
 namespace Cthulhu
 {
 
+/**
+ * @brief decay a type that isnt a reference to the base type
+ * 
+ * @see Decay
+ * 
+ * @tparam T the type to decay
+ */
 template<typename T> 
 struct DecayNonReference { using Type = typename RemoveQualifiers<T>::Type; };
 
+/**
+ * @brief decay a function pointer to its base types
+ * 
+ * @tparam TRet the return type of the function pointer
+ * @tparam TArgs the argument types
+ */
 template<typename TRet, typename... TArgs>
 struct DecayNonReference<TRet(TArgs...)> { using Type = TRet(*)(TArgs...); };
 
+/**
+ * @brief Decay a type to its most basic type
+ * 
+ * @description this means removing `const` `volatile` `&` references and `*` pointers
+ * 
+ * @code{.cpp}
+ * 
+ * Decay<I32*>::Type; // I32
+ * Decay<volatile String>::Type; // String
+ * 
+ * @endcode
+ * 
+ * @tparam T the type to decay
+ */
 template<typename T>
 struct Decay
 {

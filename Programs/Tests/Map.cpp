@@ -38,7 +38,7 @@ int main()
     //printf("[%x]\n", *Keys[0]);
 
     //TODO: for some reason segfaults here
-    String F = Keys[0];
+    String F = *Keys[0];
     //make sure copying from a map doesnt segfault
 
     //printf("%s %s %llu\n", *F, *Keys[1], Keys.Len());
@@ -64,5 +64,86 @@ int main()
 
     ASSERT_TEST(Numbers[0] == "zero");
     ASSERT_TEST(Numbers[10] == "ten");
+
+    I32 Loop = 0;
+
+    for(auto& A : Numbers.Keys().Iterate())
+    {
+
+    }
+    
+    Loop = 0;
+
+    for(auto A : Numbers.Values().Iterate())
+    {
+
+    }
+
+    Loop = 0;
+
+    for(const auto& I : Numbers.Items().ConstIterate())
+    {
+        if(Loop == 0)
+        {
+            ASSERT_TEST(*I.First == 0);
+            ASSERT_TEST(*I.Second == "zero");
+        }
+        else if(Loop == 1)
+        {
+            ASSERT_TEST(*I.First == 1);
+            ASSERT_TEST(*I.Second == "one");
+        }
+        else if(Loop == 2)
+        {
+            ASSERT_TEST(*I.First == 2);
+            ASSERT_TEST(*I.Second == "two");
+        }
+        else if(Loop == 3)
+        {
+            ASSERT_TEST(*I.First == 3);
+            ASSERT_TEST(*I.Second == "three");
+        }
+        else if(Loop == 4)
+        {
+            ASSERT_TEST(*I.First == 4);
+            ASSERT_TEST(*I.Second == "four");
+        }
+        else if(Loop == 5)
+        {
+            ASSERT_TEST(*I.First == 5);
+            ASSERT_TEST(*I.Second == "five");
+        }
+        else if(Loop == 6)
+        {
+            ASSERT_TEST(*I.First == 6);
+            ASSERT_TEST(*I.Second == "six");
+        }
+        else if(Loop == 7)
+        {
+            ASSERT_TEST(*I.First == 7);
+            ASSERT_TEST(*I.Second == "seven");
+        }
+        else if(Loop == 8)
+        {
+            ASSERT_TEST(*I.First == 8);
+            ASSERT_TEST(*I.Second == "eight");
+        }
+        else if(Loop == 9)
+        {
+            ASSERT_TEST(*I.First == 9);
+            ASSERT_TEST(*I.Second == "nine");
+        }
+        else if(Loop == 10)
+        {
+            ASSERT_TEST(*I.First == 10);
+            ASSERT_TEST(*I.Second == "ten");
+        }
+        else
+        {
+            ASSERT_TEST(false);
+        }
+
+        Loop++;
+    }
 
 }

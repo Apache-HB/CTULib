@@ -15,7 +15,14 @@
 
 #pragma once
 
+/**
+ * @brief The namespace for all of Cthulhu's standard library replacment functions
+ * that dont fit anywhere else
+ */
 namespace Cthulhu::Standard
 {
+    /**
+     * @brief A replacment for size_t
+     */
     using TSize = unsigned long long;
 }

@@ -13,27 +13,25 @@
  *  limitations under the License.
  */
 
-//a bunch of hash functions for different classes
+#include "../TestMacros.h"
 
-#include "Core/Collections/Map.h"
+#include <Core/Serialization/JSON.h>
 
-#include "Core/Collections/CthulhuString.h"
+using namespace Cthulhu;
+using namespace Cthulhu::JSON;
 
-#pragma once
-
-namespace Cthulhu
+int main()
 {
-
-template<> constexpr inline U32 Hash<String>(const String& Item)
-{
-    U32 Ret = 0;
-
-    for(U32 I = 0; I < Item.Len(); I++)
+    Map<String, Object> Data = 
     {
-        Ret ^= Item[I];
-    }
+        { "Name", "Jeff" },
+        { "Age", 25LL },
+        { "Number", 64.4f }
+    };
 
-    return Ret % MersenePrime;
+    Object A(&Data);
+
+    String S = A.DumpObject();
+
+    printf("%s\n", *S);
 }
-
-} // Cthulhu
