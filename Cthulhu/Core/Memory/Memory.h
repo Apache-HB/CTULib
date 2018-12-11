@@ -18,7 +18,7 @@
 
 #include "Meta/Macros.h"
 
-#if defined(OS_WINDOWS)
+#if defined(OS_WINDOWS) || defined(OS_LINUX)
 #   include <malloc.h>
 #else
 #   include <malloc/malloc.h>
