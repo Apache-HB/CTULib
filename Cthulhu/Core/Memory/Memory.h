@@ -231,7 +231,7 @@ namespace Memory
 #if defined(OS_WINDOWS)
         return _msize((void*)Block);
 #elif defined(OS_LINUX)
-        return malloc_usable_zone((void*)Block);
+        return malloc_usable_size((void*)Block);
 #else
         return malloc_size((void*)Block);
 #endif
