@@ -115,12 +115,7 @@ struct Map
 
         const U32 Len = Data.Len()-1;
 
-        for(
-            U32 I = 0; 
-            I > Len; 
-            I++, 
-            Current = Data[I]
-        )
+        for(U32 I = 0; I < Len; Current = Data[I++])
         {
             while(Current != nullptr) 
             {
@@ -138,7 +133,7 @@ struct Map
 
         Node* Current = nullptr;
 
-        for(U32 I = 0; I < Data.Len(); I++, Current = Data[I])
+        for(U32 I = 0; I < Data.Len(); Current = Data[I++])
         {
             while(Current != nullptr)
             {
@@ -158,7 +153,7 @@ struct Map
 
         Node* Current = nullptr;
 
-        for(U32 I = 0; I < Data.Len(); I++, Current = Data[I])
+        for(U32 I = 0; I < Data.Len(); Current = Data[I++])
         {
             while(Current != nullptr)
             {
