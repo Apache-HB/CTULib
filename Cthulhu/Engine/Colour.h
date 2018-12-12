@@ -13,27 +13,42 @@
  *  limitations under the License.
  */
 
-//a bunch of hash functions for different classes
-
-#include "Core/Collections/Map.h"
-
 #include "Core/Collections/CthulhuString.h"
+#include "Meta/Aliases.h"
 
 #pragma once
 
-namespace Cthulhu::Utils
+namespace Cthulhu
 {
 
-template<> constexpr inline U32 Hash<String>(const String& Item)
+namespace Engine
 {
-    U32 Ret = 0;
 
-    for(U32 I = 0; I < Item.Len(); I++)
-    {
-        Ret ^= Item[I];
-    }
+constexpr U8 RGB = 0;
+constexpr U8 RGBA = 1;
 
-    return Ret % MersenePrime;
-}
+template<I8>
+struct Colour{};
+
+template<>
+struct Colour<RGB>
+{
+    U8 Red, Green, Blue;
+};
+
+template<>
+struct Colour<RGBA>
+{
+    U8 Red, Green, Blue;
+    float Alpha;
+};
+
+} // Graphics
+
+namespace Utils
+{
+    String ToString(const Engine::Colour<Engine::RGB> Col);
+    String ToString(const Engine::Colour<Engine::RGBA> Col);
+} //Utils
 
 } // Cthulhu

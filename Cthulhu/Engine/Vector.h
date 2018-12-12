@@ -13,27 +13,43 @@
  *  limitations under the License.
  */
 
-//a bunch of hash functions for different classes
-
-#include "Core/Collections/Map.h"
-
 #include "Core/Collections/CthulhuString.h"
 
 #pragma once
 
-namespace Cthulhu::Utils
+namespace Cthulhu
 {
 
-template<> constexpr inline U32 Hash<String>(const String& Item)
+namespace Engine
 {
-    U32 Ret = 0;
 
-    for(U32 I = 0; I < Item.Len(); I++)
-    {
-        Ret ^= Item[I];
-    }
+template<U8> struct Vector;
 
-    return Ret % MersenePrime;
-}
+template<>
+struct Vector<2>
+{
+    float X, Y;
+};
+
+template<>
+struct Vector<3>
+{
+    float X, Y, Z;
+};
+
+template<>
+struct Vector<4>
+{
+    float X, Y, Z, A;
+};
+
+} // Engine
+
+namespace Utils
+{
+    String ToString(const Engine::Vector<2> Vec);
+    String ToString(const Engine::Vector<3> Vec);
+    String ToString(const Engine::Vector<4> Vec);
+} // Utils
 
 } // Cthulhu

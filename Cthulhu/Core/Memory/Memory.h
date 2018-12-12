@@ -18,10 +18,10 @@
 
 #include "Meta/Macros.h"
 
-#if defined(OS_WINDOWS) || defined(OS_LINUX)
-#   include <malloc.h>
-#else
+#ifdef OS_APPLE
 #   include <malloc/malloc.h>
+#else
+#   include <malloc.h>
 #endif
 
 #pragma once
