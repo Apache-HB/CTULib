@@ -117,8 +117,11 @@ struct Array
     ALWAYSINLINE T* operator*() const { return Real; }
     ALWAYSINLINE T* Data() const { return Real; }
 
-    Iterator<Array<T>, T> Iterate() { return Iterator<Array<T>, T>(*this); }
-    const Iterator<Array<T>, T> ConstIterate() const { return Iterator<Array<T>, T>(*this); }
+
+    //STL iterators, dont use directly
+    //use for(auto& I : Arr) instead
+    T* begin() const { return Real; }
+    T* end() const { return Real + Length; }
 
     //cut from back
     void Cut(U32 Amount)
@@ -226,7 +229,7 @@ private:
 
     T* Real;
     U32 Length, Allocated;
-    U16 Slack;
+    U16 Slack{DefaultSlack};
 };
 
 }

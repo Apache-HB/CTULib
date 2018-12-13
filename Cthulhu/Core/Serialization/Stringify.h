@@ -27,7 +27,7 @@ String ToString(const Array<T>& Arr)
 {
     String Ret = "[ ";
     
-    for(const auto& I : Arr.ConstIterate())
+    for(const auto& I : Arr)
     {
         Ret += ToString(I);
         Ret += ", ";
@@ -43,7 +43,7 @@ String ToString(const Map<TKey, TVal>& InMap)
 {
     String Ret = "{\n";
 
-    for(const auto& I : InMap.Items().ConstIterate())
+    for(const auto& I : InMap.Items())
     {
         Ret += ToString(I.First);
         Ret += ": ";

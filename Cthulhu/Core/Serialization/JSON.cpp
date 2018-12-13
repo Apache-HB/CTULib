@@ -287,7 +287,7 @@ String MapToJSON(const Map<String, Object>& Data)
 {
     String Ret = "{";
 
-    for(const auto& I : Data.Items().ConstIterate())
+    for(const auto& I : Data.Items())
     {
         Ret += '"';
         Ret += *I.First;

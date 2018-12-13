@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#include <vector>
+
 #include "TestMacros.h"
 
 #include <Core/Serialization/Hashes.h>
@@ -31,17 +33,9 @@ int main()
     ASSERT_TEST(TestMap["A"] == 5);
     ASSERT_TEST(TestMap["B"] == 10);
 
-    //printf("%lu\n", TestMap["A"]);
-
     auto Keys = TestMap.Keys();
 
-    //printf("[%x]\n", *Keys[0]);
-
-    //TODO: for some reason segfaults here
     String F = *Keys[0];
-    //make sure copying from a map doesnt segfault
-
-    //printf("%s %s %llu\n", *F, *Keys[1], Keys.Len());
 
     ASSERT_TEST(TestMap.Keys().Len() == 2);
 
@@ -67,21 +61,21 @@ int main()
 
     I32 Loop = 0;
 
-    for(auto& A : Numbers.Keys().Iterate())
+    for(auto& A : Numbers.Keys())
     {
 
     }
     
     Loop = 0;
 
-    for(auto A : Numbers.Values().Iterate())
+    for(auto A : Numbers.Values())
     {
 
     }
 
     Loop = 0;
 
-    for(const auto& I : Numbers.Items().ConstIterate())
+    for(const auto& I : Numbers.Items())
     {
         if(Loop == 0)
         {

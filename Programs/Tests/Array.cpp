@@ -78,8 +78,6 @@ int main()
     StrSecond.Append("Jeff");
     StrSecond.Append("Funnymeme");
 
-    //printf("[%x]\n", *StrFirst[0]);
-
     String SFF = StrFirst[0];
     String SSF = StrSecond[0];
 
@@ -93,7 +91,7 @@ int main()
 
     I32 Loop = 0;
 
-    for(String& I : Temp.Iterate())
+    for(String& I : Temp)
     {
         if(Loop == 0)
         {

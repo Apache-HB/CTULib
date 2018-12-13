@@ -90,8 +90,6 @@ int main(int argc, const char** argv)
         ASSERT_TEST(Edited.Valid());
         U64 Ed = Edited.Value();
 
-        printf("[%llu]\n", Ed);
-
         ASSERT_TEST(Ed == FS::LastEdited("./Programs/Tests/Files/cache.txt").Value());
 
         ASSERT_TEST(FS::Delete("./Programs/Tests/Files/cache.txt") == Errno::None);

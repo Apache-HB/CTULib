@@ -274,9 +274,7 @@ String Cthulhu::String::Format(const Map<String, String>& Args) const
 {
     String Ret = Real;
 
-    const auto Iter = Args.Items().ConstIterate();
-
-    for(const auto& I : Iter)
+    for(const auto& I : Args.Items())
     {
         String Temp = "{";
         Temp << (I64)I.Second;
@@ -328,13 +326,6 @@ bool Cthulhu::String::Has(char Item) const
     return false;
 }
 
-Iterator<Array<char>, char> Cthulhu::String::Iterate() const
-{
-    Array Ret(CString::Duplicate(Real), Length);
-
-    return Ret.Iterate();
-}
-
 String Cthulhu::String::Reversed() const
 {
     char* Temp = CString::Reverse(Real);
@@ -364,9 +355,7 @@ bool Cthulhu::String::Equals(const String& Other) const
 
 String& Cthulhu::String::operator=(const String& Other)
 {
-    //TODO: memory leaks
     delete[] Real;
-    //printf("%x\n", *Other);
     
     Real = CString::Duplicate(!!Other.Real ? Other.Real : "");
     

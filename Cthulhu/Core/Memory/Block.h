@@ -41,8 +41,6 @@ struct Block
     T& operator[](U32 Index) const
     {
         ASSERT(Index <= Size, "Accessing block out of range");
-        printf("Idx = %lu\n", Index);
-        printf("Size = %d\n", Memory::AllocSize(Real) / sizeof(T));
         return Real[Index];
     }
 

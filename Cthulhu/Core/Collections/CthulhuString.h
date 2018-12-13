@@ -103,7 +103,9 @@ struct String
     bool Has(const String& Pattern) const;
     bool Has(char Item) const;
 
-    Iterator<Array<char>, char> Iterate() const;
+
+    char* begin() const { return Real; }
+    char* end() const { return Real + Length; }
 
     String Reversed() const;
 
