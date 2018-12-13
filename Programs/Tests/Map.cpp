@@ -62,16 +62,12 @@ int main()
     I32 Loop = 0;
 
     for(auto& A : Numbers.Keys())
-    {
-
-    }
+        ;
     
     Loop = 0;
 
     for(auto A : Numbers.Values())
-    {
-
-    }
+        ;
 
     Loop = 0;
 

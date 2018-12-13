@@ -13,31 +13,9 @@
  *  limitations under the License.
  */
 
-#include "Thread.h"
-#include "Core/Collections/Array.h"
-
 #pragma once
 
 namespace Cthulhu
 {
-
-class ThreadPool
-{
-    Array<Thread> Threads;
-
-    static ThreadPool* GlobalThreadPool;
-
-public:
-
-    ThreadPool(int StartThreads)
-    {
-        
-    }
-
-
-    static ThreadPool* GetGlobalThreadPool();
-
-    static void InitGlobalThreadPool();
-};
-
+    
 }

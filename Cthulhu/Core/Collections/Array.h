@@ -31,27 +31,78 @@
 namespace Cthulhu
 {
 
+/**
+ * @brief A dynamically sized array
+ * 
+ * @description A dynamically sized slacked array, rather than exponential
+ * 
+ * @tparam T the type of object to store in the array
+ */
 template<typename T>
 struct Array
 {
+    /**
+     * @brief Default constructor for an array
+     * 
+     */
     Array()
         : Real(new T[DefaultSlack])
         , Length(0)
         , Allocated(DefaultSlack)
     {}
 
+    /**
+     * @brief Copy constructor for an array
+     * 
+     * @descrption perform a deep copy of all elements in an array
+     * 
+     * @param Other the array to copy the data from
+     */
     Array(const Array& Other)
         : Real(Memory::NewDuplicate<T>(Other.Data(), Other.Allocated))
         , Allocated(Other.Allocated)
         , Length(Other.Length)
     {}
 
+    /**
+     * @brief Construct a new Array object from a raw pointer and its length
+     * 
+     * @description Allows an array to "claim" a pointer as its own data
+     *              This makes the pointer unusable once it has been claimed 
+     *              by the array
+     * 
+     * @param Ptr the raw pointer to claim
+     * @param PtrLen the length of the raw pointer
+     */
     Array(T* Ptr, U32 PtrLen)
         : Real(Ptr)
         , Allocated(PtrLen)
         , Length(PtrLen)
     {}
     
+    /**
+     * @brief Construct a new Array object from an initializer_list
+     * 
+     * @description enable initializer_list syntax to make arrays easier to type
+     * so instead of 
+     * @code{.cpp}
+     * 
+     * Array<String> Names;
+     * Names.Append("Jeb");
+     * Names.Append("Bob");
+     * Names.Append("Bill");
+     * 
+     * @endcode
+     * the user can type 
+     * @code{.cpp}
+     * 
+     * Array<String> Names = { "Jeb", "Bob", "Bill" };
+     * 
+     * @endcode
+     * instead
+     * 
+     * @param InitList the initalizer list to use
+     */
     Array(std::initializer_list<T> InitList)
         : Allocated(InitList.size())
         , Length(0)
@@ -63,6 +114,14 @@ struct Array
         }
     }
 
+    /**
+     * @brief push an item to the back of the array
+     * 
+     * @description simmilar to <a href="http://www.cplusplus.com/reference/vector/vector/push_back/">vector::push_back</a> or rusts
+     * <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html#method.push">vec::push</a>
+     * 
+     * @param Item the item to push
+     */
     void Append(const T& Item)
     {        
         if(Length + 1 >= Allocated)
@@ -126,10 +185,8 @@ struct Array
     //cut from back
     void Cut(U32 Amount)
     {
-        //TODO: this doesnt work you muppet
         ASSERT(Amount <= Length, "Cutting beyond end of array");
-        Real += (sizeof(T) * Amount);
-        Length -= Amount;
+        Real = Memory::Move(Real, Real + Amount, (Length -= Amount));
     }
 
     //drop from back

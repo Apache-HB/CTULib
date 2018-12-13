@@ -28,15 +28,12 @@ namespace Cthulhu
  * @tparam T the object to check for a pointer on
  */
 template<typename T>
-struct IsPointer { static const bool Value = false; };
+struct IsPointer { static constexpr bool Value = false; };
 
-template<typename T> struct IsPointer<                  T*>    { static const bool Value = true; };
-template<typename T> struct IsPointer<const             T*>    { static const bool Value = true; };
-template<typename T> struct IsPointer<volatile          T*>    { static const bool Value = true; };
-template<typename T> struct IsPointer<const volatile    T*>    { static const bool Value = true; };
+template<typename T> struct IsPointer<T*> { static constexpr bool Value = true; };
 
-template<typename T> struct IsPointer<const             T>     { static const bool Value = false; };
-template<typename T> struct IsPointer<volatile          T>     { static const bool Value = false; };
-template<typename T> struct IsPointer<const volatile    T>     { static const bool Value = false; };
+template<typename T> struct IsPointer<const             T>    { static constexpr bool Value = IsPointer<T>::Value; };
+template<typename T> struct IsPointer<volatile          T>    { static constexpr bool Value = IsPointer<T>::Value; };
+template<typename T> struct IsPointer<const volatile    T>    { static constexpr bool Value = IsPointer<T>::Value; };
 
 }

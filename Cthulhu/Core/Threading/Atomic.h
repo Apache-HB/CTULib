@@ -13,19 +13,15 @@
  *  limitations under the License.
  */
 
-#include "Thread.h"
+#pragma once
 
-void Cthulhu::Thread::Detatch()
+namespace Cthulhu
 {
-    InternalThread->detach();
-}
 
-void Cthulhu::Thread::Join()
+template<typename T>
+struct Atomic
 {
-    InternalThread->join();
-}
 
-bool Cthulhu::Thread::Joinable() const
-{
-    return InternalThread->joinable();
+};
+
 }

@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 
-#include "Core/Templates/Invoke.h"
+#include "Core/Traits/Invoke.h"
 #include "Meta/Aliases.h"
 
 #pragma once

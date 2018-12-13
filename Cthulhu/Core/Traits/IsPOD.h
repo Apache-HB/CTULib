@@ -13,16 +13,20 @@
  *  limitations under the License.
  */
 
-#include "Mutex.h"
+#include "Traits.h"
+#include "Arithmatic.h"
+#include "Logic.h"
 
-Cthulhu::Mutex::Mutex() {}
+#pragma once
 
-void Cthulhu::Mutex::Lock()
+namespace Cthulhu
 {
-    InternalMutex.lock();
-}
 
-void Cthulhu::Mutex::Unlock()
+template<typename T>
+struct IsPOD
 {
-    InternalMutex.unlock();
+    static constexpr bool Value = Or<__is_pod(T) || __is_enum(T), IsArithmatic<T>, IsPointer<T>>::Value;
+}; //                                ^^^^^^^^       ^^^^^^^^^
+   //these are some magic things that compilers have without #including anything 
+
 }

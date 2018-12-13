@@ -13,35 +13,9 @@
  *  limitations under the License.
  */
 
-#include <thread>
-
-#include "Core/Types/Lambda.h"
-
-#include "Meta/Aliases.h"
-
 #pragma once
 
 namespace Cthulhu
 {
-
-struct Thread
-{
-    template<typename T, typename... TArgs>
-    Thread(Lambda<T(TArgs...)> Start)
-    {
-        InternalThread = new std::thread(Start);
-    }
-
-    ~Thread() { delete InternalThread; }
-
-    U64 ID() const;
-
-    void Detatch();
-    void Join();
-    bool Joinable() const;
-
-private:
-    std::thread* InternalThread;
-};
 
 }

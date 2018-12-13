@@ -13,23 +13,15 @@
  *  limitations under the License.
  */
 
-#include <mutex>
-
 #pragma once
 
 namespace Cthulhu
 {
 
+template<typename T>
 struct Mutex
 {
-    Mutex();
-    ~Mutex();
 
-    void Lock();
-    void Unlock();
-
-private:
-    std::mutex InternalMutex;
 };
 
 }

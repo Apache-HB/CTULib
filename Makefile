@@ -64,7 +64,7 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = Map.cpp
+TEST_NAME = JSON/JSON.cpp
 
 tests:
 	echo 'Running tests' && \
