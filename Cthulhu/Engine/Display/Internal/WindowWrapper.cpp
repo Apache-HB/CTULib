@@ -13,20 +13,12 @@
  *  limitations under the License.
  */
 
-#include "Range.h"
+#include "Meta/Macros.h"
 
-using namespace Cthulhu;
-
-Array<I64> Range::ToArray() const 
-{
-    return Array<I64>(End, [](U32 I){ return I; });
-}
-
-String Utils::ToString(const Range& Data)
-{
-    return String("{ Start: {0}, End: {1}, Index: {2}").ArrayFormat({
-        ToString(Data.Start),
-        ToString(Data.End),
-        ToString(Data.Idx)
-    });
-}
+#if defined(OS_APPLE)
+#   include "MetalWindow.mm"
+#elif defined(OS_WINDOWS)
+#   include "DirectXWindow.cpp"
+#else
+#   include "VulkanWindow.cpp"
+#endif

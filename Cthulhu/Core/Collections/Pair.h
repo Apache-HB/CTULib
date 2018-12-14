@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#include "CthulhuString.h"
+
 #pragma once
 
 namespace Cthulhu
@@ -99,5 +101,24 @@ struct Triplet
     TSecond Second;
     TThird Third;
 };
+
+namespace Utils
+{
+    template<typename TFirst, typename TSecond>
+    String ToString(const Pair<TFirst, TSecond>& Data)
+    {
+        return String("{ First: {0}, Second: {1} }").ArrayFormat({ ToString(Data.First), ToString(Data.Second)});
+    }
+
+    template<typename A, typename B, typename C>
+    String ToString(const Triplet<A, B, C>& Data)
+    {
+        return String("{ First: {0}, Second: {1}, Third: {2} }").ArrayFormat({
+            ToString(Data.First),
+            ToString(Data.Second),
+            ToString(Data.Third)
+        });
+    }
+}
 
 } //Cthulhu

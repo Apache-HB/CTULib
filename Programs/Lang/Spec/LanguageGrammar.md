@@ -56,6 +56,15 @@ single-bool-expr:   bool-single-op expr
 
 bool-expr:          expr bool-op expr
 
+dotted-class-name:  ident |
+                    ident '.' ident
+
+dotted-name:        ident |
+                    ident '::' dotted-name |
+                    dotted-class-name
+
+arg-list:           '(' arg-body ')'
+
 func-call:          dotted-name arg-list 
 
 expr:               const |

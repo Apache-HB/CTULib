@@ -203,11 +203,10 @@ namespace Utils
     String ToString(I64 Num);
     String ToString(float Num);
     String ToString(bool Val);
-
     String ToString(const String& Text);
 
-    String HexToString(I64 HexNum);
 
+    String HexToString(I64 HexNum);
     String FastToString(float Num);
 
     ALWAYSINLINE bool IsSpace(char C);

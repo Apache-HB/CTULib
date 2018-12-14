@@ -13,7 +13,140 @@
  *  limitations under the License.
  */
 
+#include "Lexer.h"
 
+using namespace Cthulhu::Lang;
+
+using TType = Token::Type;
+
+Token Lexer::ParseIdent()
+{
+    char C = File.Next();
+
+    while(Utils::IsAlnum(C))
+    {
+        Buf.Push(C);
+        C = File.Next();
+    }
+    File.Push(C);
+
+    Keyword Ret = KeywordType();
+
+    if(Ret == Keyword::NoKw)
+    {
+        auto Tok = Token(TType::Ident);
+        Buf.Push('\0');
+        Tok.Str = new String(*Buf);
+        Buf.Pop();
+
+        return Tok;
+    }
+    else
+    {
+        auto Tok = Token(TType::Key);
+        Tok.Key = Ret;
+
+        return Tok;
+    }
+}
+
+Token Lexer::ParseKeyword()
+{
+    char C = File.Next();
+
+    Keyword Key;
+
+    while((Key = OperatorType()) != Keyword::NoOp)
+    {
+        C = File.Next();
+        Buf.Push(C);
+    }
+}
+
+Token Lexer::GetNext()
+{
+    char C = File.Next();
+
+    Buf.Wipe();
+    Buf.Push(C);
+
+    if(Utils::IsEOF(C))
+    {
+        return Token(TType::End);
+    }
+
+    if(C == '/' && File.Peek() == '*')
+    {
+        //is a comment
+        C = File.Next();
+
+        while(C != '*' || File.Peek() != '/')
+        {
+            C = File.Next();
+            if(Utils::IsEOF(C))
+            {
+                return Token(TType::End);
+            }
+        }
+    }
+
+    if(C == ' ')
+    {
+        while(Utils::IsSpace(C))
+        {
+            C = File.Next();
+        }
+    }
+
+    Buf.Push(C);
+
+    if(Utils::IsAlpha(C))
+    {
+        return ParseIdent();
+    }
+    else if(Utils::IsNum(C))
+    {
+        return ParseNumber();
+    }
+    else if(C == '"' || C == '\'')
+    {
+        return ParseString();
+    }
+    else if(Utils::IsEOF(C))
+    {
+        return Token(TType::End);
+    }
+    else
+    {
+        return ParseKeyword();
+    }
+}
+
+Token Lexer::Next()
+{
+    Token Ret = Current;
+    
+    Current = Look1;
+    Look1 = Look2;
+    Look2 = GetNext();
+
+    return Ret;
+}
+
+Token Lexer::Peek() const
+{
+    return Current;
+}
+
+Token Lexer::Peek2() const
+{
+    return Look1;
+}
+
+Token Lexer::Peek3() const 
+{
+    return Look2;
+}
 
 /*
 

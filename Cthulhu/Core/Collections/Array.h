@@ -221,9 +221,9 @@ struct Array
     }
 
     /**
-     * @brief 
+     * @brief Remove the last item from the array and return it
      * 
-     * @return T 
+     * @return T the last item on the array
      */
     T Pop()
     {
@@ -302,15 +302,27 @@ struct Array
      */
     ALWAYSINLINE T* Data() const { return Real; }
 
+    /**
+     * @brief 
+     * 
+     * @return ALWAYSINLINE& Front 
+     */
+    ALWAYSINLINE T& Front() const { return Real[0]; }
+
+    /**
+     * @brief 
+     * 
+     * @return ALWAYSINLINE& Back 
+     */
+    ALWAYSINLINE T& Back() const { return Real[Length]; }
 
     //STL iterators, dont use directly
     //use for(auto& I : Arr) instead
     T* begin() const { return Real; }
     T* end() const { return Real + Length; }
 
-    //cut from back
     /**
-     * @brief 
+     * @brief Cut N elements from the front of the array
      * 
      * @param Amount 
      */
@@ -320,9 +332,8 @@ struct Array
         Real = Memory::Move(Real, Real + Amount, (Length -= Amount));
     }
 
-    //drop from back
     /**
-     * @brief 
+     * @brief Cut N elements from the back of the array
      * 
      * @param Amount 
      */

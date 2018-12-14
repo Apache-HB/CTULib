@@ -265,4 +265,13 @@ struct MapNode
     }
 };
 
+namespace Utils
+{
+    template<typename TKey, typename TVal>
+    String ToString(const Map<TKey, TVal>& Data)
+    {
+        
+    }
+}
+
 } // Cthulhu

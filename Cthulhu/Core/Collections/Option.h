@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+#include "CthulhuString.h"
 #include "Core/Types/Lambda.h"
 #include "Meta/Assert.h"
 
@@ -126,6 +127,15 @@ Option<TOpt> Some(TOpt Input) { return Option<TOpt>(Input); }
 
 template<typename TOpt>
 Option<TOpt> None() { return Option<TOpt>(); }
+
+namespace Utils
+{
+    template<typename T>
+    String ToString(const Option<T> Item)
+    {
+        return Item.Valid() ? String("Some({})").Replace("{}", ToString(Item.Get())) : String("None()");
+    }
+}
 
 } // Cthulhu
 

@@ -13,20 +13,44 @@
  *  limitations under the License.
  */
 
-#include "Range.h"
+#include <Core/Collections/CthulhuString.h>
+#include "Display.h"
 
-using namespace Cthulhu;
+#pragma once
 
-Array<I64> Range::ToArray() const 
+namespace Cthulhu::Engine
 {
-    return Array<I64>(End, [](U32 I){ return I; });
-}
 
-String Utils::ToString(const Range& Data)
+enum class WindowMode : U8
 {
-    return String("{ Start: {0}, End: {1}, Index: {2}").ArrayFormat({
-        ToString(Data.Start),
-        ToString(Data.End),
-        ToString(Data.Idx)
-    });
+    Border,
+    Borderless,
+    Fullscreen,
+    Minimized
+};
+
+struct Window
+{
+    Window();
+    Window(WindowMode Mode, U32 W, U32 H);
+    
+    void SetTitle(const String& Title);
+    bool ToggleFullscreen() const;
+    bool Fullscreen() const;
+    U32 Width() const;
+    U32 Height() const;
+
+    void Display();
+    void Minimize();
+    void Close();
+
+    void Move(Location& NewLocation);
+    void Resize(Size& NewSize);
+
+    void* Handle() const;
+
+private:
+    void* Native;
+};
+
 }

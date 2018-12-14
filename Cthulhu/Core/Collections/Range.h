@@ -20,6 +20,13 @@
 namespace Cthulhu
 {
 
+struct Range;
+
+namespace Utils
+{
+    String ToString(const Range& Data);
+}
+
 struct Range
 {
     constexpr Range(I64 Len)
@@ -47,6 +54,8 @@ struct Range
     constexpr Range& operator++() { Idx++; return *this; }
 
     Array<I64> ToArray() const;
+
+    friend String Utils::ToString(const Range& Data);
 
 private:
     constexpr Range(I64 First, I64 Last, I64 Index)

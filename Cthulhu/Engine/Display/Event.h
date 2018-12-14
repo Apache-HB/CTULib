@@ -13,20 +13,9 @@
  *  limitations under the License.
  */
 
-#include "Range.h"
+#pragma once
 
-using namespace Cthulhu;
-
-Array<I64> Range::ToArray() const 
+namespace Cthulhu::Engine
 {
-    return Array<I64>(End, [](U32 I){ return I; });
-}
-
-String Utils::ToString(const Range& Data)
-{
-    return String("{ Start: {0}, End: {1}, Index: {2}").ArrayFormat({
-        ToString(Data.Start),
-        ToString(Data.End),
-        ToString(Data.Idx)
-    });
+    
 }

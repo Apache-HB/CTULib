@@ -13,20 +13,21 @@
  *  limitations under the License.
  */
 
-#include "Range.h"
+#include "Meta/Aliases.h"
 
-using namespace Cthulhu;
+#pragma once
 
-Array<I64> Range::ToArray() const 
+namespace Cthulhu::Engine
 {
-    return Array<I64>(End, [](U32 I){ return I; });
-}
 
-String Utils::ToString(const Range& Data)
+struct Size
 {
-    return String("{ Start: {0}, End: {1}, Index: {2}").ArrayFormat({
-        ToString(Data.Start),
-        ToString(Data.End),
-        ToString(Data.Idx)
-    });
+    U32 Width, Height;
+};
+
+struct Location
+{
+    U32 X, Y;
+};
+
 }

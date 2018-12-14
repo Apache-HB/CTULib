@@ -20,13 +20,108 @@
 namespace Cthulhu::Lang
 {
 
+#define KW(V, _) V,
+#define OP(V, _) V,
+
+enum class Keyword : U8
+{
+#include "Keywords.inc"
+};
+
+#undef KW
+#undef OP
+
+struct Token
+{
+    enum class Type : U8
+    {
+        Ident,
+        String, 
+        FString,
+        Int,
+        Float,
+        Key,
+        End,
+    };
+
+    U64 Line;
+    U64 Depth;
+    
+    Type TokType;
+
+    Token(){}
+
+    Token(Type InType)
+        : TokType(InType)
+    {}
+
+    Token(U64 L, U64 D, Type InType)
+        : Line(L)
+        , Depth(D)
+        , TokType(InType)
+    {}
+
+    union
+    {
+        String* Str;
+        I64 Int;
+        float Float;
+        Keyword Key;
+    };
+
+    ~Token()
+    {
+        if( TokType == Type::String || 
+            TokType == Type::FString || 
+            TokType == Type::Ident)
+            delete Str;
+    }
+};
+
 struct Lexer
 {
-    
+    Lexer(FastFile InFile)
+        : File(InFile)
+        , Distance(0)
+        , Line(0)
+        , Depth(0)
+    {
+        Current = GetNext();
+        Look1 = GetNext();
+        Look2 = GetNext();
+    }
 
+    Token Next();
+    Token Peek() const;
+    Token Peek2() const;
+    Token Peek3() const;
+
+private:
+    char NextChar();
+
+    Keyword KeywordType() const;
+    Keyword OperatorType() const;
     
+    I64 ParseHex() const;
+    I64 ParseBits() const;
+    I64 ParseInt() const;
+
+    double ParseFloat() const;
+
+    Token ParseString();
+    Token ParseIdent();
+    Token ParseNumber();
+    Token ParseKeyword();
+
+    Token GetNext();
+    //2 token lookahead
+    Token Current, Look1, Look2;
+
     U64 Distance;
+    U64 Line;
+    U16 Depth;
 
+    mutable Buffer<char, 512> Buf;
 
     FastFile File;
 };
