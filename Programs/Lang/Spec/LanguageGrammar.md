@@ -1,84 +1,92 @@
-program: imports outer-body
+import-body:        ident |
+                    ident ',' import-body
 
-outer-body:     decorator inner-body
+import-list:        '{' import-body '}'
 
-decorator:      '@' ident arg-call-list
+import-path:        ident |
+                    ident '::' import-path
 
-arg-call-list:      '(' ')' | 
-                    '(' arg-call-body ')'
+import:             'import' import-path |
+                    'import' import-path import-list
 
-arg-call-body:      ident | 
-                    ident ',' arg-call-body | 
-                    kwarg-call-body
+imports:            import | 
+                    import imports
 
-kwarg-call-body:    ident '=' expr | 
-                    ident '=' expr ',' kwarg-call-body
+decorator-path:     ident |
+                    ident '::' decorator-path
 
-inner-body:     function body | 
-                variable body | 
-                class body
+number:             int |
+                    float
 
-function:       'def' ident arg-list '->' type func-body
+const:              string |
+                    ident |
+                    char |
+                    number
 
-arg-list:       '(' ')' | 
-                '(' arg-body ')'
+bin-op:             '+'  |
+                    '+=' |
+                    '-'  |
+                    '-=' |
+                    '*'  |
+                    '*=' |
+                    '/'  |
+                    '/=' |
+                    '%'  |
+                    '%=' |
+                    '&'  |
+                    '&=' |
+                    '|'  |
+                    '|=' |
+                    '^'  |
+                    '^='
 
-arg-body:       ident ':' type | 
-                ident ':' type ',' arg-body |
-                ident ':' type '=' expr |
-                ident ':' type '=' expr ',' default-arg-body
+bin-expr:           expr bin-op expr
 
-default-arg-body:   ident ':' type '=' expr | 
-                    ident ':' type '=' expr ',' default-arg-body
+bool-op:            'and' | '&&' |
+                    'or'  | '||' |
+                    '=='  | 'is' |
+                    '!='  | 'is' 'not' |
+                    '>'   | '>=' |
+                    '<'   | '<=' |
+                    'in'  | 'not' 'in'
 
-func-body:      '{' stmt '}'
+bool-single-op:     '!'
 
-stmt:           return-stmt stmt | 
-                if-stmt stmt | 
-                branch-stmt stmt |
-                for-stmt stmt |
-                while-stmt stmt |
-                var-decl stmt
+single-bool-expr:   bool-single-op expr
 
-var-decl:       'var' ident '=' expr
+bool-expr:          expr bool-op expr
 
-while-stmt:     'while' bool-expr func-body
+func-call:          dotted-name arg-list 
 
-for-stmt:       'for' for-body func-body
+expr:               const |
+                    bin-expr |
+                    single-expr |
+                    bool-expr |
+                    single-bool-expr |
+                    func-call |
+                    ternary-expr |
+                    assign-expr |
+                    '(' expr ')'
 
-for-body:       ident 'in' expr
+kwarg-list:         ident '=' expr |
+                    ident '=' expr ',' kwarg-list
 
-branch-stmt:    'branch' branch-body
+arg-list:           arg |
+                    arg ',' arg-list |
+                    arg ',' kwarg-list |
+                    kwarg ',' kwarg-list 
 
-branch-body:    '{' branch-options '}'
+decorator-args:     '(' arg-list ')'
 
-branch-options: expr '->' func-body |
-                expr '->' func-body branch-options |
-                'else' '->' func-body
+decorator:          '@' decorator-path |
+                    '@' decorator-path decorator-args
 
-return-stmt:    'return' expr
+decorators:         decorator |
+                    decorator decorators
 
-if-stmt:        'if' bool-stmt func-body |
-                'if' bool-stmt func-body else-stmt |
-                'if' bool-stmt func-body elif-stmt
+preamble:           decorators | 
+                    decorators imports | 
+                    imports
 
-elif-stmt:      'else' 'if' bool-stmt func-body |
-                'else' 'if' bool-stmt func-body elif-stmt |
-                'else' 'if' bool-stmt func-body else-stmt
-
-imports:    import-stmt imports | 
-            import-stmt
-
-import-stmt:    extern-import | 
-                native-import
-
-native-import: 'import' dotted-path exposing-list
-
-extern-import: 'extern' lang 'import' dotted-path exposing-list |
-               'extern' lang 'import' dotted-path exposing-list
-
-exposing-import:    '{' '...' '}' |
-                    '{' import-list '}'
-
-import-list:    ident | 
-                ident ',' import-list
+program:            preamble body | 
+                    body

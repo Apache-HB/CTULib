@@ -204,6 +204,8 @@ namespace Utils
     String ToString(float Num);
     String ToString(bool Val);
 
+    String ToString(const String& Text);
+
     String HexToString(I64 HexNum);
 
     String FastToString(float Num);

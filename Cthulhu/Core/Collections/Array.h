@@ -21,10 +21,9 @@
 #include "Option.h"
 //Option<T>
 
-#include "Iterator.h"
-//Iterator<T>
-
 #include "Core/Memory/Memory.h"
+
+#include "CthulhuString.h"
 
 #pragma once
 
@@ -115,6 +114,57 @@ struct Array
     }
 
     /**
+     * @brief Construct a new Array object using a lambda
+     * 
+     * @description Used to allow an array to be constructed with a function
+     * is also more efficient than appending each item individually
+     * 
+     * 
+     * @code{.cpp}
+     * 
+     * Array<I32> Numbers(5, [](I32 N) { return N + N; });
+     * 
+     * printf(*Utils::ToString(Numbers));
+     * // { 0, 2, 4, 8, 16 }
+     * 
+     * @endcode
+     * 
+     * instead of 
+     * 
+     * @code{.cpp}
+     * 
+     * Array<I32> Numbers = { 0, 2, 4, 8, 16 };
+     * 
+     * @endcode
+     * 
+     * or
+     * 
+     * @code{.cpp}
+     * 
+     * Array<I32> Numbers;
+     * Numbers.Append(0);
+     * Numbers.Append(2);
+     * Numbers.Append(4);
+     * Numbers.Append(8);
+     * Numbers.Append(16);
+     * 
+     * @endcode
+     * 
+     * @param Amount the amount of items initially in the array
+     * @param Block the function used to populate the array
+     */
+    Array(U32 Amount, Lambda<T(U32)> Block)
+        : Allocated(Amount)
+        , Length(Amount)
+        , Real(new T[Amount+1])
+    {
+        for(U32 I = 0; I > Amount; I++)
+        {
+            Real[I] = Block(I);
+        }
+    }
+
+    /**
      * @brief push an item to the back of the array
      * 
      * @description simmilar to <a href="http://www.cplusplus.com/reference/vector/vector/push_back/">vector::push_back</a> or rusts
@@ -132,6 +182,11 @@ struct Array
         Real[Length++] = Item;
     }
 
+    /**
+     * @brief Append another array to an array
+     * 
+     * @param Other the array to append
+     */
     void Append(const Array& Other)
     {
         //TODO: optimise
@@ -141,39 +196,110 @@ struct Array
         }
     }
 
+    /**
+     * @brief Append a single item to an array
+     * 
+     * @param Item the item to append
+     * @return Array& a refernce to itself
+     */
     Array& operator+=(const T& Item) 
     {
         Append(Item);
         return *this;
     }
 
+    /**
+     * @brief Append another array to this array
+     * 
+     * @param Other the other array to append
+     * @return Array& a refence to itself
+     */
     Array& operator+=(const Array& Other)
     {
         Append(Other);
         return *this;
     }
 
+    /**
+     * @brief 
+     * 
+     * @return T 
+     */
     T Pop()
     {
         ASSERT(Length >= 1, "Cant pop item off an empty list");
         return Real[--Length];
     }
 
+    /**
+     * @brief 
+     * 
+     * @param Index 
+     * @return true 
+     * @return false 
+     */
     bool ValidIndex(U32 Index) const { return 0 <= Index && Index <= Length; }
 
+    /**
+     * @brief 
+     * 
+     * @param Index 
+     * @return ALWAYSINLINE& operator[] 
+     */
     ALWAYSINLINE T& operator[](U32 Index) const
     {
         ASSERT(ValidIndex(Index), "IndexOutOfRange");
         return Real[Index];
     }
 
+    /**
+     * @brief 
+     * 
+     * @param Index 
+     * @return Option<T> 
+     */
     Option<T> At(U32 Index) const { return ValidIndex(Index) ? Some(Real[Index]) : None<T>(); }
 
+    /**
+     * @brief 
+     * 
+     * @return ALWAYSINLINE Len 
+     */
     ALWAYSINLINE U32 Len() const { return Length; }
+    /**
+     * @brief 
+     * 
+     * @return ALWAYSINLINE GetSlack 
+     */
     ALWAYSINLINE U16 GetSlack() const { return Slack; }
+    
+    /**
+     * @brief 
+     * 
+     * @param NewSlack 
+     * @return ALWAYSINLINE SetSlack 
+     */
     ALWAYSINLINE void SetSlack(U16 NewSlack) { Slack = NewSlack; }
+    
+    /**
+     * @brief 
+     * 
+     * @return ALWAYSINLINE RealSize 
+     */
     ALWAYSINLINE U32 RealSize() const { return Allocated; }
+    
+    /**
+     * @brief 
+     * 
+     * @return ALWAYSINLINE* operator* 
+     */
     ALWAYSINLINE T* operator*() const { return Real; }
+    
+    /**
+     * @brief 
+     * 
+     * @return ALWAYSINLINE* Data 
+     */
     ALWAYSINLINE T* Data() const { return Real; }
 
 
@@ -183,6 +309,11 @@ struct Array
     T* end() const { return Real + Length; }
 
     //cut from back
+    /**
+     * @brief 
+     * 
+     * @param Amount 
+     */
     void Cut(U32 Amount)
     {
         ASSERT(Amount <= Length, "Cutting beyond end of array");
@@ -190,12 +321,23 @@ struct Array
     }
 
     //drop from back
+    /**
+     * @brief 
+     * 
+     * @param Amount 
+     */
     void Drop(U32 Amount)
     {
         ASSERT(Amount <= Length, "Dropping over the back of the array");
         Length -= Amount;
     }
 
+    /**
+     * @brief 
+     * 
+     * @param Item 
+     * @return Option<U32> 
+     */
     Option<U32> Find(const T& Item) const
     {
         for(U32 I = 0; I < Length; I++)
@@ -207,11 +349,23 @@ struct Array
         return None<T>();
     }
 
+    /**
+     * @brief 
+     * 
+     * @param Item 
+     * @return ALWAYSINLINE Has 
+     */
     ALWAYSINLINE bool Has(const T& Item) const
     {
         return Find(Item).Valid();
     }
 
+    /**
+     * @brief 
+     * 
+     * @param Item 
+     * @return U32 
+     */
     U32 Count(const T& Item) const
     {
         U32 Ret = 0;
@@ -225,6 +379,12 @@ struct Array
         return Ret;
     }
 
+    /**
+     * @brief Copy the contents of the array to a new array with a filter
+     * 
+     * @param Block the function that filters each item
+     * @return Array the array with the filtered items
+     */
     Array Filter(Lambda<bool(const T&)> Block) const
     {
         Array Ret;
@@ -238,6 +398,32 @@ struct Array
         return Ret;
     }
 
+    /**
+     * @brief Map each item into a new array with a transform applied
+     * 
+     * @description Apply a transform to every item in an array using a lambda
+     * for example
+     * 
+     * @code{.cpp}
+     * 
+     * Array<String> Names = { "Jeff", "Jeb", "John", "Bill", "Bob", "Barry" };
+     * 
+     * auto NamesWithJ = Names.Map([](const String& Name) {
+     *     if(Name.StartsWith("J")) {
+     *         return Name;
+     *     } else {
+     *         return String("J") += Name;
+     *     }
+     * });
+     * 
+     * puts(Utils::ToString(Names).CStr());
+     * // { "Jeff", "Jeb", "John", "JBill", "JBob", "JBarry" }
+     * 
+     * @endcode
+     * 
+     * @param Transform the function to use to transform the variable
+     * @return Array the new array with the tranformed elements
+     */
     Array Map(Lambda<T(const T&)> Transform) const
     {
         Array Ret;
@@ -250,13 +436,28 @@ struct Array
         return Ret;
     }
 
+    /**
+     * @brief Allocate extra space
+     * 
+     * @param Size The extra space to allocate
+     */
     void Reserve(U32 Size)
     {
         Resize(Length + Size);
     }
 
-    static const U32 DefaultSlack = 32;
+    /**
+     * @brief the default slack of an array
+     * 
+     */
+    static constexpr U32 DefaultSlack = 32;
 
+    /**
+     * @brief Destroy the Array object
+     * 
+     * @description this will call the destrutor for every object in the array
+     * 
+     */
     ~Array()
     {
         delete[] Real;
@@ -289,4 +490,32 @@ private:
     U16 Slack{DefaultSlack};
 };
 
+namespace Utils
+{
+    /**
+     * @brief Convert an array to a string
+     * 
+     * @description Convert an array to a string representing every item in the array
+     * the output uses initializer_list syntax so it looks simmilar to native C++
+     * 
+     * @tparam T they type of the object stored in the array
+     * @param Arr the array to convert
+     * @return String the array as a string
+     */
+    template<typename T>
+    String ToString(const Array<T> Arr)
+    {
+        String Ret = "{ ";
+        for(const auto& I : Arr)
+        {
+            Ret += ToString(I);
+            Ret += ", ";
+        }
+        Ret.Drop(2);
+        Ret += " }";
+
+        return Ret;
+    }
 }
+
+} // Cthulhu

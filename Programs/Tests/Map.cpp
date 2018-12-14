@@ -13,8 +13,6 @@
  *  limitations under the License.
  */
 
-#include <vector>
-
 #include "TestMacros.h"
 
 #include <Core/Serialization/Hashes.h>

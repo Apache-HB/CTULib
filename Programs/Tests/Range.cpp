@@ -13,17 +13,18 @@
  *  limitations under the License.
  */
 
-#include "Core/Traits/IsTrivial.h"
+#include "TestMacros.h"
 
-#pragma once
+#include <Core/Collections/Range.h>
 
-namespace Cthulhu
+using namespace Cthulhu;
+
+int main()
 {
+    Range R = Range(25);
 
-template<typename T>
-struct Future
-{
-    static_assert(IsTrivial<T>::Value, "Atomic types must be trivial");
-};
-
+    for(I64 I : R)
+    {
+        printf("%lld\n", I);
+    }
 }

@@ -14,7 +14,7 @@
  */
 
 #include "Map.h"
-//Map<T, K> Array<T> Option<T> Iterator<TC, T> Memory::* 
+//Map<T, K> Array<T> Option<T> Memory::* 
 
 #include "Core/Math/Math.h"
 //Math::Min Math::Max
@@ -818,6 +818,11 @@ String Cthulhu::Utils::ToString(float Num)
 String Cthulhu::Utils::ToString(bool Val)
 {
     return Val ? "true" : "false";
+}
+
+String Cthulhu::Utils::ToString(const String& Text)
+{
+    return String('"') + Text + '"';
 }
 
 namespace

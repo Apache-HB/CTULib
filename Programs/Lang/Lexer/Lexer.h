@@ -13,9 +13,34 @@
  *  limitations under the License.
  */
 
+#include "Utils/FastFile/FastFile.h"
+
+#pragma once
+
+namespace Cthulhu::Lang
+{
+
+struct Lexer
+{
+    
+
+    
+    U64 Distance;
+
+
+    FastFile File;
+};
+
+}
+
+
+/*
+
 #include <Meta/Aliases.h>
 #include <Core/Collections/CthulhuString.h>
 #include <Core/Memory/Buffer.h>
+#include <Core/Collections/Array.h>
+#include <Core/Collections/Map.h>
 
 #include "../Utils/FastFile/FastFile.h"
 
@@ -43,7 +68,14 @@ enum class LexType : U8
     Float,
     Int,
     String,
+    FString,
     End,
+};
+
+struct FString
+{
+    String Template;
+    Array<String> Args;
 };
 
 struct Lexeme
@@ -56,6 +88,7 @@ struct Lexeme
     union
     {
         String* Ident;
+        FString* Format;
         Keyword Key;
         float F;
         I64 Num;
@@ -66,6 +99,11 @@ struct Lexeme
     Lexeme(LexType LType);
     ~Lexeme();
 };
+
+namespace Consts
+{
+    constexpr char FormatPrefix = 'f';
+}
 
 struct Lexer
 {
@@ -81,10 +119,15 @@ struct Lexer
     U64 GetRealDistance() const { return RealDistance; }
 
 private:
+    void ParseHexString(char C);
+    void ParseEscapedChar(char C);
+
     Lexeme LexNext();
     void ParseOperator();
     static Keyword IsOperator(Buffer<char, 512>* Buf);
     static Keyword IsKeyword(Buffer<char, 512>* Buf);
+
+    Lexeme ParseFString();
 
     Lexeme ParseNum(Buffer<char, 512>* NumBuf, char& C);
 
@@ -102,4 +145,4 @@ private:
     bool FoundEOF = false;
 };
 
-}
+}*/

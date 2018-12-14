@@ -13,42 +13,11 @@
  *  limitations under the License.
  */
 
-#include "Core/Collections/CthulhuString.h"
-#include "Meta/Aliases.h"
+#include "Range.h"
 
-#pragma once
+using namespace Cthulhu;
 
-namespace Cthulhu
+Array<I64> Range::ToArray() const 
 {
-
-namespace Engine
-{
-
-constexpr U8 RGB = 0;
-constexpr U8 RGBA = 1;
-
-template<I8>
-struct Colour{};
-
-template<>
-struct Colour<RGB>
-{
-    U8 Red, Green, Blue;
-};
-
-template<>
-struct Colour<RGBA>
-{
-    U8 Red, Green, Blue;
-    float Alpha;
-};
-
-} // Graphics
-
-namespace Utils
-{
-    String ToString(const Engine::Colour<Engine::RGB> Col);
-    String ToString(const Engine::Colour<Engine::RGBA> Col);
-} //Utils
-
-} // Cthulhu
+    return Array<I64>(End, [](U32 I){ return I; });
+}

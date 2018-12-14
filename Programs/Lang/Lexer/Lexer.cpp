@@ -13,6 +13,10 @@
  *  limitations under the License.
  */
 
+
+
+/*
+
 #include <stdio.h>
 #include <unistd.h>
 
@@ -31,6 +35,8 @@ Lexeme::~Lexeme()
 {
     if(Type == LexType::String)
         delete Ident;
+    else if(Type == LexType::FString)
+        delete Format;
 }
 
 Lexer::Lexer(FastFile InFile)
@@ -140,8 +146,6 @@ Keyword Lexer::IsKeyword(Buffer<char, 512>* Buf)
 {
     Buf->Push('\0');
 
-    printf("KWBuf = %s\n", Buf->Data());
-
 #define OP(...)
 
 #define KW(W, S) if(CString::Compare(Buf->Data(), S) == 0) { Buf->Pop(); return Keyword::W; }
@@ -181,6 +185,89 @@ Lexeme Lexer::Next()
     return Temp;
 }
 
+void Lexer::ParseHexString()
+{
+    Buffer<char, 32> HexBuf;
+
+    char C = File.Next();
+
+    if(C != 'x')
+    {
+        Buf.Push(C);
+        return;
+    }
+
+    while(ValidHex(C))
+    {
+        HexBuf.Push(C);
+    }
+
+    Utils::ParseHex(*HexBuf).Fold<void>([this](I64 Hex){
+        Buf.Push((char)Hex);
+    }, []{
+        //Warn here
+    });
+}
+
+void Lexer::ParseEscapedChar()
+{
+    char C = File.Next();
+
+    if(C == '{')
+    {
+        Buf.Push('{');
+    }
+    else if(C == '0')
+    {
+        ParseHexString();
+        return;
+        //Is hex char
+    }
+    
+    char ToPush = '\0';
+
+    switch(C)
+    {
+        case '\'': ToPush = '\'';    break;
+        case '"': ToPush = '"';      break;
+        case '\\': ToPush = '\\';    break;
+        case 'a': ToPush = '\a';     break;
+        case 'b': ToPush = '\b';     break;
+        case 'f': ToPush = '\f';     break;
+        case 'n': ToPush = '\n';     break;
+        case 'r': ToPush = '\r';     break;
+        case 't': ToPush = '\t';     break;
+        case 'v': ToPush = '\v';     break;
+        case '0': ParseHexString(); return;
+        case '{': ToPush = '{';      break;
+        default:
+            //Warn about unrecognised escape sequence
+            Buf.Push('\\');
+            Buf.Push(C);
+    }
+};
+
+Lexeme Lexer::ParseFString()
+{
+    char C = File.Next();
+    Buf.Push(C);
+
+    U64 InitialLoc = Distance;
+
+    if(C == '\\')
+    {
+        ParseEscapedChar();
+    }
+    else if(C == '"')
+    {
+        return Lexeme();
+    }
+    else if(C == '{')
+    {
+
+    }
+}
+
 Lexeme Lexer::LexNext()
 {
     char C = File.Next();
@@ -191,12 +278,14 @@ Lexeme Lexer::LexNext()
         return Lexeme(LexType::End);
     }
 
+    printf("N2 = %c%c\n", C, File.Peek());
+
     //Is a comment
     if(C == '(' && File.Peek() == '*')
     {
         //Discard the '('
         File.Next();
-
+        printf("Found Comment\n");
         while(true)
         {
             C = File.Next();
@@ -207,7 +296,11 @@ Lexeme Lexer::LexNext()
                 break;
             }
         }
+
+        printf("End Comment\n");
     }
+
+    char N = File.Peek();
 
     if(Utils::IsNum(C)) //is a number
     {
@@ -281,6 +374,13 @@ Lexeme Lexer::LexNext()
         }
             
     }
+    else if(C == 'f' && N == '"' || N == '\'')
+    {
+        //Is an f-string like python
+        Buf.Wipe();
+        File.Next(); //discard the "
+        return ParseFString(N);
+    }
     else if(Utils::IsAlpha(C) || C == '_')
     {
         //Is an identifier or keyword
@@ -304,6 +404,8 @@ Lexeme Lexer::LexNext()
 
             printf("Keyword = %hhu\n", A);
 
+            File.Push(C);
+
             return Ret;
         }
         else
@@ -313,6 +415,10 @@ Lexeme Lexer::LexNext()
 
             printf("Ident = %s\n", Ret.Ident->CStr());
 
+            File.Push(C);
+
+            printf("C = %c\n", C);
+
             return Ret;
         }
     }
@@ -320,6 +426,11 @@ Lexeme Lexer::LexNext()
     {
         //If its a space, recurse to drop a character and return a new Lexeme
         return Next();
+    }
+    else if(C == '\'' || C == '"')
+    {
+        //Is a single char
+        return ParseString(C);
     }
     else
     {
@@ -332,10 +443,20 @@ Lexeme Lexer::LexNext()
         auto Ret = Lexeme(LexType::Keyword);
         Ret.Key = IsOperator(&Buf);
 
+        switch(Ret.Key)
+        {
+            case Keyword::Or2: Ret.Key = Keyword::Or;   break;
+            case Keyword::And2: Ret.Key = Keyword::And; break;
+            case Keyword::Not2: Ret.Key = Keyword::Not; break;
+            default: break;
+        }
+
         if(Ret.Key == Keyword::None)
             return Lexeme(LexType::End);
 
         printf("Op = %hhu\n", Ret.Key);
+
+        printf("C = %c\n", C);
 
         return Ret;
     }
@@ -358,3 +479,4 @@ Lexeme Lexer::Peek3() const
     return Next2Lex;
 }
 
+*/

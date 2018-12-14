@@ -15,10 +15,7 @@
 
 #pragma once
 
-namespace Cthulhu
-{
-
-namespace Math
+namespace Cthulhu::Math
 {
     template<typename T>
     T Max(T Left, T Right)
@@ -31,6 +28,4 @@ namespace Math
     {
         return (Left < Right) ? Left : Right;
     }
-}
-
-}
+} // Cthulhu::Math

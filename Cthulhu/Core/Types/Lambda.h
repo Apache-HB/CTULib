@@ -29,7 +29,7 @@ template<typename, typename> struct LambdaCaller;
 template<typename TFunctor, typename TRet, typename... TArgs>
 struct LambdaCaller<TFunctor, TRet(TArgs...)>
 {
-    static TRet Call(void* Object, TArgs... Args)
+    constexpr static TRet Call(void* Object, TArgs... Args)
     {
         return Invoke(*(TFunctor*)Object, Forward<TArgs>(Args)...);
     }
@@ -40,7 +40,7 @@ template<typename, typename> struct LambdaBase;
 template<typename TDerived, typename TRet, typename... TArgs>
 struct LambdaBase<TDerived, TRet(TArgs...)>
 {
-    TRet operator()(TArgs... Args) const
+    constexpr TRet operator()(TArgs... Args) const
     {
         const TDerived* Derived = static_cast<const TDerived*>(this);
         return Callback(Derived->Ptr, Args...);
@@ -49,7 +49,7 @@ struct LambdaBase<TDerived, TRet(TArgs...)>
 protected:
 
     template<typename T>
-    void Set(T* Functor)
+    constexpr void Set(T* Functor)
     {
         Callback = &LambdaCaller<T, TRet(TArgs...)>::Call;
     }
@@ -69,26 +69,26 @@ struct Lambda : Private::LambdaBase<Lambda<TFunctor>, TFunctor>
     friend Super;
 
     template<typename TFunction>
-    Lambda(TFunction& Other)
+    constexpr Lambda(TFunction& Other)
     {
         Set(&Other);
     }
 
     template<typename TFunction>
-    Lambda(const TFunction& Other)
+    constexpr Lambda(const TFunction& Other)
     {
         Set(&Other);
     }
 
     template<typename TFunction>
-    Lambda(TFunction* Functor)
+    constexpr Lambda(TFunction* Functor)
     {
         Set(Functor);
     }
 private:
 
     template<typename TFunction>
-    void Set(TFunction* Function)
+    constexpr void Set(TFunction* Function)
     {
         Ptr = (void*)Function;
         Super::Set(Function);
@@ -97,4 +97,4 @@ private:
     void* Ptr;
 };
 
-}
+} // Cthulhu

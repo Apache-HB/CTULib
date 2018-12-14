@@ -24,17 +24,17 @@ using namespace Cthulhu::Lang;
 
 int Main(Array<String>* Args)
 {
-    FastFile F = FastFile((*(Args))[1]);
-    Lexer L = Lexer(F);
+    // FastFile F = FastFile((*(Args))[1]);
+    // Lexer L = Lexer(F);
 
-    Lexeme Lex = L.Next();
+    // Lexeme Lex = L.Next();
 
-    while(Lex.Type != LexType::End)
-    {
-        Lex = L.Next();
-    }
+    // while(Lex.Type != LexType::End)
+    // {
+    //     Lex = L.Next();
+    // }
 
-    printf("End of file\n");
+    // printf("End of file\n");
 
     return 0;
 }

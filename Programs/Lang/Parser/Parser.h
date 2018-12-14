@@ -13,10 +13,17 @@
  *  limitations under the License.
  */
 
+
+
+
+/*
+
 #include <Core/Collections/CthulhuString.h>
 #include <Core/Collections/Map.h>
 
 #include "../Lexer/Lexer.h"
+
+#include "Structures.h"
 
 #pragma once
 
@@ -25,7 +32,14 @@ namespace Cthulhu::Lang
 
 struct Parser
 {
+    Parser(Lexer InLex);
 
+    BaseTree* ParseFile();
+
+private:
+
+    Lexer CurrentStream;
 };
 
 } // Cthulhu::Lang
+*/

@@ -15,6 +15,7 @@
 
 #include "Array.h"
 #include "Core/Memory/Block.h"
+#include "Pair.h"
 
 #pragma once
 

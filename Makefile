@@ -64,7 +64,7 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = JSON/JSON.cpp
+TEST_NAME = Range.cpp
 
 tests:
 	echo 'Running tests' && \
@@ -79,16 +79,17 @@ angry:
 
 LANG_DIRS = $(shell find ./Programs/Lang -name '*.cpp')
 LANG_NAME = ccthulhu
+LANG_PATH = -I./Programs/Lang
 
 lang:
 	echo 'Building compiler' && \
-	$(CC) $(STD) $(FLAGS) $(PATHS) $(LANG_DIRS) \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(LANG_DIRS) $(LANG_PATH) \
 	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
 	-o $(LANG_NAME)
 
 debug_lang:
 	echo 'Building debug compiler' && \
-	$(CC) $(STD) $(FLAGS) $(PATHS) $(LANG_DIRS) $(DEBUG_ARGS) \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(LANG_DIRS) $(DEBUG_ARGS) $(LANG_PATH) \
 	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
 	-o $(LANG_NAME)
 
