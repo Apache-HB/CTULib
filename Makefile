@@ -13,6 +13,12 @@ SOURCE_DIR = Cthulhu
 #all C++ source files to compile
 DIRS = $(shell find ./$(SOURCE_DIR) -name '*.cpp')
 
+OBJCDIRS = $(shell find ./$(SOURCE_DIR) -name '*.mm' )
+
+ALL_DIRS = DIRS
+
+UNAME = $(shell uname)
+
 #extra include paths
 PATHS = -I./$(SOURCE_DIR)
 
@@ -64,7 +70,7 @@ clean:
 	rm -rf $(BUILD_DIR)/Binaries/Libraries/Cthulhu/Cthulhu.a && \
 	rm -rf $(BUILD_DIR)/Binaries/Objects/Cthulhu/*.o
 
-TEST_NAME = Range.cpp
+TEST_NAME = Engine/Window.cpp
 
 tests:
 	echo 'Running tests' && \

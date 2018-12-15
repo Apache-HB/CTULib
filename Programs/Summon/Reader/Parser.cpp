@@ -13,12 +13,3 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-
-#if defined(OS_APPLE)
-#   include "MetalWindow.mm"
-#elif defined(OS_WINDOWS)
-#   include "DirectXWindow.cpp"
-#else
-#   include "VulkanWindow.cpp"
-#endif
