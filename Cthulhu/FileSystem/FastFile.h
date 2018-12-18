@@ -15,9 +15,11 @@
 
 #include <Core/Collections/CthulhuString.h>
 
+#include <stdio.h>
+
 #pragma once
 
-namespace Cthulhu::Lang
+namespace Cthulhu::FileSystem
 {
 
 struct FastFile

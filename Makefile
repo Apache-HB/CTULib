@@ -15,8 +15,6 @@ DIRS = $(shell find ./$(SOURCE_DIR) -name '*.cpp')
 
 OBJCDIRS = $(shell find ./$(SOURCE_DIR) -name '*.mm' )
 
-ALL_DIRS = DIRS
-
 UNAME = $(shell uname)
 
 #extra include paths
@@ -31,9 +29,22 @@ BUILD_DIR = Build
 DEBUG_FLAG = -DCTU_DEBUG
 
 #TODO: -arch i386 should only be for clang++
-FLAGS = -fno-exceptions -fno-rtti -arch x86_64
+FLAGS = -fno-exceptions -fno-rtti
+
+ifeq ($(CC), clang++)
+	FLAGS := $(FLAGS) -arch x86_64
+endif
+
+ifeq ($(UNAME), Darwin)
+	DIRS := $(OBJCDIRS) $(DIRS)
+	FLAGS := $(FLAGS) #-framework Foundation -framework Cocoa
+endif
 
 #-fno-builtin -nostdinc -nostdlib
+
+#just echo all the dirs lmao
+beep:
+	echo $(DIRS)
 
 all:
 	echo 'Building standard build' && \
@@ -102,5 +113,24 @@ debug_lang:
 finalize:
 	echo 'Moving Files to library' && \
 	sh Build/Scripts/MakeLibrary.sh
+
+SUMMON_DIRS = $(shell find ./Programs/Summon -name '*.cpp')
+SUMMON_NAME = summon
+SUMMON_PATH = -I./Programs/Summon
+
+
+summon:
+	echo 'Building summon' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(SUMMON_DIRS) $(DEBUG_ARGS) $(SUMMON_PATH) \
+	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
+	-o $(SUMMON_NAME)
+
+build:
+	echo 'Yeet'
+
+	#echo 'Building summon' && \
+	$(CC) $(STD) $(FLAGS) $(PATHS) $(SUMMON_DIRS) $(DEBUG_ARGS) $(SUMMON_PATH) \
+	Build/Binaries/Libraries/Cthulhu/Cthulhu.a \
+	-o $(SUMMON_NAME)
 
 .PHONY: all

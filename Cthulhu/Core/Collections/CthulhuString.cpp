@@ -909,6 +909,11 @@ bool Cthulhu::Utils::IsEOF(char C)
     return C == -1 || C == '\0';
 }
 
+bool Cthulhu::Utils::IsNewline(char C)
+{
+    return Consts::Newlines()->Has(C);
+}
+
 /*================================================================*/
 /*              Cthulhu::Consts string functions                  */
 /*================================================================*/
@@ -933,6 +938,7 @@ const String DigitsString = "0123456789";
 const String CharsString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const String PunctionationString = "!\"#$%%&\'()*+,-./:;<=>?@[\\]^_`{|}~";
 const String PrintableString = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c";
+const String NewLines = "\n\r";
 
 }
 
@@ -984,4 +990,9 @@ const String* Cthulhu::Consts::Punctuation()
 const String* Cthulhu::Consts::Printable()
 {
     return &PrintableString;
+}
+
+const String* Cthulhu::Consts::Newlines()
+{
+    return &NewLines;
 }

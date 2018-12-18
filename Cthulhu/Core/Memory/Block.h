@@ -30,7 +30,7 @@ namespace Cthulhu
 template<typename T, U32 Size>
 struct Block
 {
-    Block(){}
+    constexpr Block(){}
     
     Block(const Block& Other)
     {
@@ -44,7 +44,7 @@ struct Block
         return Real[Index];
     }
 
-    void Wipe() 
+    void Wipe()
     {
         Memory::Zero(Real, Size * sizeof(T));
     }

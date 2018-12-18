@@ -85,7 +85,7 @@ File::File(const String& Path, Mode ReadMode)
         
         Buffer = new Byte[Len];
 
-        fread(Buffer, 1, Len, Real);
+        fread(Buffer, sizeof(Byte), Len, Real);
         Bytes = Array<Byte>(Buffer, Len);
     }
     else

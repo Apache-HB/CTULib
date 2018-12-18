@@ -12,3 +12,46 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+#include <stdio.h>
+
+#include "FastFile.h"
+
+using namespace Cthulhu::FileSystem;
+
+FastFile::FastFile(const String& Name)
+    : Real(fopen(*Name, "r"))
+{
+    if(Real)
+        fputs("\n", Real);
+}
+
+char FastFile::Next()
+{
+    return fgetc(Real);
+}
+
+char FastFile::Peek() const
+{
+    //Take the next char
+    char Ret = fgetc(Real);
+    //Push the char back onto the file
+    ungetc(Ret, Real);
+    //Return the taken char
+    return Ret;
+}
+
+bool FastFile::Valid() const
+{
+    return Real != nullptr;
+}
+
+void FastFile::Close()
+{
+    fclose(Real);
+}
+
+void FastFile::Push(char C)
+{
+    ungetc(C, Real);
+}

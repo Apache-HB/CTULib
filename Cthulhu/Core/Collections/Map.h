@@ -270,7 +270,18 @@ namespace Utils
     template<typename TKey, typename TVal>
     String ToString(const Map<TKey, TVal>& Data)
     {
-        
+        String Ret = "{";
+        for(const auto& I : Data.Items())
+        {
+            Ret += ToString(I.First);
+            Ret += ": ";
+            Ret += ToString(I.Second);
+            Ret += ", ";
+        }
+        Ret.Drop(2);
+        Ret += "}";
+
+        return Ret;
     }
 }
 

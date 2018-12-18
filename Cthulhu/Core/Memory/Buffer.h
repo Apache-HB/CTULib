@@ -20,10 +20,10 @@
 namespace Cthulhu
 {
 
-template<typename T, I32 Size>
+template<typename T, U32 Size>
 struct Buffer
 {
-    Buffer() : Index(0) {}
+    constexpr Buffer() : Index(0) {}
     
     void Push(T Item)
     {
@@ -35,17 +35,21 @@ struct Buffer
         return Real[--Index];
     }
 
-    I32 Length() const { return Index; }
+    U32 Length() const { return Index; }
     T* Data() const { return Real; }
     T* operator*() const { return Real; }
     void Wipe() { Index = 0; }
 
-    T& operator[](I32 Index) const { return Real[Index]; }
+    T& operator[](U32 Index) const 
+    { 
+        ASSERT(Index <= Size, "Accessing buffer out of bounds");
+        return Real[Index]; 
+    }
 
     ~Buffer() { delete[] Real; }
 private:
     T* Real = new T[Size];
-    I32 Index;
+    U32 Index;
 };
 
 }

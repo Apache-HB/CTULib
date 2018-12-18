@@ -13,45 +13,18 @@
  *  limitations under the License.
  */
 
-#include <stdio.h>
+#include <Core/Seriazlization/Hashes.h>
+#include <Core/Collections/Array.h>
 
-#include "FastFile.h"
+#pragma once
 
-using namespace Cthulhu::Lang;
-
-FastFile::FastFile(const String& Name)
-    : Real(fopen(*Name, "r"))
+namespace Cthulhu::Build
 {
-    if(Real)
-        fputs("\n", Real);
-}
 
-char FastFile::Next()
-{
-    return fgetc(Real);
-}
+using FileMap = Map<String, U64>;
 
-char FastFile::Peek() const
-{
-    //Take the next char
-    char Ret = fgetc(Real);
-    //Push the char back onto the file
-    ungetc(Ret, Real);
-    //Return the taken char
-    return Ret;
-}
+bool SaveTimes(const FileMap& Files, const String& Path);
 
-bool FastFile::Valid() const
-{
-    return Real != nullptr;
-}
+FileMap LoadTimes(const String& Path);
 
-void FastFile::Close()
-{
-    fclose(Real);
-}
-
-void FastFile::Push(char C)
-{
-    ungetc(C, Real);
 }

@@ -217,6 +217,7 @@ namespace Utils
     ALWAYSINLINE bool IsPrintable(char C);
     ALWAYSINLINE bool IsAlnum(char C);
     ALWAYSINLINE bool IsEOF(char C);
+    ALWAYSINLINE bool IsNewline(char C);
 }
 
 /**
@@ -300,6 +301,8 @@ namespace Consts
      * @return const String* all printable characters
      */
     ALWAYSINLINE const String* Printable();
+
+    ALWAYSINLINE const String* Newlines();
 }
 
 }
