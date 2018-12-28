@@ -13,21 +13,38 @@
  *  limitations under the License.
  */
 
-#include "Meta/Aliases.h"
+#include "Window.h"
 
 #pragma once
 
-namespace Cthulhu::Engine
+namespace Cthulhu::Graphics
 {
 
-struct Size
+struct MacView
 {
-    U32 Width, Height;
+    MacView(const Dimensions& Frame);
+
+    void MouseUp(Lambda<void(Event)> Function);
+    void MouseDown(Lambda<void(Event)> Function);
+
+    void KeyUp(Lambda<void(Event)> Function);
+    void KeyDown(Lambda<void(Event)> Function);
+
+    void* Native() const;
+public:
+
+    ModifierKeys ModKeysPressed;
+
+    Lambda<void(Event)> OnMouseUp = [](Event){};
+    Lambda<void(Event)> OnMouseDown = [](Event){};
+    
+    Lambda<void(Event)> OnKeyUp = [](Event){};
+    Lambda<void(Event)> OnKeyDown = [](Event){};
+
+    void* Handle = nullptr;
+    MacWindow* Associated = nullptr;
 };
 
-struct Location
-{
-    U32 X, Y;
-};
+using View = MacView;
 
 }

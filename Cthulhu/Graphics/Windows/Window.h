@@ -13,6 +13,26 @@
  *  limitations under the License.
  */
 
-#include "Engine/Display/Window.h"
+#pragma once
 
-using namespace Cthulhu::Engine;
+namespace Cthulhu::Graphics
+{
+
+struct WindowsWindow
+{
+    WindowsWindow();
+    WindowsWindow(const WindowsWindow& Other);
+
+    void Resize(const Size NewSize);
+
+private:
+    HWND Handle;
+};
+
+void Startup(hInstance* Instance);
+
+void Cleanup();
+
+using Window = WindowsWindow;
+
+}

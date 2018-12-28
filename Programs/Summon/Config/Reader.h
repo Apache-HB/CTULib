@@ -13,23 +13,9 @@
  *  limitations under the License.
  */
 
-#include <Core/Serialization/Hashes.h>
-#include <Core/Collections/Map.h>
-
 #pragma once
 
 namespace Cthulhu::Build
 {
-
-using ConfigT = Map<String, Map<String, String>*>;
-
-struct Config
-{
-    ConfigT* Data;
-};
-
-Config ReadConfig(const String& Path);
-
-bool WriteConfig(const Config& Data, const String& Path);
 
 }

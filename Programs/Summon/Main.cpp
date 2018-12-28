@@ -15,23 +15,10 @@
 
 #include "Config/Reader.h"
 
+using namespace Cthulhu;
 namespace BLD = Cthulhu::Build;
 
 int main(int argc, char const *argv[])
 {
-    printf("%s\n", argv[1]);
-    auto Cfg = BLD::ReadConfig(argv[1]);
-    for(const auto& I : Cfg.Data->Items())
-    {
-        printf("[%s]\n", I.First->CStr());
-
-        auto Iter = **I.Second;
-
-        for(const auto& A : Iter.Items())
-        {
-            printf("%s = %s\n", A.First->CStr(), A.Second->CStr());
-        }
-    }
-
     return 0;
 }

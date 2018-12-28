@@ -13,9 +13,14 @@
  *  limitations under the License.
  */
 
+#include "Types.h"
+
 #pragma once
 
-namespace Cthulhu::Engine
-{
-    
-}
+#if defined(OS_WINDOWS)
+#   include "Windows/View.h"
+#elif defined(OS_APPLE)
+#   include "Darwin/View.h"
+#elif defined(OS_LINUX)
+#   include "Linux/View.h"
+#endif

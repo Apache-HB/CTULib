@@ -13,33 +13,4 @@
  *  limitations under the License.
  */
 
-#include "Meta/Aliases.h"
-
-#pragma once
-
-
-namespace Cthulhu::Engine
-{
-
-template<U8>
-struct Vector{};
-
-template<>
-struct Vector<2>
-{
-    float X, Y;
-};
-
-template<>
-struct Vector<3>
-{
-    float X, Y, Z;
-};
-
-template<>
-struct Vector<4>
-{
-    float X, Y, Z, A;
-};
-
-}
+#include "Window.h"

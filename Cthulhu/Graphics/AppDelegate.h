@@ -13,44 +13,9 @@
  *  limitations under the License.
  */
 
-#include <Core/Collections/CthulhuString.h>
-#include "Display.h"
-
 #pragma once
 
-namespace Cthulhu::Engine
+namespace Cthulhu::Graphics
 {
-
-enum class WindowMode : U8
-{
-    Border,
-    Borderless,
-    Fullscreen,
-    Minimized
-};
-
-struct Window
-{
-    Window();
-    Window(WindowMode Mode, U32 W, U32 H);
     
-    void SetTitle(const String& Title);
-    bool ToggleFullscreen() const;
-    bool Fullscreen() const;
-    U32 Width() const;
-    U32 Height() const;
-
-    void Display();
-    void Minimize();
-    void Close();
-
-    void Move(Location& NewLocation);
-    void Resize(Size& NewSize);
-
-    void* Handle() const;
-
-private:
-    void* Native;
-};
-
 }

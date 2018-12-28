@@ -15,7 +15,18 @@
 
 #pragma once
 
-namespace Cthulhu::Engine
+namespace Cthulhu::Graphics
 {
-    
+
+struct LinuxWindow
+{
+
+};
+
+void Startup();
+
+void Cleanup();
+
+using Window = LinuxWindow;
+
 }

@@ -13,4 +13,14 @@
  *  limitations under the License.
  */
 
-#include "Reader.h"
+#include "Types.h"
+
+#if defined(OS_WINDOWS)
+#   include "Windows/Window.h"
+#elif defined(OS_APPLE)
+#   include "Darwin/Window.h"
+#elif defined(OS_LINUX)
+#   include "Linux/Window.h"
+#endif
+
+#pragma once

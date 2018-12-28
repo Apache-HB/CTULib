@@ -13,9 +13,7 @@
  *  limitations under the License.
  */
 
-//a bunch of hash functions for different classes
-
-#include "Core/Collections/Map.h"
+#include "Meta/Aliases.h"
 
 #include "Core/Collections/CthulhuString.h"
 
@@ -24,16 +22,25 @@
 namespace Cthulhu::Utils
 {
 
-template<> constexpr inline U32 Hash<String>(const String& Item)
+constexpr inline U32 Hash(I8 Item)  { return Item; }
+constexpr inline U32 Hash(I16 Item) { return Item; }
+constexpr inline U32 Hash(I32 Item) { return Item; }
+constexpr inline U32 Hash(I64 Item) { return Item; }
+constexpr inline U32 Hash(U8 Item)  { return Item; }
+constexpr inline U32 Hash(U16 Item) { return Item; }
+constexpr inline U32 Hash(U32 Item) { return Item; }
+constexpr inline U32 Hash(U64 Item) { return Item; }
+
+constexpr inline U32 Hash(const String& Item)
 {
     U32 Ret = 0;
-
+    
     for(U32 I = 0; I < Item.Len(); I++)
     {
         Ret ^= Item[I];
     }
-
-    return Ret % MersenePrime;
+    
+    return Ret;
 }
 
-} // Cthulhu
+}

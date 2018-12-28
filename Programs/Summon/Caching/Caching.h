@@ -13,18 +13,9 @@
  *  limitations under the License.
  */
 
-#include <Core/Seriazlization/Hashes.h>
-#include <Core/Collections/Array.h>
-
 #pragma once
 
 namespace Cthulhu::Build
 {
-
-using FileMap = Map<String, U64>;
-
-bool SaveTimes(const FileMap& Files, const String& Path);
-
-FileMap LoadTimes(const String& Path);
 
 }

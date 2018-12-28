@@ -156,34 +156,6 @@ namespace CString
      * 
      */
     char* Reverse(const char* Content);
-
-    /**Faster variants of the standard CString functions
-     * 
-     */
-    namespace Fast
-    {
-        /** Duplicate a string to a new location in memory
-         * @param Data      the string to duplicate
-         * @param DataLen   the length of the string
-         * @return          the duplicated string
-         */
-        char* Duplicate(const char* Data, U32 DataLen);
-        
-        /**
-         * 
-         */
-        char* Section(
-            //Haystack string and associated length
-            char* Haystack, U32 HaystackLen, 
-            //Needle string and associated length
-            char* Needle, U32 NeedleLen
-        );
-
-        /**
-         * 
-         */
-        char* Reverse(const char* Content, U32 ContentLen);
-    }
 }
 
 /**

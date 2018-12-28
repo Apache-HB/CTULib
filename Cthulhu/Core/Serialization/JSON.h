@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 
-#include "Hashes.h"
+#include "Hash.h"
 #include "Core/Collections/Map.h"
 #include "Core/Collections/CthulhuString.h"
 #include "Core/Types/Types.h"

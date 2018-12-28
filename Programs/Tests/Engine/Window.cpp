@@ -15,11 +15,38 @@
 
 #include "../TestMacros.h"
 
-#include <Engine/Display/Window.h>
+#include <Graphics/Window.h>
+#include <Graphics/View.h>
 
-using namespace Cthulhu::Engine;
+using namespace Cthulhu::Graphics;
 
-int main()
+int main(int argc, const char* argv[])
 {
-    Window* Win = new Window();
+    //make window
+    Window W{{100, 100, 400, 400}};
+
+    View V = View({100, 100, 400, 400});
+
+    V.MouseUp([](Event){
+        printf("MouseUp\n");
+    });
+
+    V.MouseDown([](Event){
+        printf("MouseDown\n");
+    });
+
+    V.KeyUp([](Event){
+        printf("KeyUp\n");
+    });
+
+    V.KeyDown([](Event){
+        printf("KeyDown\n");
+    });
+
+    W.SetView(&V);
+    W.SetTitle("Name jeff");
+    W.Display();
+
+    //Run event loop
+    Run([]{});
 }

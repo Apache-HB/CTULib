@@ -17,6 +17,8 @@
 #include "Core/Memory/Block.h"
 #include "Pair.h"
 
+#include "Core/Serialization/Hash.h"
+
 #pragma once
 
 namespace Cthulhu
@@ -24,21 +26,7 @@ namespace Cthulhu
 
 namespace Utils
 {
-
-constexpr U32 MersenePrime = 8191;
-
-template<typename T> constexpr inline U32 Hash(const T&);
-
-template<> constexpr inline U32 Hash(const U8& Num)  { return Num % MersenePrime; }
-template<> constexpr inline U32 Hash(const U16& Num) { return Num % MersenePrime; }
-template<> constexpr inline U32 Hash(const U32& Num) { return Num % MersenePrime; }
-template<> constexpr inline U32 Hash(const U64& Num) { return Num % MersenePrime; }
-
-template<> constexpr inline U32 Hash(const I8& Num)  { return Num % MersenePrime; }
-template<> constexpr inline U32 Hash(const I16& Num) { return Num % MersenePrime; }
-template<> constexpr inline U32 Hash(const I32& Num) { return Num % MersenePrime; }
-template<> constexpr inline U32 Hash(const I64& Num) { return Num % MersenePrime; }
-
+    constexpr U32 MersenePrime = 151;
 } // Utils
 
 template<typename, typename> 
