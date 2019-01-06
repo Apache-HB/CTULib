@@ -13,14 +13,38 @@
  *  limitations under the License.
  */
 
+#include "Meta/Macros.h"
+
 #pragma once
 
-namespace Cthulhu::Lang
+#if defined(OS_WINDOWS)
+#   include "Windows/Image.h"
+#elif defined(OS_APPLE)
+#   include "Darwin/Image.h"
+#elif defined(OS_LINUX)
+#   include "Linux/Image.h"
+#endif
+
+#if 0
+namespace Cthulhu::Graphics
 {
 
-struct Parser
+struct Image
 {
+    Image(U8* Bytes, U32 DataWidth, U32 DataHeight);
+    Image(U8 Colour[3], U32 DataWidth, U32 DataHeight);
 
+    void SetPixel(U32 X, U32 Y, U8 Colour[3]);
+    U8* GetPixel(U32 X, U32 Y);
+
+    U32 GetWidth() const { return Height; }
+    U32 GetHeight() const { return Width; }
+    U8* Real() const { return Data; }
+private:
+    U8* Data;
+    U32 Width, Height;
 };
 
 }
+
+#endif

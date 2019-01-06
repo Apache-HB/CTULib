@@ -13,14 +13,6 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include "Globals.h"
 
-namespace Cthulhu::Lang
-{
-
-struct Parser
-{
-
-};
-
-}
+Lambda<void(MainLoopEvent)> EventHandler = [](MainLoopEvent){};

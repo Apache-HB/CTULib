@@ -15,12 +15,15 @@
 
 #pragma once
 
-namespace Cthulhu::Lang
+#include "Graphics/Darwin/Window.h"
+
+#import <Cocoa/Cocoa.h>
+
+@interface CthulhuWindow : NSWindow 
 {
-
-struct Parser
-{
-
-};
-
+    Cthulhu::Graphics::MacWindow* Handle;
 }
+
+- (void)setHandle:(Cthulhu::Graphics::MacWindow*)handle;
+
+@end

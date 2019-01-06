@@ -13,14 +13,50 @@
  *  limitations under the License.
  */
 
+#include "Graphics/Types.h"
+
 #pragma once
 
-namespace Cthulhu::Lang
+namespace Cthulhu::Graphics
 {
 
-struct Parser
-{
+void Setup();
 
-};
+void Run(Lambda<void(MainLoopEvent)> EventHandler);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if 0
+
+#include "Core/Types/Lambda.h"
+
+#pragma once
+
+namespace Cthulhu::Graphics
+{
+
+void Run(Lambda<void()> Callback);
+
+void Test();
+
+}
+
+#endif

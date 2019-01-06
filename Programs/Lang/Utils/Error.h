@@ -13,14 +13,48 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include <Core/Collections/CthulhuString.h>
+#include <FileSystem/BufferedFile.h>
 
-namespace Cthulhu::Lang
+namespace Cthulhu::Lang::Err
 {
 
-struct Parser
+enum class Level
 {
-
+    Abort,
+    Fatal,
+    Warning,
+    Trivial,
+    Other,
 };
+
+String LevelToTag(Level LVL);
+
+enum class Colour
+{
+    Black,
+    Red,
+    Green,
+    Yellow,
+    Blue,
+    Pink,
+    Cyan,
+    White
+};
+
+String ColourText(const String& Text, Colour C);
+
+namespace FS = Cthulhu::FileSystem;
+
+struct Location
+{
+    FS::BufferedFile* File;
+    String* FileName;
+    U64 Line, Loc, Len;
+};
+
+void Error(const String& Message, const Location& Loc, Level Severity);
+
+String Shorten(const String& Text, U16 NewLen);
 
 }

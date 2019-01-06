@@ -135,7 +135,7 @@ Dimensions::Dimensions(const Point Loc, const Size InSize)
     , Y(Loc.Y)
 {}
 
-Dimensions::Dimensions(U32 InWidth, U32 InHeight, U32 InX, U32 InY)
+Dimensions::Dimensions(U32 InX, U32 InY, U32 InWidth, U32 InHeight)
     : Width(InWidth)
     , Height(InHeight)
     , X(InX)

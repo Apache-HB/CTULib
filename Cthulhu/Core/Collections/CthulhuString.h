@@ -19,6 +19,9 @@
 #include "Meta/Aliases.h"
 //U32
 
+#include "Core/Traits/IsSame.h"
+#include "Core/Traits/Opposite.h"
+
 #pragma once
 
 namespace Cthulhu
@@ -103,7 +106,6 @@ struct String
     bool Has(const String& Pattern) const;
     bool Has(char Item) const;
 
-
     char* begin() const { return Real; }
     char* end() const { return Real + Length; }
 
@@ -176,7 +178,29 @@ namespace Utils
     String ToString(float Num);
     String ToString(bool Val);
     String ToString(const String& Text);
+    
+    template<typename T>
+    String ToBits(T Num)
+    {
+        static_assert(IsDecimal<T>::Value, "T must be a decimal type");
 
+        constexpr U8 Length = sizeof(T) * 8; // sizeof(T) * number of bits in a byte
+
+        char Temp[Length+1];
+        Temp[Length] = '\0';
+
+        using UnsignedType = typename Unsigned<T>::Type;
+
+        UnsignedType UNum = *(UnsignedType*)&Num;
+
+        constexpr T One = (T)1;
+        UnsignedType Mask = One << (Length-1);
+
+        for(U8 I = 0; I < Length; I++, Mask >>= 1)
+            Temp[I] = ((UNum & Mask) != 0) + '0';
+
+        return Temp;
+    }
 
     String HexToString(I64 HexNum);
     String FastToString(float Num);

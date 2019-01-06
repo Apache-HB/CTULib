@@ -13,14 +13,14 @@
  *  limitations under the License.
  */
 
+#include "Meta/Macros.h"
+
 #pragma once
 
-namespace Cthulhu::Lang
-{
-
-struct Parser
-{
-
-};
-
-}
+#if defined(OS_WINDOWS)
+#   include "Windows/Path.h"
+#elif defined(OS_APPLE)
+#   include "Darwin/Path.h"
+#elif defined(OS_LINUX)
+#   include "Linux/Path.h"
+#endif

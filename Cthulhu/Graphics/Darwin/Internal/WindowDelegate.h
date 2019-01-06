@@ -15,12 +15,8 @@
 
 #pragma once
 
-namespace Cthulhu::Lang
-{
+#import <Cocoa/Cocoa.h>
 
-struct Parser
-{
+@interface CthulhuWindowDelegate : NSObject<NSWindowDelegate> {}
 
-};
-
-}
+@end

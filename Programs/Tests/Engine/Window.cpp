@@ -15,38 +15,64 @@
 
 #include "../TestMacros.h"
 
+#include <Graphics/Graphics.h>
 #include <Graphics/Window.h>
-#include <Graphics/View.h>
+#include <Graphics/Path.h>
 
+using namespace Cthulhu;
 using namespace Cthulhu::Graphics;
+
+struct MyWindow : public Window
+{
+    using Super = Window;
+
+    using Super::Super;
+
+    Point MouseLocation = { 0, 0 };
+
+    virtual void MouseDown(Event Evt) override
+    {
+        
+    }
+
+    virtual void MouseUp(Event Evt) override
+    {
+
+    }
+
+    virtual void MouseMoved(Event Evt, Point From, Point To) override
+    {
+        MouseLocation = To;
+    }
+
+    virtual void KeyDown(Event Evt) override
+    {
+
+    }
+
+    virtual void KeyUp(Event Evt) override
+    {
+
+    }
+
+    virtual void Draw(DrawHandle& Handle) override
+    {
+        Path P = MouseLocation;
+        P.LineTo({});
+        TriggerRedraw();
+    }
+};
 
 int main(int argc, const char* argv[])
 {
-    //make window
-    Window W{{100, 100, 400, 400}};
+    Setup();
 
-    View V = View({100, 100, 400, 400});
+    auto Wnd = MyWindow({100, 100, 400, 400}, "Yeet");
+    Wnd.Display();
 
-    V.MouseUp([](Event){
-        printf("MouseUp\n");
+    Run([&Wnd](MainLoopEvent Evt)
+    { 
+        if(Evt == MainLoopEvent::Launch)
+            printf("Loaded\n");
     });
-
-    V.MouseDown([](Event){
-        printf("MouseDown\n");
-    });
-
-    V.KeyUp([](Event){
-        printf("KeyUp\n");
-    });
-
-    V.KeyDown([](Event){
-        printf("KeyDown\n");
-    });
-
-    W.SetView(&V);
-    W.SetTitle("Name jeff");
-    W.Display();
-
-    //Run event loop
-    Run([]{});
 }

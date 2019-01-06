@@ -46,6 +46,12 @@ struct LambdaBase<TDerived, TRet(TArgs...)>
         return Callback(Derived->Ptr, Args...);
     }
 
+    constexpr TRet Apply(TArgs... Args) const
+    {
+        const TDerived* Derived = static_cast<const TDerived*>(this);
+        return Callback(Derived->Ptr, Args...);
+    }
+
 protected:
 
     template<typename T>

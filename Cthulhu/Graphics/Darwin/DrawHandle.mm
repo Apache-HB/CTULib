@@ -13,36 +13,40 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include "DrawHandle.h"
 
-#include "View.h"
-#include "Window.h"
-
-#import <MetalKit/MetalKit.h>
 #import <Cocoa/Cocoa.h>
-#import <Metal/MTLDevice.h>
 
 using namespace Cthulhu;
 using namespace Cthulhu::Graphics;
 
-@interface CTUView : MTKView
+#define PTH(A) ((NSBezierPath*)A)
+#define IMG(A) ((NSImage*)A)
+#define RCT(A) ((NSRect*)A)
+
+NSColor* ColourToNS(Colour& C)
 {
-    @public MacView* ThisView;
+    float R = ((float)C.R) / 255, 
+          G = ((float)C.G) / 255,
+          B = ((float)C.B) / 255,
+          A = ((float)C.A) / 255;
+    
+    return [NSColor colorWithCalibratedRed:R green:G blue:B alpha:A];
 }
 
-@property(nonatomic) MacView* ThisView;
-
-- (void)setView:(MacView*)newView;
-
-@end
-
-@interface CTUWindow : NSWindow
+void MacDrawHandle::DrawRect(const Dimensions& Dim, Colour Col)
 {
-    @public MacWindow* Window;
+
 }
 
-@property(nonatomic) MacWindow* Window;
+void MacDrawHandle::DrawPath(Path& ThePath)
+{
+    [ColourToNS(ThePath.PathColour) setFill];
+    [PTH(ThePath.Native()) stroke];
+    [PTH(ThePath.Native()) fill];
+}
 
-- (void)setWindow:(MacWindow*)newWindow;
+void MacDrawHandle::DrawImage(Image& Img, U32 X, U32 Y)
+{
 
-@end
+}

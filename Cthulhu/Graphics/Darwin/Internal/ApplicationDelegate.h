@@ -15,12 +15,18 @@
 
 #pragma once
 
-namespace Cthulhu::Lang
-{
+#import <Cocoa/Cocoa.h>
 
-struct Parser
-{
+/**overloaded application delegate that fixes some of apples 
+ * library "qwerks" (they cant code for shit so other people have to fix it for them)
+ */
+@interface CthulhuApplicationDelegate : NSObject<NSApplicationDelegate> {}
 
-};
+/**force this application into focus
+ * mac by default is fucking stupid and doesnt do this for you, so you have to 
+ * beat it over the head until it works 
+ */
++ (void)focusApp;
 
-}
+@end
+

@@ -13,14 +13,25 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include "WindowDelegate.h"
+#include "Graphics/Darwin/Internal/Globals.h"
 
-namespace Cthulhu::Lang
+@implementation CthulhuWindowDelegate
+
+- (BOOL)windowShouldClose:(id)sender
 {
-
-struct Parser
-{
-
-};
-
+    EventHandler(MainLoopEvent::RequestQuit);
+    return NO;
 }
+
+- (void)windowDidResignKey:(NSNotification*)notify
+{
+    EventHandler(MainLoopEvent::ApplicationDefocus);
+}
+
+- (void)windowDidBecomeKey:(NSNotification*)notify
+{
+    EventHandler(MainLoopEvent::ApplicationFocus);
+}
+
+@end

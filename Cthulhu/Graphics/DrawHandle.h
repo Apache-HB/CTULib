@@ -13,14 +13,14 @@
  *  limitations under the License.
  */
 
+#include "Meta/Macros.h"
+
 #pragma once
 
-namespace Cthulhu::Lang
-{
-
-struct Parser
-{
-
-};
-
-}
+#if defined(OS_WINDOWS)
+#   include "Windows/DrawHandle.h"
+#elif defined(OS_APPLE)
+#   include "Darwin/DrawHandle.h"
+#elif defined(OS_LINUX)
+#   include "Linux/DrawHandle.h"
+#endif

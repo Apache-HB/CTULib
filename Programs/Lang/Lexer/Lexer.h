@@ -13,231 +13,82 @@
  *  limitations under the License.
  */
 
-#include "Utils/FastFile/FastFile.h"
-
-#pragma once
-
-namespace Cthulhu::Lang
-{
-
-#define KW(V, _) V,
-#define OP(V, _) V,
-
-enum class Keyword : U8
-{
-#include "Keywords.inc"
-};
-
-#undef KW
-#undef OP
-
-struct Token
-{
-    enum class Type : U8
-    {
-        Ident,
-        String, 
-        FString,
-        Int,
-        Float,
-        Key,
-        End,
-    };
-
-    U64 Line;
-    U64 Depth;
-    
-    Type TokType;
-
-    Token(){}
-
-    Token(Type InType)
-        : TokType(InType)
-    {}
-
-    Token(U64 L, U64 D, Type InType)
-        : Line(L)
-        , Depth(D)
-        , TokType(InType)
-    {}
-
-    union
-    {
-        String* Str;
-        I64 Int;
-        float Float;
-        Keyword Key;
-    };
-
-    ~Token()
-    {
-        if( TokType == Type::String || 
-            TokType == Type::FString || 
-            TokType == Type::Ident)
-            delete Str;
-    }
-};
-
-struct Lexer
-{
-    Lexer(FastFile InFile)
-        : File(InFile)
-        , Distance(0)
-        , Line(0)
-        , Depth(0)
-    {
-        Current = GetNext();
-        Look1 = GetNext();
-        Look2 = GetNext();
-    }
-
-    Token Next();
-    Token Peek() const;
-    Token Peek2() const;
-    Token Peek3() const;
-
-private:
-    char NextChar();
-
-    Keyword KeywordType() const;
-    Keyword OperatorType() const;
-    
-    I64 ParseHex() const;
-    I64 ParseBits() const;
-    I64 ParseInt() const;
-
-    double ParseFloat() const;
-
-    Token ParseString();
-    Token ParseIdent();
-    Token ParseNumber();
-    Token ParseKeyword();
-
-    Token GetNext();
-    //2 token lookahead
-    Token Current, Look1, Look2;
-
-    U64 Distance;
-    U64 Line;
-    U16 Depth;
-
-    mutable Buffer<char, 512> Buf;
-
-    FastFile File;
-};
-
-}
-
-
-/*
-
-#include <Meta/Aliases.h>
-#include <Core/Collections/CthulhuString.h>
+#include <FileSystem/BufferedFile.h>
 #include <Core/Memory/Buffer.h>
-#include <Core/Collections/Array.h>
-#include <Core/Collections/Map.h>
 
-#include "../Utils/FastFile/FastFile.h"
+namespace FS = Cthulhu::FileSystem;
 
 #pragma once
 
 namespace Cthulhu::Lang
 {
 
-#define KW(V, _) V,
-#define OP(V, _) V,
-
-enum class Keyword : U8
+enum class KW
 {
-    None,
+#define KW(A, _) A,
+#define OP(A, _) A,
 #   include "Keywords.inc"
-};
-
 #undef KW
 #undef OP
-
-enum class LexType : U8
-{
-    Ident,
-    Keyword,
-    Float,
-    Int,
-    String,
-    FString,
-    End,
-};
-
-struct FString
-{
-    String Template;
-    Array<String> Args;
 };
 
 struct Lexeme
 {
     U64 Line;
-    U16 Distance;
+    U16 Column;
+    
+    const String* FileName;
 
-    LexType Type;
+    enum class Type
+    {
+        Float,
+        Int,
+        Bool,
+        Str,
+        Ident,
+        Keyword,
+        End
+    };
+
+    Type LexType;
 
     union
     {
-        String* Ident;
-        FString* Format;
-        Keyword Key;
-        float F;
+        KW Keyword;
         I64 Num;
+        bool Val;
+        F64 Float;
+        String* Str;
     };
-
-
-    Lexeme() : Type(LexType::Int) {}
-    Lexeme(LexType LType);
-    ~Lexeme();
 };
-
-namespace Consts
-{
-    constexpr char FormatPrefix = 'f';
-}
 
 struct Lexer
 {
+    Lexer(FS::BufferedFile InFile, const String& InFileName);
+    Lexer(const String& InFileName);
+
     Lexeme Next();
-    Lexeme Peek() const;
+    Lexeme Peek1() const;
     Lexeme Peek2() const;
-    Lexeme Peek3() const;
 
-    Lexer(FastFile InFile);
-
-    U64 CurrentLine() const { return Line; }
-    U16 CurrentDistance() const { return Distance; }
-    U64 GetRealDistance() const { return RealDistance; }
+    bool Valid() const { return File.Valid(); }
 
 private:
-    void ParseHexString(char C);
-    void ParseEscapedChar(char C);
 
-    Lexeme LexNext();
-    void ParseOperator();
-    static Keyword IsOperator(Buffer<char, 512>* Buf);
-    static Keyword IsKeyword(Buffer<char, 512>* Buf);
+    Lexeme GetNextLexeme();
 
-    Lexeme ParseFString();
+    char NChar();
 
-    Lexeme ParseNum(Buffer<char, 512>* NumBuf, char& C);
+    U64 Distance = 0;
+    U64 Line = 0;
+    U16 Column = 0;
 
-    Lexeme CurrentLex;
-    Lexeme NextLex;
-    Lexeme Next2Lex;
+    FS::BufferedFile File;
+    Buffer<char, 256> Buf;
+    String FileName;
 
-    U64 Line;
-    U16 Distance;
-    U64 RealDistance;
-    FastFile File;
-
-    Buffer<char, 512> Buf;
-
-    bool FoundEOF = false;
+    Lexeme NextLex0, NextLex1, NextLex2;
+    bool ReachedEOF = false;
 };
 
-}*/
+}

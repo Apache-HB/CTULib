@@ -13,38 +13,28 @@
  *  limitations under the License.
  */
 
-#include "Window.h"
+#include "Graphics/Types.h"
 
 #pragma once
 
 namespace Cthulhu::Graphics
 {
 
-struct MacView
+using Path = struct MacPath
 {
-    MacView(const Dimensions& Frame);
+    MacPath(const Point InitialPoint);
 
-    void MouseUp(Lambda<void(Event)> Function);
-    void MouseDown(Lambda<void(Event)> Function);
+    void LineTo(const Point Location);
+    void CurveTo(const Point Location, const Point Control1, const Point Control2);
+    void Close();
 
-    void KeyUp(Lambda<void(Event)> Function);
-    void KeyDown(Lambda<void(Event)> Function);
+    void* Native() const { return Handle; }
 
-    void* Native() const;
-public:
+    F32 LineWidth;
+    Colour PathColour;
 
-    ModifierKeys ModKeysPressed;
-
-    Lambda<void(Event)> OnMouseUp = [](Event){};
-    Lambda<void(Event)> OnMouseDown = [](Event){};
-    
-    Lambda<void(Event)> OnKeyUp = [](Event){};
-    Lambda<void(Event)> OnKeyDown = [](Event){};
-
-    void* Handle = nullptr;
-    MacWindow* Associated = nullptr;
+private:
+    void* Handle;
 };
-
-using View = MacView;
 
 }

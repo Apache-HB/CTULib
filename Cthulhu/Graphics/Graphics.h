@@ -15,12 +15,12 @@
 
 #pragma once
 
-namespace Cthulhu::Lang
-{
+#include "Meta/Macros.h"
 
-struct Parser
-{
-
-};
-
-}
+#if defined(OS_WINDOWS)
+#   include "Windows/Graphics.h"
+#elif defined(OS_APPLE)
+#   include "Darwin/Graphics.h"
+#elif defined(OS_LINUX)
+#   include "Linux/Graphics.h"
+#endif

@@ -13,14 +13,31 @@
  *  limitations under the License.
  */
 
+#include <Core/Collections/CthulhuString.h>
+
+#include <stdio.h>
+
 #pragma once
 
-namespace Cthulhu::Lang
+namespace Cthulhu::FileSystem
 {
 
-struct Parser
+struct BufferedFile
 {
+    BufferedFile(const String& Name);
 
+    ALWAYSINLINE char Next();
+
+    ALWAYSINLINE char Peek() const;
+
+    ALWAYSINLINE void Close();
+
+    ALWAYSINLINE bool Valid() const;
+
+    ALWAYSINLINE void Push(char C);
+
+private:
+    FILE* Real;
 };
 
 }

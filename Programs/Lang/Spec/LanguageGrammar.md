@@ -1,101 +1,59 @@
-import-body:        ident |
-                    ident ',' import-body
 
-import-list:        '{' import-body '}'
+char:                       [a-z] | [A-Z]
 
-import-path:        ident |
-                    ident '::' import-path
+ident-letters:              char | [0-9] | '_'
 
-import:             'import' import-path |
-                    'import' import-path import-list
+ident-body:                 ident-letters |
+                            ident-letters ident-body
 
-imports:            import | 
-                    import imports
+ident:                      char |
+                            char ident-body
 
-decorator-path:     ident |
-                    ident '::' decorator-path
+dotted-name(pattern):       ident |
+                            ident pattern dotted-name(pattern)
 
-number:             int |
-                    float
+num-lit:                    integer |
+                            float |
+                            hexidecimal |
+                            binary
 
-const:              string |
-                    ident |
-                    char |
-                    number
+constant:                   bool-lit |
+                            num-lit |
+                            str-lit |
+                            char-lit |
+                            list-lit |
+                            dict-lit
 
-bin-op:             '+'  |
-                    '+=' |
-                    '-'  |
-                    '-=' |
-                    '*'  |
-                    '*=' |
-                    '/'  |
-                    '/=' |
-                    '%'  |
-                    '%=' |
-                    '&'  |
-                    '&=' |
-                    '|'  |
-                    '|=' |
-                    '^'  |
-                    '^='
+binary-op:                  '-' expr                
 
-bin-expr:           expr bin-op expr
+binary-op:                  '+' | '-' | '*' | '%' | '/'
 
-bool-op:            'and' | '&&' |
-                    'or'  | '||' |
-                    '=='  | 'is' |
-                    '!='  | 'is' 'not' |
-                    '>'   | '>=' |
-                    '<'   | '<=' |
-                    'in'  | 'not' 'in'
+bi-op:                      expr binary-op expr
 
-bool-single-op:     '!'
+expr:                       constant |
+                            unary-op |
+                            bi-op |
+                            func-call |
+                            '(' expr ')'
 
-single-bool-expr:   bool-single-op expr
+kwarg-call-body:            ident '=' expr |
+                            ident '=' expr ',' kwarg-call-body
 
-bool-expr:          expr bool-op expr
+arg-call-body:              expr |
+                            expr ',' arg-call-body |
+                            expr ',' kwarg-call-body |
+                            kwarg-call-body
 
-dotted-class-name:  ident |
-                    ident '.' ident
+arg-call-list:              '(' ')' |
+                            '(' arg-call-body ')'
 
-dotted-name:        ident |
-                    ident '::' dotted-name |
-                    dotted-class-name
+decorator:                  '@' dotted-name('::') |
+                            '@' dotted-name('::') arg-call-list
 
-arg-list:           '(' arg-body ')'
+preamble:                   decorator | 
+                            decorator imports | 
+                            imports
 
-func-call:          dotted-name arg-list 
+program:                    preamble body
 
-expr:               const |
-                    bin-expr |
-                    single-expr |
-                    bool-expr |
-                    single-bool-expr |
-                    func-call |
-                    ternary-expr |
-                    assign-expr |
-                    '(' expr ')'
-
-kwarg-list:         ident '=' expr |
-                    ident '=' expr ',' kwarg-list
-
-arg-list:           arg |
-                    arg ',' arg-list |
-                    arg ',' kwarg-list |
-                    kwarg ',' kwarg-list 
-
-decorator-args:     '(' arg-list ')'
-
-decorator:          '@' decorator-path |
-                    '@' decorator-path decorator-args
-
-decorators:         decorator |
-                    decorator decorators
-
-preamble:           decorators | 
-                    decorators imports | 
-                    imports
-
-program:            preamble body | 
-                    body
+#todo all of this

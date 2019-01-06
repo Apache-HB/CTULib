@@ -15,12 +15,19 @@
 
 #pragma once
 
-namespace Cthulhu::Lang
+#include "Graphics/Darwin/Window.h"
+
+#import <Cocoa/Cocoa.h>
+
+@interface CthulhuView : NSView
 {
-
-struct Parser
-{
-
-};
-
+    NSTrackingArea* TrackingArea;
+    @public Cthulhu::Graphics::MacWindow* Handle;
+    @private Cthulhu::Graphics::ModifierKeys CurrentKeys;
+             Cthulhu::String PressedKeys;
+             NSPoint MouseLocation;
 }
+
+- (void)updateTrackingAreas;
+
+@end

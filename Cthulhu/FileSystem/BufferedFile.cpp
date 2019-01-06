@@ -13,14 +13,45 @@
  *  limitations under the License.
  */
 
-#include "Types.h"
+#include <stdio.h>
 
-#pragma once
+#include "BufferedFile.h"
 
-#if defined(OS_WINDOWS)
-#   include "Windows/View.h"
-#elif defined(OS_APPLE)
-#   include "Darwin/View.h"
-#elif defined(OS_LINUX)
-#   include "Linux/View.h"
-#endif
+using namespace Cthulhu::FileSystem;
+
+BufferedFile::BufferedFile(const String& Name)
+    : Real(fopen(*Name, "r"))
+{
+    if(Real)
+        fputs("\n", Real);
+}
+
+char BufferedFile::Next()
+{
+    return fgetc(Real);
+}
+
+char BufferedFile::Peek() const
+{
+    //Take the next char
+    char Ret = fgetc(Real);
+    //Push the char back onto the file
+    ungetc(Ret, Real);
+    //Return the taken char
+    return Ret;
+}
+
+bool BufferedFile::Valid() const
+{
+    return Real != nullptr;
+}
+
+void BufferedFile::Close()
+{
+    fclose(Real);
+}
+
+void BufferedFile::Push(char C)
+{
+    ungetc(C, Real);
+}

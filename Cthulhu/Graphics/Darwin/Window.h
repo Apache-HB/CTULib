@@ -13,24 +13,27 @@
  *  limitations under the License.
  */
 
+#include "Core/Collections/Map.h"
 #include "Graphics/Types.h"
-#include "Core/Collections/Array.h"
+#include "Graphics/Path.h"
+#include "Graphics/Image.h"
+#include "Graphics/DrawHandle.h"
 
 #pragma once
 
 namespace Cthulhu::Graphics
 {
 
-struct MacView;
-
-struct MacWindow
+using Window = struct MacWindow
 {
-    MacWindow();
-    MacWindow(const String& WindowTitle);
-    MacWindow(const Dimensions& WindowDimensions);
+    //impl
+    MacWindow(const Dimensions& WindowDimensions, const String& Title = "CthulhuWindow");
 
-    void SetTitle(const String& NewTitle);
-    String Title() const;
+    //impl
+    void Display();
+
+    void SetDimensions(const Dimensions& NewDimensions);
+    Dimensions GetDimensions() const;
 
     void Resize(const Size NewSize);
     Size GetSize() const;
@@ -38,42 +41,147 @@ struct MacWindow
     void Move(const Point NewLocation);
     Point Location() const;
 
+    String Name() const;
+    void Rename(const String& NewName);
+
+    void TriggerRedraw();
+
+    virtual void Draw(DrawHandle& Drawer){}
+
+    virtual void MouseMoved(Event MouseEvent, Point From, Point To){}
+    virtual void MouseDown(Event MouseEvent){}
+    virtual void MouseUp(Event MouseEvent){}
+
+    virtual void KeyDown(Event KeyEvent){}
+    virtual void KeyUp(Event KeyEvent){}
+
+    virtual void MouseEntered(Event MouseEvent){}
+    virtual void MouseExited(Event MouseEvent){}
+
+    virtual void WindowMove(){}
+    virtual void WindowResize(){}
+    virtual void WindowMinimize(){}
+    virtual void WindowClose(){}
+    virtual void WindowOpen(){}
+    virtual void WindowEnterFullscreen(){}
+    virtual void WindowExitFullscreen(){}
+
+    virtual void Initialize(){}
+    virtual void PreInitialize(){}
+
+    virtual void AnyEvent(){}
+
+    void* Native() const { return Handle; }
+private:
+    void* Handle;
+    Array<Path*> Paths;
+    Array<Image*> Images;
+};
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if 0
+
+#include "Core/Collections/CthulhuString.h"
+
+#pragma once
+
+namespace Cthulhu::Graphics
+{
+
+struct Image;
+struct Path;
+struct Font;
+
+struct MacWindow
+{
+    MacWindow();
+    MacWindow(const String& Title);
+    MacWindow(const Dimensions& Size);
+
+    ~MacWindow();
+
+    void DrawImage(const Image& Img, const Point Location);
+    void DrawPath(const Path& InPath, const Point Location);
+    void DrawText(const String& Text, const Font& InFont, const Point Location);
+
+    void Hide();
+    void Display();
+    void HackToFront();
+
+    void Enable();
+    void Disable();
+
+    void Rename(const String& NewName);
+    String Title() const;
+
     void SetDimensions(const Dimensions& NewDimensions);
     Dimensions GetDimensions() const;
 
-    void SetView(MacView* NewView);
-    MacView* GetView() const;
+    void Resize(const Size NewSize);
+    Size GetSize() const;
+
+    Point Location() const;
+    void Move(const Point NewLocation);
+
+    void SetMinSize(const Size MinSize);
+    Size MinSize() const;
+
+    void SetMaxSize(const Size MaxSize);
+    Size MaxSize() const;
+
+    virtual void OnMimimize(){}
+    virtual void OnMaximize(){}
+    virtual void OnEnterFullscreen(){}
+    virtual void OnExitFullscreen(){}
+
+    virtual void OnWindowMove(Point Origin, Point NewLocation){}
+    virtual void OnClose(){}
+
+    virtual void OnLeftMouseDown(Event MouseEvent){}
+    virtual void OnLeftMouseUp(Event MouseEvent){}
     
-    void Display();
-    void Hide();
+    virtual void OnRightMouseDown(Event MouseEvent){}
+    virtual void OnRightMouseUp(Event MouseEvent){}
+    
+    virtual void OnOtherMouseDown(Event MouseEvent){}
+    virtual void OnOtherMouseUp(Event MouseEvent){}
 
-    void Miniaturize();
-    void Deminiaturize();
+    virtual void OnMouseMove(Event MouseEvent, Point From, Point To){}
 
-    void Close();
+    virtual void PreInitialize(){}
+    virtual void PostInitialize(){}
 
-    void OnDeminiaturize(Lambda<void()> Function);
-    void OnMiniaturize(Lambda<void()> Function);
+    virtual void Tick(F64 DeltaTime){}
 
-    void OnClose(Lambda<void()> Function);
-    void OnResize(Lambda<void()> Function);
+    virtual void OnScroll(Event MouseEvent, Direction ScrollDirection){}
 
-    void* Native() const;
-public:
-    Lambda<void()> DeminiaturizeCallback = []{};
-    Lambda<void()> MiniaturizeCallback = []{};
-
-    Lambda<void()> OnCloseCallback = []{};
-    Lambda<void()> OnResizeCallback = []{};
-
-public:
-
-    MacView* View = nullptr;
-    void* Handle = nullptr;
+    void* Native() const { return Handle; }
+private:
+    void* Handle;
 };
 
-void Run(Lambda<void()> Callback);
-
-using Window = MacWindow; 
+using Window = MacWindow;
 
 }
+
+#endif

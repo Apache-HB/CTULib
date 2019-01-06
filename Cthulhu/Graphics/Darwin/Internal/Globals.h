@@ -13,14 +13,12 @@
  *  limitations under the License.
  */
 
+#include "Core/Types/Lambda.h"
+#include "Graphics/Darwin/Graphics.h"
+
 #pragma once
 
-namespace Cthulhu::Lang
-{
+using namespace Cthulhu::Graphics;
+using namespace Cthulhu;
 
-struct Parser
-{
-
-};
-
-}
+extern Lambda<void(MainLoopEvent)> EventHandler;

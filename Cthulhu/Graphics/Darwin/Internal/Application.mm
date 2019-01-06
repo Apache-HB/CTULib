@@ -13,14 +13,8 @@
  *  limitations under the License.
  */
 
-#pragma once
+#include "Application.h"
 
-namespace Cthulhu::Lang
-{
+@implementation CthulhuApplication 
 
-struct Parser
-{
-
-};
-
-}
+@end

@@ -13,45 +13,31 @@
  *  limitations under the License.
  */
 
-#include <stdio.h>
+#include "View.h"
+#include "Window.h"
 
-#include "FastFile.h"
+@implementation CthulhuWindow
 
-using namespace Cthulhu::FileSystem;
-
-FastFile::FastFile(const String& Name)
-    : Real(fopen(*Name, "r"))
+- (BOOL)canBecomeKeyWindow
 {
-    if(Real)
-        fputs("\n", Real);
+    return YES;
 }
 
-char FastFile::Next()
+- (BOOL)canBecomeMainWindow
 {
-    return fgetc(Real);
+    return YES;
 }
 
-char FastFile::Peek() const
+- (BOOL)isOpaque
 {
-    //Take the next char
-    char Ret = fgetc(Real);
-    //Push the char back onto the file
-    ungetc(Ret, Real);
-    //Return the taken char
-    return Ret;
+    return YES;
 }
 
-bool FastFile::Valid() const
+- (void)setHandle:(Cthulhu::Graphics::MacWindow*)handle
 {
-    return Real != nullptr;
+    Handle = handle;
+    ((CthulhuView*)_contentView)->Handle = handle;
 }
 
-void FastFile::Close()
-{
-    fclose(Real);
-}
+@end
 
-void FastFile::Push(char C)
-{
-    ungetc(C, Real);
-}

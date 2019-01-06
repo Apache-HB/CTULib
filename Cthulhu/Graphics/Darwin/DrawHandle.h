@@ -13,14 +13,22 @@
  *  limitations under the License.
  */
 
+#include "Graphics/Path.h"
+#include "Graphics/Image.h"
+
 #pragma once
 
-namespace Cthulhu::Lang
+namespace Cthulhu::Graphics
 {
 
-struct Parser
+using DrawHandle = struct MacDrawHandle
 {
+    MacDrawHandle(){}
 
+    void DrawRect(const Dimensions& Dim, Colour Col);
+
+    void DrawPath(Path& ThePath);
+    void DrawImage(Image& Img, U32 X, U32 Y);
 };
 
 }

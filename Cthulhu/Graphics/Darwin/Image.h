@@ -13,32 +13,18 @@
  *  limitations under the License.
  */
 
-#include <Core/Collections/CthulhuString.h>
-
-#include <stdio.h>
+#include "Meta/Aliases.h"
 
 #pragma once
 
-namespace Cthulhu::FileSystem
+namespace Cthulhu::Graphics
 {
 
-struct FastFile
+using Image = struct MacImage
 {
-    FastFile(const String& Name);
-
-    ALWAYSINLINE char Next();
-
-    ALWAYSINLINE char Peek() const;
-
-    ALWAYSINLINE void Close();
-
-    ALWAYSINLINE bool Valid() const;
-
-    ALWAYSINLINE void Push(char C);
-
+    void* Native() const { return Handle; }
 private:
-
-    FILE* Real;
+    void* Handle;
 };
 
 }
