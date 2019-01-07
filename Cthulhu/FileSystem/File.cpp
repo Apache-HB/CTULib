@@ -13,13 +13,16 @@
  *  limitations under the License.
  */
 
-#include <libgen.h>
 #include <errno.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
 #include "File.h"
+
+#if !defined(OS_WINDOWS)
+#	include <libgen.h>
+#	include <unistd.h>
+#endif
 
 using namespace Cthulhu;
 using namespace Cthulhu::FileSystem;
@@ -70,10 +73,21 @@ File::File(const File& Other)
 }
 
 File::File(const String& Path, Mode ReadMode)
-    : FileName(basename(*Path))
-    , FileType(ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary)
+    : FileType(ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary)
+#if !defined(OS_WINDOWS)
+	, FileName(basename(*Path))
     , Real(fopen(Path.CStr(), Private::ModeToString(ReadMode).CStr()))
+#endif
 {
+#if defined(OS_WINDOWS)
+	_splitpath_s<0, 0, 256, 256>(
+		nullptr,nullptr,
+		nullptr,
+		Path.CStr(),
+		nullptr
+	);
+	//TODO: impl for windows stuff
+#endif
     Memory::Zero<String>(&Content, sizeof(String));
 
     if(FileType == Type::Binary)

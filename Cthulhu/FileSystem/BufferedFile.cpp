@@ -17,11 +17,17 @@
 
 #include "BufferedFile.h"
 
+using namespace Cthulhu;
 using namespace Cthulhu::FileSystem;
 
 BufferedFile::BufferedFile(const String& Name)
+#if defined(OS_LINUX) || defined(OS_APPLE)
     : Real(fopen(*Name, "r"))
+#endif
 {
+#if defined(OS_WINDOWS)
+	fopen_s(&Real, *Name, "r");
+#endif
     if(Real)
         fputs("\n", Real);
 }

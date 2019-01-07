@@ -18,7 +18,7 @@
 namespace Cthulhu::Graphics
 {
 
-struct WindowsWindow
+using Window = struct WindowsWindow
 {
     WindowsWindow();
     WindowsWindow(const WindowsWindow& Other);
@@ -32,7 +32,5 @@ private:
 void Startup(hInstance* Instance);
 
 void Cleanup();
-
-using Window = WindowsWindow;
 
 }

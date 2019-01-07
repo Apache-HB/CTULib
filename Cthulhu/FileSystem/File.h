@@ -13,13 +13,16 @@
  *  limitations under the License.
  */
 
-#include <libgen.h>
 #include <errno.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
 #include "Meta/Macros.h"
+
+#if !defined(OS_WINDOWS)
+#	include <unistd.h>
+#	include <libgen.h>
+#endif
 
 #include "Core/Collections/CthulhuString.h"
 #include "Core/Collections/Array.h"
