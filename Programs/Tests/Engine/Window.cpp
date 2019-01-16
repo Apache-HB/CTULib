@@ -43,6 +43,7 @@ struct MyWindow : public Window
     virtual void MouseMoved(Event Evt, Point From, Point To) override
     {
         MouseLocation = To;
+        TriggerRedraw();
     }
 
     virtual void KeyDown(Event Evt) override
@@ -58,21 +59,24 @@ struct MyWindow : public Window
     virtual void Draw(DrawHandle& Handle) override
     {
         Path P = MouseLocation;
-        P.LineTo({});
-        TriggerRedraw();
+        P.LineTo(MouseLocation - Point{ 50, 0 });
+        P.LineTo(MouseLocation + Point{ 50, 50 });
+        P.LineTo(MouseLocation - Point{ 0, 50 });
+        P.Close();
+        Handle.DrawPath(P);
     }
 };
 
-int main(int argc, const char* argv[])
+CTU_GRAPHCS_MAIN(Handle, Args)
 {
-    Setup();
+    CTU_GRAPHICS_INIT(Handle);
 
     auto Wnd = MyWindow({100, 100, 400, 400}, "Yeet");
     Wnd.Display();
 
-    Run([&Wnd](MainLoopEvent Evt)
-    { 
-        if(Evt == MainLoopEvent::Launch)
+    Run([&](MainLoopEvent Event)
+    {
+        if(Event == MainLoopEvent::Launch)
             printf("Loaded\n");
     });
 }

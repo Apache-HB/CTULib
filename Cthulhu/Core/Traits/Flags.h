@@ -13,35 +13,23 @@
  *  limitations under the License.
  */
 
+#include "Meta/Aliases.h"
+
 #pragma once
 
-#include "Meta/Macros.h"
+namespace Cthulhu
+{
 
-#ifdef OS_WINDOWS
-#   include <windows.h>
-#endif
+template<typename T>
+T operator|(const T Left, const T Right)
+{
+    return (T)((U64)Left | (U64)Right);
+}
 
-#ifdef OS_WINDOWS
-#   define CTU_GRAPHCS_MAIN(HANDLE, ARGS) int WINAPI wWinMain( \
-    HINSTANCE HANDLE, \
-    HINSTANCE, \
-    PSTR ARGS, \
-    int \
-)
-#else
-#   define CTU_GRAPHCS_MAIN(_, ARGS) int main(int, const char** ARGS)
-#endif
+template<typename T>
+T operator&(const T Left, const T Right)
+{
+    return (T)((U64)Left & (U64)Right);
+}
 
-#ifdef OS_WINDOWS
-#   define CTU_GRAPHICS_INIT(HANDLE) Setup(HANDLE);
-#else
-#   define CTU_GRAPHICS_INIT(_) Setup();
-#endif
-
-#if defined(OS_WINDOWS)
-#   include "Windows/Graphics.h"
-#elif defined(OS_APPLE)
-#   include "Darwin/Graphics.h"
-#elif defined(OS_LINUX)
-#   include "Linux/Graphics.h"
-#endif
+}

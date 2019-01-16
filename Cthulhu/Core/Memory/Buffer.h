@@ -14,6 +14,7 @@
  */
 
 #include "Meta/Aliases.h"
+#include "Meta/Assert.h"
 
 #pragma once
 

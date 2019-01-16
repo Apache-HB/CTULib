@@ -34,30 +34,6 @@ void Cthulhu::Graphics::Setup()
     [NSApplication sharedApplication];
 }
 
-/*
-    //create the window
-    CthulhuWindow* Window = [
-        [CthulhuWindow alloc]
-        initWithContentRect:NSMakeRect(100, 100, 400, 400)
-            styleMask:NSWindowStyleMaskResizable | NSWindowStyleMaskClosable | NSWindowStyleMaskTitled
-            backing:NSBackingStoreBuffered
-            defer:NO
-    ];
-
-    [Window setMinSize:NSMakeSize(400, 400)];
-
-    //[Window setBackgroundColor:[NSColor blueColor]];
-    [Window center];
-    [Window orderFrontRegardless];
-    [Window setRestorable:NO];
-    [Window setTitle:@"Yeet"];
-
-    CthulhuView* View = [[CthulhuView alloc] init];
-
-    [Window setContentView:View];
-    [Window setAcceptsMouseMovedEvents:YES];
-*/
-
 void Cthulhu::Graphics::Run(Lambda<void(MainLoopEvent)> Callback)
 {
     //register the callback for event handling

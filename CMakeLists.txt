@@ -4,10 +4,6 @@ project(Cthulhu)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17")
 
-if(APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Cocoa -framework Metal -framework MetalKit")
-endif(APPLE)
-
 include_directories(./Cthulhu)
 
 file(GLOB_RECURSE CthulhuCoreSources RELATIVE ${CMAKE_SOURCE_DIR} Cthulhu/Core/*.cpp)
@@ -37,6 +33,15 @@ add_library(CthulhuGraphics STATIC
 )
 
 target_link_libraries(CthulhuGraphics CthulhuCore)
+
+if (APPLE)
+    target_link_libraries(
+        CthulhuGraphics
+        "-framework Cocoa"
+        "-framework Metal"
+        "-framework MetalKit"
+    )
+endif (APPLE)
 
 add_executable(WindowTest Programs/Tests/Engine/Window.cpp)
 target_link_libraries(WindowTest CthulhuGraphics)
