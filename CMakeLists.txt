@@ -56,7 +56,7 @@ if (APPLE)
     )
 endif (APPLE)
 
-add_executable(WindowTest Programs/Tests/Engine/Window.cpp)
+add_executable(WindowTest ${CMAKE_CURRENT_SOURCE_DIR}/Programs/Tests/Engine/Window.cpp)
 target_link_libraries(WindowTest CthulhuGraphics)
 
 file(
