@@ -28,7 +28,7 @@
 namespace Cthulhu::Math
 {
 
-ALWAYSINLINE U16 ByteSwap(U16 Data)
+inline U16 ByteSwap(U16 Data)
 {
 #if defined(CC_MSVC)
     return _byteswap_ushort(Data);
@@ -39,7 +39,7 @@ ALWAYSINLINE U16 ByteSwap(U16 Data)
 #endif
 }
 
-ALWAYSINLINE U32 ByteSwap(U32 Data)
+inline U32 ByteSwap(U32 Data)
 {
 #if defined(CC_MSVC)
     return _byteswap_ulong(Data);
@@ -50,7 +50,7 @@ ALWAYSINLINE U32 ByteSwap(U32 Data)
 #endif
 }
 
-ALWAYSINLINE U64 ByteSwap(U64 Data)
+inline U64 ByteSwap(U64 Data)
 {
 #if defined(CC_MSVC)
     return _byteswap_uint64(Data);

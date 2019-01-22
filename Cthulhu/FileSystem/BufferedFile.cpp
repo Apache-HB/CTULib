@@ -32,12 +32,12 @@ BufferedFile::BufferedFile(const String& Name)
         fputs("\n", Real);
 }
 
-char BufferedFile::Next()
+C8 BufferedFile::Next()
 {
     return fgetc(Real);
 }
 
-char BufferedFile::Peek() const
+C8 BufferedFile::Peek() const
 {
     //Take the next char
     char Ret = fgetc(Real);

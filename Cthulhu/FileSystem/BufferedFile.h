@@ -26,9 +26,9 @@ struct BufferedFile
 {
     BufferedFile(const String& Name);
 
-    ALWAYSINLINE char Next();
+    ALWAYSINLINE C8 Next();
 
-    ALWAYSINLINE char Peek() const;
+    ALWAYSINLINE C8 Peek() const;
 
     ALWAYSINLINE void Close();
 
