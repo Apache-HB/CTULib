@@ -60,6 +60,7 @@ void Handler(int)
     sigemptyset(&Action.sa_mask);
     Action.sa_flags = 0;
     
+    //use sigaction to make sure that crashes are reported
     sigaction(SIGTERM, &Action, nullptr);
     sigaction(SIGSEGV, &Action, nullptr);
     sigaction(SIGTRAP, &Action, nullptr);

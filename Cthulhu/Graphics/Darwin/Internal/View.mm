@@ -76,16 +76,20 @@ RYES(acceptsFirstResponder);
 
 - (id)init
 {
+    //init the class
     self = [super init];
     TrackingArea = nil;
     [self updateTrackingAreas];
+    //make sure all the tracking areas are cleaned up
     CurrentKeys = (ModifierKeys)0;
     MouseLocation = NSMakePoint(0, 0);
+    //set these to some arbitrary default values
     return self;
 }
 
 - (void)dealloc
 {
+    //clean everything up
     [TrackingArea release];
     [super dealloc];
 }
@@ -126,6 +130,8 @@ RYES(acceptsFirstResponder);
 
 - (void)keyDown:(NSEvent*)event
 {
+    //dont send repeat events from stuff like holding the key down for more than
+    //a few seconds at a time
     if(![event isARepeat])
         Handle->KeyDown(EventFromNS(event));
 }

@@ -21,4 +21,5 @@
 using namespace Cthulhu::Graphics;
 using namespace Cthulhu;
 
+//declare this as extern so it is truly global
 extern Lambda<void(MainLoopEvent)> EventHandler;

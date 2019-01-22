@@ -13,48 +13,35 @@
  *  limitations under the License.
  */
 
-#include <Core/Collections/CthulhuString.h>
-#include <FileSystem/BufferedFile.h>
+#include <stdio.h>
 
-namespace Cthulhu::Lang::Err
+#include "Logger.h"
+
+using namespace Cthulhu;
+using namespace Cthulhu::Lang;
+
+namespace 
+{ 
+
+static const char* ToTag(Level Tag)
 {
+    switch(Tag)
+    {
+        default:
+        case Level::Fatal:
+            return "\x1B[31mFatal: \x1B[0m";
+        case Level::Warning:
+            return "\x1B[33mWarning: \x1B[0m";
+        case Level::Note:
+            return "\x1B[35mNote: \x1B[0m";
+        case Level::Debug:
+            return "\x1B[32mDebug: \x1B[0m";
+    }
+}
 
-enum class Level
+}
+
+void Cthulhu::Lang::Log(const Channel& InChannel, const String& Message)
 {
-    Abort,
-    Fatal,
-    Warning,
-    Trivial,
-    Other,
-};
-
-String LevelToTag(Level LVL);
-
-enum class Colour
-{
-    Black,
-    Red,
-    Green,
-    Yellow,
-    Blue,
-    Pink,
-    Cyan,
-    White
-};
-
-String ColourText(const String& Text, Colour C);
-
-namespace FS = Cthulhu::FileSystem;
-
-struct Location
-{
-    FS::BufferedFile* File;
-    String* FileName;
-    U64 Line, Loc, Len;
-};
-
-void Error(const String& Message, const Location& Loc, Level Severity);
-
-String Shorten(const String& Text, U16 NewLen);
-
+    printf("%s%s\n", ToTag(InChannel.ThisLevel), *Message);
 }

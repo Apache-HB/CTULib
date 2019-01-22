@@ -13,14 +13,32 @@
  *  limitations under the License.
  */
 
+#include "Core/Collections/CthulhuString.h"
+
 #pragma once
 
 namespace Cthulhu::Lang
 {
 
-struct Parser
+enum class Level
 {
-
+    Fatal,
+    Warning,
+    Note,
+    Debug,
 };
+
+struct Channel
+{
+    String Name;
+    Level ThisLevel;
+};
+
+void Log(const Channel& InChannel, const String& Message);
+
+extern Channel Fatal =   { "Fatal", Level::Fatal     };
+extern Channel Warning = { "Warning", Level::Warning };
+extern Channel Note =    { "Note", Level::Note       };
+extern Channel Debug =   { "Debug", Level::Debug     };
 
 }
