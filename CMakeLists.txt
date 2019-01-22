@@ -80,3 +80,23 @@ file(
 add_executable(cctu ${CCTUSources})
 target_link_libraries(cctu CthulhuFileSystem)
 target_link_libraries(cctu CthulhuCore)
+
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+    file(MAKE_DIRECTORY Docs)
+    #set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/Cthulhu)
+    set(DOXYGEN_OUT ${CMAKE_SOURCE_DIR}/Doxyfile)
+
+    configure_file(${DOXYGEN_OUT} @ONLY)
+
+    add_custom_target(
+        docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Generating docs..."
+        VERBATIM
+    )
+else(DOXYGEN_FOUND)
+    message("Doxygen needs to be installed to generate documentation")
+endif()
