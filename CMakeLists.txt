@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(Cthulhu)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17")
-
 include_directories(./Cthulhu)
 
 file(GLOB_RECURSE CthulhuCoreSources RELATIVE ${CMAKE_SOURCE_DIR} Cthulhu/Core/*.cpp)
