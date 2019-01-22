@@ -30,6 +30,17 @@
 #   error "Unrecognised target platform"
 #endif
 
+/**compiler withc to detect edianness of the current system
+ * 
+ */
+
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#   define BIG_EDIAN 1
+#elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#   define LITTLE_EDIAN 1
+#else
+#   error "Unknown byte order (neither big or little)"
+#endif
 
 /**This is a compiler switch to detect which compiler is being used
  * as every compile has compiler specific stuff, such as __forceinline or 

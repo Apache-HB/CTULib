@@ -16,10 +16,7 @@
 #include <Core/Collections/CthulhuString.h>
 #include <Core/Collections/Array.h>
 
-#include "Lexer/Lexer.h"
-
 using namespace Cthulhu;
-using namespace Cthulhu::Lang;
 
 int Main(Array<String>& Args)
 {

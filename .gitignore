@@ -23,8 +23,11 @@
 #ignore the generated docs
 Build/Docs
 Build/Makefile
-Build/CMakeFiles/3.13.2/CompilerIdCXX/CMakeCXXCompilerId.cpp
+
+#ignore cmake stuff
 Makefile
+#dont ignore the actual build script though
 !CMakeLists.txt
-Build/
-CMakeFiles
+Build/*
+CMakeFiles/*
+CMakeCXXCompilerId.cpp

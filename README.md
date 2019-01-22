@@ -2,6 +2,24 @@
 
 A proper standard library that was meant to be read by human beings. This library is still very much a work in progress and is not yet fit for production use. One other thing to note is the modified license (this only applies to video games)
 
+## building
+
+### windows
+```
+mkdir Build
+cd Build
+cmake .. -G "Visual Studio 15 2017"
+```
+
+### mac/linux
+
+```sh
+mkdir Build
+cd Build
+cmake ..
+make
+```
+
 ## documenting
 
 adding documentation is as easy as commenting your code using the doxygen @ style, additionally all classes/functions put inside 

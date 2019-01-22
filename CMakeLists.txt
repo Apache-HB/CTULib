@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 project(Cthulhu)
 
-include_directories(./Cthulhu)
+include_directories(${CMAKE_SOURCE_DIR}/Cthulhu)
 
 file(GLOB_RECURSE CthulhuCoreSources RELATIVE ${CMAKE_SOURCE_DIR} Cthulhu/Core/*.cpp)
 
@@ -10,12 +10,13 @@ add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
 )
 
-#portable way to enable C++17
-set_target_properties(
-    CthulhuCore PROPERTIES
-    CXX_STANDARD 17
-)
-
+#turns out part of cmake is in fact busted, 
+#so we have to do this to enable C++17 instead
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+endif()
 
 file(
     GLOB_RECURSE
@@ -40,6 +41,8 @@ add_library(CthulhuGraphics STATIC
 target_link_libraries(CthulhuGraphics CthulhuCore)
 
 if (APPLE)
+    #TODO: for some reason this generates a shedload of linking warnings
+    #maybe theres a workaround that could be applied?
     target_link_libraries(
         CthulhuGraphics
         "-framework Cocoa"

@@ -36,9 +36,9 @@ struct Channel
 
 void Log(const Channel& InChannel, const String& Message);
 
-extern Channel Fatal =   { "Fatal", Level::Fatal     };
-extern Channel Warning = { "Warning", Level::Warning };
-extern Channel Note =    { "Note", Level::Note       };
-extern Channel Debug =   { "Debug", Level::Debug     };
+extern Channel Fatal;
+extern Channel Warning;
+extern Channel Note;
+extern Channel Debug;
 
 }
