@@ -35,9 +35,9 @@
  */
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#   define BIG_ENDIAN 1
+#   define PLATFORM_BIG_ENDIAN 1
 #elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#   define LITTLE_ENDIAN 1
+#   define PLATFORM_LITTLE_ENDIAN 1
 #else
 #   error "Unknown byte order (neither big or little)"
 #endif
