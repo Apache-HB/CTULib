@@ -36,6 +36,15 @@ struct BufferedFile
 
     ALWAYSINLINE void Push(char C);
 
+    template<typename T>
+    T Read()
+    {
+        static_assert(IsDecimal<T>::Value, "T needs to be either a integer");
+        T Ret;
+        fread(&Ret, sizeof(T), 1, Real);
+        return Ret;
+    }
+
 private:
     FILE* Real;
 };

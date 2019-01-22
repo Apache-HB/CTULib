@@ -35,6 +35,7 @@ inline U16 ByteSwap(U16 Data)
 #elif defined(CC_CLANG) || defined(CC_GCC)
     return __builtin_bswap16(Data);
 #else
+    //TODO: intel and CPU agnostic byteswap
     NO_IMPL();
 #endif
 }
@@ -46,6 +47,7 @@ inline U32 ByteSwap(U32 Data)
 #elif defined(CC_CLANG) || defined(CC_GCC)
     return __builtin_bswap32(Data);
 #else
+    //TODO: intel and CPU agnostic byteswap
     NO_IMPL();
 #endif
 }
@@ -57,6 +59,7 @@ inline U64 ByteSwap(U64 Data)
 #elif defined(CC_CLANG) || defined(CC_GCC)
     return __builtin_bswap64(Data);
 #else
+    //TODO: intel and CPU agnostic byteswap
     NO_IMPL();
 #endif
 }
