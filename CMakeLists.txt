@@ -12,6 +12,13 @@ add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
 )
 
+#portable way to enable C++17
+set_target_properties(
+    CthulhuCore PROPERTIES
+    CXX_STANDARD 17
+)
+
+
 file(
     GLOB_RECURSE
     CthulhuGraphicsSourcesOS
@@ -69,5 +76,5 @@ if(DOXYGEN_FOUND)
         COMMENT "Generating documentation using Doxygen"
         VERBATIM)
 else(DOXYGEN_FOUND)
-    message("Doxygen need to be installed to generate the Cthulhu documentation")
+    message("Doxygen needs to be installed to generate the Cthulhu documentation")
 endif(DOXYGEN_FOUND)

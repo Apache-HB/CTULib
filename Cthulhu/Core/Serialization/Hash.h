@@ -19,19 +19,24 @@
 
 #pragma once
 
+namespace Cthulhu::Consts
+{
+	constexpr U32 MersenePrime = 151;
+}
+
 namespace Cthulhu::Utils
 {
 
 constexpr inline U32 Hash(I8 Item)  { return Item; }
 constexpr inline U32 Hash(I16 Item) { return Item; }
 constexpr inline U32 Hash(I32 Item) { return Item; }
-constexpr inline U32 Hash(I64 Item) { return Item; }
+constexpr inline U32 Hash(I64 Item) { return static_cast<U32>(Item) ^ Consts::MersenePrime; }
 constexpr inline U32 Hash(U8 Item)  { return Item; }
 constexpr inline U32 Hash(U16 Item) { return Item; }
 constexpr inline U32 Hash(U32 Item) { return Item; }
-constexpr inline U32 Hash(U64 Item) { return Item; }
+constexpr inline U32 Hash(U64 Item) { return static_cast<U32>(Item) ^ Consts::MersenePrime; }
 
-constexpr inline U32 Hash(const String& Item)
+inline U32 Hash(const String& Item)
 {
     U32 Ret = 0;
     

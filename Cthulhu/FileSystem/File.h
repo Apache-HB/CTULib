@@ -296,6 +296,17 @@ inline String ModeToString(Mode Input)
     }    
 }
 
+ALWAYSINLINE FILE* WrapFOpen(const char* Path, const char* Mode)
+{
+#ifdef OS_WINDOWS
+	FILE* Ret;
+	fopen_s(&Ret, Path, Mode);
+	return Ret;
+#else
+	return fopen(Path, Mode);
+#endif
+}
+
 inline char* ReadFile(FILE* Ptr)
 {
     fseek(Ptr, 0, SEEK_END);
@@ -345,7 +356,11 @@ inline Result<File*, Errno> Open(const String& Name, Mode ReadMode)
         Ret->Real = Data;
         Ret->FileType = bool(ReadMode & (Mode::WriteText | Mode::ReadText)) ? Type::Text : Type::Binary;
 
+#if !defined(OS_WINDOWS)
         Ret->FileName = basename(*Name);
+#else
+		
+#endif
 
         Memory::Zero<void>(&Ret->Content, Math::Max(sizeof(Array<Byte>), sizeof(String)));
 

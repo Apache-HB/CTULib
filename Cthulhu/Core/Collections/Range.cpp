@@ -19,7 +19,7 @@ using namespace Cthulhu;
 
 Array<I64> Range::ToArray() const 
 {
-    return Array<I64>(End, [](U32 I){ return I; });
+    return Array<I64>(static_cast<U32>(End), [this](U32 I){ return I - End; });
 }
 
 String Utils::ToString(const Range& Data)

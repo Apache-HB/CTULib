@@ -80,13 +80,16 @@ File::File(const String& Path, Mode ReadMode)
 #endif
 {
 #if defined(OS_WINDOWS)
-	_splitpath_s<0, 0, 256, 256>(
-		nullptr,nullptr,
-		nullptr,
-		Path.CStr(),
-		nullptr
-	);
-	//TODO: impl for windows stuff
+	//should be enought for most filenames
+	char Name[256];
+	//i dont know of any file extentions that go beyond 6 chars at most anyway
+	char Ext[32];
+	_splitpath_s(Path.CStr(), nullptr, 0, nullptr, 0, Name, sizeof(Name), Ext, sizeof(Ext));
+
+
+	FileName = String::FromPtr(CString::Merge(Name, Ext));
+
+
 #endif
     Memory::Zero<String>(&Content, sizeof(String));
 

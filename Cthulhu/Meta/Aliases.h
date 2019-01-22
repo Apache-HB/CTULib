@@ -127,4 +127,6 @@ using F32 = float;
 
 using F64 = double;
 
+using Empty = struct {};
+
 }

@@ -24,11 +24,6 @@
 namespace Cthulhu
 {
 
-namespace Utils
-{
-    constexpr U32 MersenePrime = 151;
-} // Utils
-
 template<typename, typename> 
 struct MapNode;
 
@@ -208,7 +203,7 @@ private:
         }
     }
 
-    Block<Node*, Utils::MersenePrime> Data;
+    Block<Node*, Consts::MersenePrime> Data;
 
 public:
 

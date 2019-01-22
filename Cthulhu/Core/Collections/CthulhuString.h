@@ -116,7 +116,17 @@ struct String
     //delete the current string and claim a raw pointer as the new string
     void Claim(char* NewData);
 
+	static String FromPtr(char* Ptr)
+	{
+		String Ret = Empty{};
+		Ret.Claim(Ptr);
+		return Ret;
+	}
+
 private:
+	String(Empty)
+		: Real(nullptr)
+	{}
     char* Real;
     U32 Length{0};
 };
@@ -171,11 +181,11 @@ namespace Utils
     Option<I64> ParseInt(const String& Text);
     Option<I64> ParseBits(const String& Text);
     Option<I64> ParseHex(const String& Text);
-    Option<float> ParseFloat(const String& Text);
+    Option<F32> ParseFloat(const String& Text);
     Option<bool> ParseBool(const String& Text);
 
     String ToString(I64 Num);
-    String ToString(float Num);
+    String ToString(F32 Num);
     String ToString(bool Val);
     String ToString(const String& Text);
     

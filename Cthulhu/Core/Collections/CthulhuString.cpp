@@ -704,7 +704,7 @@ Option<I64> Cthulhu::Utils::ParseHex(const String& Text)
     return Some(Ret);
 }
 
-Option<float> Cthulhu::Utils::ParseFloat(const String& Text)
+Option<F32> Cthulhu::Utils::ParseFloat(const String& Text)
 {
     char* Real = *Text;
 
@@ -712,7 +712,7 @@ Option<float> Cthulhu::Utils::ParseFloat(const String& Text)
         Loc = 0,
         Index = 0;
     
-    float Res = 0;
+    F32 Res = 0;
 
     while(Real[Index] == ' ') { Index++; }
 
@@ -752,18 +752,18 @@ Option<float> Cthulhu::Utils::ParseFloat(const String& Text)
     }
 
     Loc = Text.Len() - Loc;
-
-    float Ret = Res;
     
     //shift the decimal place to the corrent location
     for(int I = 0; I < Loc; I++)
     {
-        Ret *= 0.1;
+		//do 0.1f instead of plain 0.1 to stop
+		//MSVC complaining about casting from double to float
+        Res *= 0.1f;
     }
     
-    Ret *= Flag;
+    Res *= Flag;
 
-    return Some(Ret);
+    return Some(Res);
 }
 
 Option<bool> Cthulhu::Utils::ParseBool(const String& Text)
@@ -796,8 +796,8 @@ String Cthulhu::Utils::ToString(I64 Num)
 
     while(Num != 0)
     {
-        I64 Rem = Num % 10;
-        Ret += Rem + '0';
+        U64 Rem = Num % 10;
+        Ret += static_cast<C8>(Rem + '0');
         Num /= 10;
     }
 
@@ -809,7 +809,7 @@ String Cthulhu::Utils::ToString(I64 Num)
     return Temp;
 }
 
-String Cthulhu::Utils::ToString(float Num)
+String Cthulhu::Utils::ToString(F32 Num)
 {
     return FastToString(Num);
     //TODO: implement dragon4 at some point
@@ -827,18 +827,16 @@ String Cthulhu::Utils::ToString(const String& Text)
 
 namespace
 {
-    const char HexChars[] = "0123456789ABCDEF";
-
-    char ToHexChar(I32 I)
+    C8 ToHexChar(I64 I)
     {
         I &= 15;
-        return I < 10 ? I + 48 : I + 55;
+        return static_cast<C8>(I < 10 ? I + '0' : I + '7');
     }
 }
 
 String Cthulhu::Utils::HexToString(I64 HexNum)
 {
-    char* Ret = new char[9]();
+	char Ret[9];
 
     for(I32 I = 0; I < 8; I++)
     {
@@ -846,11 +844,9 @@ String Cthulhu::Utils::HexToString(I64 HexNum)
         HexNum >>= 4;
     }
 
-    String Temp = Ret;
+	String Temp = String::FromPtr(Ret);
 
     Temp.Push("0x");
-
-    delete[] Ret;
 
     return Temp;
 }
