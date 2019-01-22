@@ -4,7 +4,12 @@ project(Cthulhu)
 
 include_directories(${CMAKE_SOURCE_DIR}/Cthulhu)
 
-file(GLOB_RECURSE CthulhuCoreSources RELATIVE ${CMAKE_SOURCE_DIR} Cthulhu/Core/*.cpp)
+file(
+    GLOB_RECURSE 
+    CthulhuCoreSources 
+    RELATIVE ${CMAKE_SOURCE_DIR} 
+    Cthulhu/Core/*.cpp
+)
 
 add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
@@ -54,28 +59,24 @@ endif (APPLE)
 add_executable(WindowTest Programs/Tests/Engine/Window.cpp)
 target_link_libraries(WindowTest CthulhuGraphics)
 
-file(GLOB_RECURSE CthulhuFileSystemSources RELATIVE ${CMAKE_SOURCE_DIR} Cthulhu/FileSystem/*.cpp)
+file(
+    GLOB_RECURSE 
+    CthulhuFileSystemSources 
+    RELATIVE ${CMAKE_SOURCE_DIR} 
+    Cthulhu/FileSystem/*.cpp
+)
 
 add_library(CthulhuFileSystem STATIC
     ${CthulhuFileSystemSources}
 )
 
-file(GLOB_RECURSE CCTUSources RELATIVE ${CMAKE_SOURCE_DIR} Programs/Lang/*.cpp)
+file(
+    GLOB_RECURSE 
+    CCTUSources 
+    RELATIVE ${CMAKE_SOURCE_DIR} 
+    Programs/Lang/*.cpp
+)
 
 add_executable(cctu ${CCTUSources})
 target_link_libraries(cctu CthulhuFileSystem)
 target_link_libraries(cctu CthulhuCore)
-
-option(BUILD_DOC "Build documentation" ON)
-
-find_package(Doxygen)
-
-if(DOXYGEN_FOUND)
-    add_custom_target(
-        doc
-        COMMAND ${DOXYGEN_EXECUTABLE} doxygen.conf
-        COMMENT "Generating documentation using Doxygen"
-        VERBATIM)
-else(DOXYGEN_FOUND)
-    message("Doxygen needs to be installed to generate the Cthulhu documentation")
-endif(DOXYGEN_FOUND)
