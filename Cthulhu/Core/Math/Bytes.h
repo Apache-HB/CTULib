@@ -55,7 +55,7 @@ ALWAYSINLINE U64 ByteSwap(U64 Data)
 #if defined(CC_MSVC)
     return _byteswap_uint64(Data);
 #elif defined(CC_CLANG) || defined(CC_GCC)
-    return __builtin_byteswap64(Data);
+    return __builtin_bswap64(Data);
 #else
     NO_IMPL();
 #endif
