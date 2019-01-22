@@ -17,8 +17,8 @@
 #include "Meta/Macros.h"
 
 
-#if defined(CC_CLANG) || defined(CC_GCC)
-#   include <endian.h>
+#if defined(OS_APPLE)
+#   include <machine/endian.h>
 #else
 #   include <stdlib.h>
 #endif
