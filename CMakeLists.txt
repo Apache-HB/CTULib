@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 project(Cthulhu)
 
-include_directories(${CMAKE_SOURCE_DIR}/Cthulhu)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Cthulhu)
 
 file(
     GLOB_RECURSE 
     CthulhuCoreSources 
-    RELATIVE ${CMAKE_SOURCE_DIR} 
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Cthulhu/Core/*.cpp
 )
 
@@ -26,14 +26,14 @@ endif()
 file(
     GLOB_RECURSE
     CthulhuGraphicsSourcesOS
-    RELATIVE ${CMAKE_SOURCE_DIR}
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Cthulhu/Graphics/${CMAKE_SYSTEM_NAME}/*.*
 )
 
 file(
     GLOB
     CthulhuGraphicsSources
-    RELATIVE ${CMAKE_SOURCE_DIR}
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Cthulhu/Graphics/*.cpp
 )
 
@@ -62,7 +62,7 @@ target_link_libraries(WindowTest CthulhuGraphics)
 file(
     GLOB_RECURSE 
     CthulhuFileSystemSources 
-    RELATIVE ${CMAKE_SOURCE_DIR} 
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Cthulhu/FileSystem/*.cpp
 )
 
@@ -73,7 +73,7 @@ add_library(CthulhuFileSystem STATIC
 file(
     GLOB_RECURSE 
     CCTUSources 
-    RELATIVE ${CMAKE_SOURCE_DIR} 
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Programs/Lang/*.cpp
 )
 
@@ -83,17 +83,18 @@ target_link_libraries(cctu CthulhuCore)
 
 find_package(Doxygen)
 
-if(DOXYGEN_FOUND)
+option(BUILD_DOC "Build documentation" OFF)
+
+if(DOXYGEN_FOUND AND BUILD_DOC)
     file(MAKE_DIRECTORY Docs)
-    #set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/Cthulhu)
-    set(DOXYGEN_OUT ${CMAKE_SOURCE_DIR}/Doxyfile)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
 
     configure_file(${DOXYGEN_OUT} @ONLY)
 
     add_custom_target(
         docs
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating docs..."
         VERBATIM
     )

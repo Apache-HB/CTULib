@@ -30,14 +30,33 @@ namespace Cthulhu
 template<typename T, U32 Size>
 struct Block
 {
-    constexpr Block(){}
+    /**
+     * @brief construct a new block of data
+     * 
+     */
+    constexpr Block()
+    {
+        Real = new T[Size];
+    }
     
+    /**
+     * @brief Construct a new Block object
+     * 
+     * shallow copy the data from another block
+     * 
+     * @param Other The block to copy from
+     */
     Block(const Block& Other)
     {
-        delete[] Real;
         Real = Other.Real;
     }
     
+    /**
+     * @brief 
+     * 
+     * @param Index 
+     * @return T& 
+     */
     T& operator[](U32 Index) const
     {
         ASSERT(Index <= Size, "Accessing block out of range");
@@ -52,7 +71,7 @@ struct Block
     constexpr U32 Len() const { return Size; }
 
 private:
-    T* Real = new T[Size];
+    T* Real;
 
 public:
 

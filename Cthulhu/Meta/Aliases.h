@@ -123,10 +123,22 @@ using WideChar = C32;
  */
 using AsciiChar = C8;
 
+/**
+ * 
+ * 
+ */
 using F32 = float;
 
+/**
+ * 
+ * 
+ */
 using F64 = double;
 
+/**
+ * 
+ * 
+ */
 using Empty = struct {};
 
 }
