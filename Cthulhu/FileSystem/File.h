@@ -343,7 +343,12 @@ inline Array<Byte> ReadBinaryFile(FILE* Ptr)
 
 inline Result<File*, Errno> Open(const String& Name, Mode ReadMode)
 {
+#ifdef OS_WINDOWS
+	FILE* Data = nullptr;
+	fopen_s(&Data, *Name, *Private::ModeToString(ReadMode));
+#else
     FILE* Data = fopen(*Name, *Private::ModeToString(ReadMode));
+#endif
 
     if(!Data)
         return Fail<File*, Errno>(Errno(errno));
