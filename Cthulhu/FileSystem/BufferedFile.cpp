@@ -61,3 +61,20 @@ void BufferedFile::Push(char C)
 {
     ungetc(C, Real);
 }
+
+U32 BufferedFile::Size() const
+{
+    //seek to end
+    fseek(Real, 0, SEEK_END);
+    const U32 Ret = ftell(Real);
+
+    //seek back
+    fseek(Real, 0, SEEK_SET);
+
+    return Ret;
+}
+
+U32 BufferedFile::CurrentDepth() const
+{
+    return ftell(Real);
+}

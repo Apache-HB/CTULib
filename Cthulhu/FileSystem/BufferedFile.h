@@ -48,6 +48,10 @@ struct BufferedFile
         return Ret;
     }
 
+    U32 Size() const;
+
+    ALWAYSINLINE U32 CurrentDepth() const;
+
 private:
     FILE* Real;
 };
