@@ -78,3 +78,8 @@ U32 BufferedFile::CurrentDepth() const
 {
     return ftell(Real);
 }
+
+U64 BufferedFile::Seek(U64 NewLocation)
+{
+    fseek(Real, NewLocation, SEEK_SET);
+}

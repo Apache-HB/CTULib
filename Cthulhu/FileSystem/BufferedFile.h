@@ -28,6 +28,8 @@ struct BufferedFile
 {
     BufferedFile(const String& Name);
 
+    ~BufferedFile() { fclose(Real); }
+
     ALWAYSINLINE C8 Next();
 
     ALWAYSINLINE C8 Peek() const;
@@ -51,6 +53,8 @@ struct BufferedFile
     U32 Size() const;
 
     ALWAYSINLINE U32 CurrentDepth() const;
+
+    U64 Seek(U64 NewLocation);
 
 private:
     FILE* Real;
