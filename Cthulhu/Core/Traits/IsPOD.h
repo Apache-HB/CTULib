@@ -25,7 +25,7 @@ namespace Cthulhu
 template<typename T>
 struct IsPOD
 {
-    static constexpr bool Value = Or<__is_pod(T) || __is_enum(T), IsArithmatic<T>, IsPointer<T>>::Value;
+    static constexpr bool Value = Or<__is_pod(T) || __is_enum(T), IsArithmatic<T>::Value, IsPointer<T>::Value>::Value;
 }; //                                ^^^^^^^^       ^^^^^^^^^
    //these are some magic things that compilers have without #including anything 
 

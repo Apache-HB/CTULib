@@ -20,22 +20,22 @@ namespace Cthulhu
 
 template<typename T> struct Not { static constexpr bool Value = !T::Value; };
 
-template<typename...> struct Or;
+template<bool...> struct Or;
 
-template<bool TLeft, typename... TRight>
+template<bool TLeft, bool... TRight>
 struct OrValue
 {
     static constexpr bool Value = Or<TRight...>::Value;
 };
 
-template<typename... T>
+template<bool... T>
 struct OrValue<true, T...>
 {
     static constexpr bool Value = true;
 };
 
-template<typename TLeft, typename... TRight>
-struct Or<TLeft, TRight...> : OrValue<TLeft::Value, TRight...> {};
+template<bool TLeft, bool... TRight>
+struct Or<TLeft, TRight...> : OrValue<TLeft, TRight...> {};
 
 template<>
 struct Or<> { static constexpr bool Value = false; };

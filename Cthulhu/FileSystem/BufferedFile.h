@@ -15,6 +15,8 @@
 
 #include <Core/Collections/CthulhuString.h>
 
+#include "Core/Traits/IsPOD.h"
+
 #include <stdio.h>
 
 #pragma once
@@ -39,7 +41,7 @@ struct BufferedFile
     template<typename T>
     T Read()
     {
-        static_assert(IsDecimal<T>::Value, "T needs to be an integer");
+        static_assert(IsDecimal<T>::Value || IsPOD<T>::Value, "T needs to be an integer");
         
         T Ret;
         fread(&Ret, sizeof(T), 1, Real);
