@@ -38,7 +38,7 @@ using U64 = unsigned long long;
  * 4 bytes, 32 bits
  * 
  */
-using U32 = unsigned long;
+using U32 = unsigned int;
 
 /**unsigned short
  * 
@@ -72,7 +72,7 @@ using I64 = signed long long;
  * 
  * 4 bytes, 32 bits
  */
-using I32 = signed long;
+using I32 = signed int;
 
 /**signed short
  * 
