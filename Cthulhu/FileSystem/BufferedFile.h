@@ -28,7 +28,7 @@ struct BufferedFile
 {
     BufferedFile(const String& Name);
 
-    //~BufferedFile() { fclose(Real); }
+    ~BufferedFile() { fclose(Real); }
 
     ALWAYSINLINE C8 Next();
 
