@@ -149,6 +149,10 @@ Errno Delete(const String& Name);
  */
 Result<U64, Errno> LastEdited(const String& Name);
 
+bool DirExists(const String& Path);
+
+bool MakeDir(const String& Path);
+
 /**
  * @brief 
  * 

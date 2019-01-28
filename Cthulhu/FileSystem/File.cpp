@@ -55,6 +55,22 @@ Result<U64, Errno> FileSystem::LastEdited(const String& Name)
     return Fail<U64, Errno>(Errno(errno));
 }
 
+bool FileSystem::DirExists(const String& Path)
+{
+    struct stat S;
+
+    if(stat(*Path, &S) != -1) {
+        return S_ISDIR(S.st_mode);
+    }
+
+    return false;
+}
+
+bool FileSystem::MakeDir(const String& Path)
+{
+    return mkdir(*Path, 0777) != -1;
+}
+
 File::File(const File& Other)
     : FileName(Other.FileName)
     , FileType(Other.FileType)
