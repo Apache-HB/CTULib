@@ -27,9 +27,21 @@ T operator|(const T Left, const T Right)
 }
 
 template<typename T>
+T operator|=(T& Left, const T& Right)
+{
+    return (T)((U64)Left |= (U64)Right);
+}
+
+template<typename T>
 T operator&(const T Left, const T Right)
 {
     return (T)((U64)Left & (U64)Right);
+}
+
+template<typename T>
+T operator&=(const T Left, const T Right)
+{
+    return (T)((U64)Left &= (U64)Right);
 }
 
 }
