@@ -50,6 +50,15 @@ struct BufferedFile
         return Ret;
     }
 
+    U8* ReadBytes(U32 Length)
+    {
+        U8* Ret = new U8[Length];
+
+        fread(Ret, sizeof(U8), Length, Real);
+
+        return Ret;
+    }
+
     U32 Size() const;
 
     ALWAYSINLINE U32 CurrentDepth() const;
