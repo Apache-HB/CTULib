@@ -23,9 +23,9 @@
 #	include <libgen.h>
 #	include <unistd.h>
 #	include <io.h>
-#	include <stdlib.h>
 #	include <stdio.h>
-#	include <corecrt_io.h>
+#	include <stdlib.h>
+#	include "corecrt_io.h"
 #endif
 
 using namespace Cthulhu;
@@ -53,8 +53,16 @@ Errno FileSystem::CHMod(const String& Name, Permissions NewPermissions)
 bool FileSystem::Exists(const String& Name)
 {
 #ifdef OS_WINDOWS
-	return _access(*Name, 0) != -1;
+	//fetch the attributes of the file
+	DWORD Attributes = GetFileAttributes(*Name);
+
+	//make sure the file exists (it has invalid attributes if it doesnt exist)
+	return (Attributes != INVALID_FILE_ATTRIBUTES) && 
+	
+	//then make sure the file isnt actually a directory
+		!(Attributes & FILE_ATTRIBUTE_DIRECTORY);
 #else
+	//just use the posix access function to check if its openable
     return access(*Name, F_OK) != -1;
 #endif
 }
@@ -66,6 +74,29 @@ Errno FileSystem::Delete(const String& Name)
 
 Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 {
+#ifdef OS_WINDOWS
+	HANDLE Handle = CreateFileA(
+		*Name,
+		GENERIC_READ,
+		0,
+		NULL,
+		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
+		OPEN_EXISTING,
+		NULL
+	);
+
+	if (Handle)
+	{
+		FILETIME Lifetime;
+		GetFileTime(Handle, NULL, NULL, &Lifetime);
+		CloseHandle(Handle);
+
+		return Pass<U64, Errno>(*reinterpret_cast<U64*>(&Lifetime));
+	}
+
+	return Fail<U64, Errno>(Errno::FileNotFound);
+
+#else
     struct stat Result;
     
     if(stat(*Name, &Result) == 0)
@@ -75,6 +106,7 @@ Result<U64, Errno> FileSystem::LastEdited(const String& Name)
     }
 
     return Fail<U64, Errno>(Errno(errno));
+#endif
 }
 
 bool FileSystem::DirExists(const String& Path)

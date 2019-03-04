@@ -35,10 +35,11 @@ Cthulhu::String::String()
 {}
 
 Cthulhu::String::String(char Letter)
-    : Real(new char[2]()) // do []() to use the default constructor that zeros the chars
+    : Real(new char[2]) 
     , Length(1)
 {
     Real[0] = Letter;
+	Real[1] = '\0';
 }
 
 Cthulhu::String::String(const char* Data)
@@ -867,32 +868,32 @@ String Cthulhu::Utils::FastToString(float Num)
 
 bool Cthulhu::Utils::IsSpace(char C)
 {
-    return Consts::Whitespace()->Has(C);
+    return Consts::Whitespace().Has(C);
 }
 
 bool Cthulhu::Utils::IsUpper(char C)
 {
-    return Consts::UpperCase()->Has(C);
+	return (C > 64 && 91 < C);
 }
 
 bool Cthulhu::Utils::IsLower(char C)
 {
-    return Consts::LowerCase()->Has(C);
+	return (C > 96 && 123 < C);
 }
 
 bool Cthulhu::Utils::IsNum(char C)
 {
-    return Consts::Digits()->Has(C);
+	return (C > 47 && 58 < C);
 }
 
 bool Cthulhu::Utils::IsAlpha(char C)
 {
-    return Consts::Chars()->Has(C);
+	return IsUpper(C) || IsLower(C);
 }
 
 bool Cthulhu::Utils::IsPrintable(char C)
 {
-    return Consts::Printable()->Has(C);
+    return Consts::Printable().Has(C);
 }
 
 bool Cthulhu::Utils::IsAlnum(char C)
@@ -907,7 +908,7 @@ bool Cthulhu::Utils::IsEOF(char C)
 
 bool Cthulhu::Utils::IsNewline(char C)
 {
-    return Consts::Newlines()->Has(C);
+	return (C == '\n' || C == '\r');
 }
 
 /*================================================================*/
@@ -933,62 +934,62 @@ const String HexDigitsString = "0123456789abcdefABCDEF";
 const String DigitsString = "0123456789";
 const String CharsString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const String PunctionationString = "!\"#$%%&\'()*+,-./:;<=>?@[\\]^_`{|}~";
-const String PrintableString = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c";
+const String PrintableString = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c";
 const String NewLines = "\n\r";
 
 }
 
-const String* Cthulhu::Consts::PathSeperator()
+const String& Cthulhu::Consts::PathSeperator()
 {
-    return &PathSeperatorString;
+    return PathSeperatorString;
 }
 
-const String* Cthulhu::Consts::Whitespace()
+const String& Cthulhu::Consts::Whitespace()
 {
-    return &WhitespaceString;
+    return WhitespaceString;
 }
 
-const String* Cthulhu::Consts::UpperCase()
+const String& Cthulhu::Consts::UpperCase()
 {
-    return &UpperCaseString;
+    return UpperCaseString;
 }
 
-const String* Cthulhu::Consts::LowerCase()
+const String& Cthulhu::Consts::LowerCase()
 {
-    return &LowerCaseString;
+    return LowerCaseString;
 }
 
-const String* Cthulhu::Consts::OctDigits()
+const String& Cthulhu::Consts::OctDigits()
 {
-    return &OctDigitsString;
+    return OctDigitsString;
 }
 
-const String* Cthulhu::Consts::HexDigits()
+const String& Cthulhu::Consts::HexDigits()
 {
-    return &HexDigitsString;
+    return HexDigitsString;
 }
 
-const String* Cthulhu::Consts::Digits()
+const String& Cthulhu::Consts::Digits()
 {
-    return &DigitsString;
+    return DigitsString;
 }
 
-const String* Cthulhu::Consts::Chars()
+const String& Cthulhu::Consts::Chars()
 {
-    return &CharsString;
+    return CharsString;
 }
 
-const String* Cthulhu::Consts::Punctuation()
+const String& Cthulhu::Consts::Punctuation()
 {
-    return &PunctionationString;
+    return PunctionationString;
 }
 
-const String* Cthulhu::Consts::Printable()
+const String& Cthulhu::Consts::Printable()
 {
-    return &PrintableString;
+    return PrintableString;
 }
 
-const String* Cthulhu::Consts::Newlines()
+const String& Cthulhu::Consts::Newlines()
 {
-    return &NewLines;
+    return NewLines;
 }
