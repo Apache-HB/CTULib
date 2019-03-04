@@ -14,6 +14,7 @@
  */
 
 #include "Meta/Macros.h"
+#include "Meta/Assert.h"
 //CTU_INLINE
 
 #include "Meta/Aliases.h"
@@ -47,10 +48,10 @@ struct String
 
     String& operator=(const String& Other);
 
-    CTU_INLINE U32 Len() const;
+    CTU_INLINE U32 Len() const { return Length; }
 
-    CTU_INLINE bool IsEmpty() const;
-    CTU_INLINE operator bool() const;
+    CTU_INLINE bool IsEmpty() const { return Length == 0; }
+    CTU_INLINE operator bool() const { return Length != 0; }
 
     bool Equals(const String& Other) const;
 
@@ -73,15 +74,20 @@ struct String
     void Push(const String& Other);
     void Push(char Other);
 
-    CTU_INLINE char* operator*() const;
-    CTU_INLINE char* CStr() const;
+    CTU_INLINE char* operator*() const { return Real; }
+    CTU_INLINE char* CStr() const { return Real; }
 
     bool StartsWith(const String& Pattern) const;
     bool EndsWith(const String& Pattern) const;
 
     bool ValidIndex(U32 Index) const;
 
-    CTU_INLINE char& operator[](U32 Index) const;
+    CTU_INLINE char& operator[](U32 Index) const
+    {
+        ASSERT(ValidIndex(Index), "Trying to access string out of range with operator[]");
+        return Real[Index];
+    }
+
     char At(U32 Index) const;
 
     String SubString(U32 Start, U32 End) const;
@@ -111,7 +117,7 @@ struct String
 
     String Reversed() const;
 
-    CTU_INLINE ~String();
+    CTU_INLINE ~String() { delete[] Real; }
 
     //delete the current string and claim a raw pointer as the new string
     void Claim(char* NewData);

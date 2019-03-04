@@ -22,6 +22,9 @@
 #if !defined(OS_WINDOWS)
 #	include <libgen.h>
 #	include <unistd.h>
+#endif
+
+#if defined(OS_WINDOWS)
 #	include <io.h>
 #	include <stdio.h>
 #	include <stdlib.h>

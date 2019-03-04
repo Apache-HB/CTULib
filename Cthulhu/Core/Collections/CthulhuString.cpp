@@ -53,27 +53,8 @@ Cthulhu::String::String(const String& Other)
 {}
 
 /*================================================================*/
-/*              Cthulhu::String destructors                       */
-/*================================================================*/
-
-Cthulhu::String::~String()
-{
-    delete[] Real;
-}
-
-/*================================================================*/
 /*              Cthulhu::String member functions                  */
 /*================================================================*/
-
-U32 Cthulhu::String::Len() const
-{
-    return Length;
-}
-
-bool Cthulhu::String::IsEmpty() const
-{
-    return Length == 0;
-}
 
 void Cthulhu::String::Append(const String& Other)
 {
@@ -121,11 +102,6 @@ void Cthulhu::String::Push(char Other)
     Real = Temp;
 
     Length++;
-}
-
-char* Cthulhu::String::CStr() const
-{   
-    return Real;
 }
 
 bool Cthulhu::String::StartsWith(const String& Pattern) const
@@ -363,22 +339,6 @@ String& Cthulhu::String::operator=(const String& Other)
     Length = Other.Length;
 
     return *this;
-}
-
-char& Cthulhu::String::operator[](U32 Index) const
-{
-    ASSERT(ValidIndex(Index), "Trying to access string out of range with operator[]");
-    return Real[Index];
-}
-
-char* Cthulhu::String::operator*() const
-{
-    return Real;
-}
-
-Cthulhu::String::operator bool() const
-{
-    return IsEmpty();
 }
 
 bool Cthulhu::String::operator==(const String& Other) const

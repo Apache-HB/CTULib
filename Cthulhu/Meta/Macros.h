@@ -83,9 +83,9 @@
 #endif
 
 #if defined(CTU_FORCEINLINE)
-#	define CTU_INLINE FORCEINLINE
+#	  define CTU_INLINE ALWAYSINLINE
 #else
-#	define CTU_INLINE inline
+#	  define CTU_INLINE inline
 #endif
 
 #define WITH_CTHULHU 1
