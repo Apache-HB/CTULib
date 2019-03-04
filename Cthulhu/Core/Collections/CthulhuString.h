@@ -14,7 +14,7 @@
  */
 
 #include "Meta/Macros.h"
-//ALWAYSINLINE
+//CTU_INLINE
 
 #include "Meta/Aliases.h"
 //U32
@@ -47,10 +47,10 @@ struct String
 
     String& operator=(const String& Other);
 
-    ALWAYSINLINE U32 Len() const;
+    CTU_INLINE U32 Len() const;
 
-    ALWAYSINLINE bool IsEmpty() const;
-    ALWAYSINLINE operator bool() const;
+    CTU_INLINE bool IsEmpty() const;
+    CTU_INLINE operator bool() const;
 
     bool Equals(const String& Other) const;
 
@@ -73,15 +73,15 @@ struct String
     void Push(const String& Other);
     void Push(char Other);
 
-    ALWAYSINLINE char* operator*() const;
-    ALWAYSINLINE char* CStr() const;
+    CTU_INLINE char* operator*() const;
+    CTU_INLINE char* CStr() const;
 
     bool StartsWith(const String& Pattern) const;
     bool EndsWith(const String& Pattern) const;
 
     bool ValidIndex(U32 Index) const;
 
-    ALWAYSINLINE char& operator[](U32 Index) const;
+    CTU_INLINE char& operator[](U32 Index) const;
     char At(U32 Index) const;
 
     String SubString(U32 Start, U32 End) const;
@@ -111,7 +111,7 @@ struct String
 
     String Reversed() const;
 
-    ALWAYSINLINE ~String();
+    CTU_INLINE ~String();
 
     //delete the current string and claim a raw pointer as the new string
     void Claim(char* NewData);
@@ -215,15 +215,15 @@ namespace Utils
     String HexToString(I64 HexNum);
     String FastToString(float Num);
 
-    ALWAYSINLINE bool IsSpace(char C);
-    ALWAYSINLINE bool IsUpper(char C);
-    ALWAYSINLINE bool IsLower(char C);
-    ALWAYSINLINE bool IsNum(char C);
-    ALWAYSINLINE bool IsAlpha(char C);
-    ALWAYSINLINE bool IsPrintable(char C);
-    ALWAYSINLINE bool IsAlnum(char C);
-    ALWAYSINLINE bool IsEOF(char C);
-    ALWAYSINLINE bool IsNewline(char C);
+    CTU_INLINE bool IsSpace(char C);
+    CTU_INLINE bool IsUpper(char C);
+    CTU_INLINE bool IsLower(char C);
+    CTU_INLINE bool IsNum(char C);
+    CTU_INLINE bool IsAlpha(char C);
+    CTU_INLINE bool IsPrintable(char C);
+    CTU_INLINE bool IsAlnum(char C);
+    CTU_INLINE bool IsEOF(char C);
+    CTU_INLINE bool IsNewline(char C);
 }
 
 /**
@@ -243,72 +243,72 @@ namespace Consts
      * 
      * @return const String* the current platforms path seperator
      */
-    ALWAYSINLINE const String* PathSeperator();
+    CTU_INLINE const String* PathSeperator();
 
     /**
      * @brief returns all whitespace characters
      * 
      * @return const String* whitespace characters
      */
-    ALWAYSINLINE const String* Whitespace();
+    CTU_INLINE const String* Whitespace();
 
     /**
      * @brief returns all uppercase characters
      * 
      * @return const String* all uppercase characters
      */
-    ALWAYSINLINE const String* UpperCase();
+    CTU_INLINE const String* UpperCase();
 
     /**
      * @brief returns all lowercase characters
      * 
      * @return const String* all lowercase characters
      */
-    ALWAYSINLINE const String* LowerCase();
+    CTU_INLINE const String* LowerCase();
 
     /**
      * @brief returns all valid characters for a string representation of an octal number
      * 
      * @return const String* all valid octal digits
      */
-    ALWAYSINLINE const String* OctDigits();
+    CTU_INLINE const String* OctDigits();
 
     /**
      * @brief returns all valid characters for a string representation of a hex number
      * 
      * @return const String* all valid hex digits
      */
-    ALWAYSINLINE const String* HexDigits();
+    CTU_INLINE const String* HexDigits();
 
     /**
      * @brief return a string containing all number characters
      * 
      * @return const String* all digit characters
      */
-    ALWAYSINLINE const String* Digits();
+    CTU_INLINE const String* Digits();
 
     /**
      * @brief return a string containing every character
      * 
      * @return const String* all characters
      */
-    ALWAYSINLINE const String* Chars();
+    CTU_INLINE const String* Chars();
     
     /**
      * @brief return a string of all punctuation characters
      * 
      * @return const String* all punctuation characters
      */
-    ALWAYSINLINE const String* Punctuation();
+    CTU_INLINE const String* Punctuation();
 
     /**
      * @brief return a string of all printable characters
      * 
      * @return const String* all printable characters
      */
-    ALWAYSINLINE const String* Printable();
+    CTU_INLINE const String* Printable();
 
-    ALWAYSINLINE const String* Newlines();
+    CTU_INLINE const String* Newlines();
 }
 
 }

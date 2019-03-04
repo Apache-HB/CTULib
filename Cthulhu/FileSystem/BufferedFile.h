@@ -30,15 +30,15 @@ struct BufferedFile
 
     ~BufferedFile() { fclose(Real); }
 
-    ALWAYSINLINE C8 Next();
+    CTU_INLINE C8 Next();
 
-    ALWAYSINLINE C8 Peek() const;
+    CTU_INLINE C8 Peek() const;
 
-    ALWAYSINLINE void Close();
+    CTU_INLINE void Close();
 
-    ALWAYSINLINE bool Valid() const;
+    CTU_INLINE bool Valid() const;
 
-    ALWAYSINLINE void Push(char C);
+    CTU_INLINE void Push(char C);
 
     template<typename T>
     T Read()
@@ -61,7 +61,7 @@ struct BufferedFile
 
     U32 Size() const;
 
-    ALWAYSINLINE U32 CurrentDepth() const;
+    CTU_INLINE U32 CurrentDepth() const;
 
     U64 Seek(U64 NewLocation);
 

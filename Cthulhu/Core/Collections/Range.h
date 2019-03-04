@@ -46,10 +46,10 @@ struct Range
     constexpr Range begin() const { return { Start, End }; }
     constexpr Range end() const { return { Start, End, End }; }
 
-    ALWAYSINLINE constexpr bool operator==(const Range& Other) const { return Idx == Other.Idx; }
-    ALWAYSINLINE constexpr bool operator!=(const Range& Other) const { return Idx != Other.Idx; }
+    CTU_INLINE constexpr bool operator==(const Range& Other) const { return Idx == Other.Idx; }
+    CTU_INLINE constexpr bool operator!=(const Range& Other) const { return Idx != Other.Idx; }
 
-    ALWAYSINLINE constexpr I64 operator*() const { return Idx; }
+    CTU_INLINE constexpr I64 operator*() const { return Idx; }
 
     constexpr Range& operator++() { Idx++; return *this; }
 

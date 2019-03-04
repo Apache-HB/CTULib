@@ -22,6 +22,10 @@
 #if !defined(OS_WINDOWS)
 #	include <libgen.h>
 #	include <unistd.h>
+#	include <io.h>
+#	include <stdlib.h>
+#	include <stdio.h>
+#	include <corecrt_io.h>
 #endif
 
 using namespace Cthulhu;
@@ -29,12 +33,30 @@ using namespace Cthulhu::FileSystem;
 
 Errno FileSystem::CHMod(const String& Name, Permissions NewPermissions)
 {
+#ifdef OS_WINDOWS
+	size_t ConvertedChars = 0;
+	size_t NewSize = Name.Len() + 1;
+
+	wchar_t* WideString = new wchar_t[NewSize];
+
+	mbstowcs_s(&ConvertedChars, WideString, NewSize, *Name, _TRUNCATE);
+
+	Errno Error = _wchmod(WideString, ((int)NewPermissions & 0x0000ffff)) ? Errno::None : Errno(errno);
+	delete[] WideString;
+
+	return Error;
+#else
     return chmod(*Name, (mode_t)NewPermissions) == 0 ? Errno::None : Errno(errno);
+#endif
 }
 
 bool FileSystem::Exists(const String& Name)
 {
+#ifdef OS_WINDOWS
+	return _access(*Name, 0) != -1;
+#else
     return access(*Name, F_OK) != -1;
+#endif
 }
 
 Errno FileSystem::Delete(const String& Name)

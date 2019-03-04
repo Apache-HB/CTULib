@@ -35,15 +35,15 @@ struct Unique
         return Ret;
     }
 
-    ALWAYSINLINE const T* operator->() const { return Raw; }
-    ALWAYSINLINE T* operator->() { return Raw; }
+    CTU_INLINE const T* operator->() const { return Raw; }
+    CTU_INLINE T* operator->() { return Raw; }
 
-    ALWAYSINLINE const T operator*() const { ASSERT(Valid(), "Attempting to deref a null pointer"); return *Raw; }
-    ALWAYSINLINE T operator*() { ASSERT(Valid(), "Attempting to deref a null pointer"); return *Raw; }
+    CTU_INLINE const T operator*() const { ASSERT(Valid(), "Attempting to deref a null pointer"); return *Raw; }
+    CTU_INLINE T operator*() { ASSERT(Valid(), "Attempting to deref a null pointer"); return *Raw; }
 
-    ALWAYSINLINE bool Valid() const { return Raw != nullptr; }
+    CTU_INLINE bool Valid() const { return Raw != nullptr; }
 
-    ALWAYSINLINE operator bool() const { return Raw != nullptr; }
+    CTU_INLINE operator bool() const { return Raw != nullptr; }
 
     ~Unique()
     {

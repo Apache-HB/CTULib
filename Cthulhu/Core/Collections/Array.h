@@ -244,9 +244,9 @@ struct Array
      * @brief 
      * 
      * @param Index 
-     * @return ALWAYSINLINE& operator[] 
+     * @return CTU_INLINE& operator[] 
      */
-    ALWAYSINLINE T& operator[](U32 Index) const
+    CTU_INLINE T& operator[](U32 Index) const
     {
         ASSERT(ValidIndex(Index), "IndexOutOfRange");
         return Real[Index];
@@ -263,58 +263,58 @@ struct Array
     /**
      * @brief 
      * 
-     * @return ALWAYSINLINE Len 
+     * @return Len 
      */
-    ALWAYSINLINE U32 Len() const { return Length; }
+    CTU_INLINE U32 Len() const { return Length; }
     /**
      * @brief 
      * 
-     * @return ALWAYSINLINE GetSlack 
+     * @return CTU_INLINE GetSlack 
      */
-    ALWAYSINLINE U16 GetSlack() const { return Slack; }
+    CTU_INLINE U16 GetSlack() const { return Slack; }
     
     /**
      * @brief 
      * 
      * @param NewSlack 
-     * @return ALWAYSINLINE SetSlack 
+     * @return CTU_INLINE SetSlack 
      */
-    ALWAYSINLINE void SetSlack(U16 NewSlack) { Slack = NewSlack; }
+    CTU_INLINE void SetSlack(U16 NewSlack) { Slack = NewSlack; }
     
     /**
      * @brief 
      * 
-     * @return ALWAYSINLINE RealSize 
+     * @return CTU_INLINE RealSize 
      */
-    ALWAYSINLINE U32 RealSize() const { return Allocated; }
+    CTU_INLINE U32 RealSize() const { return Allocated; }
     
     /**
      * @brief 
      * 
-     * @return ALWAYSINLINE* operator* 
+     * @return CTU_INLINE* operator* 
      */
-    ALWAYSINLINE T* operator*() const { return Real; }
+    CTU_INLINE T* operator*() const { return Real; }
     
     /**
      * @brief 
      * 
-     * @return ALWAYSINLINE* Data 
+     * @return CTU_INLINE* Data 
      */
-    ALWAYSINLINE T* Data() const { return Real; }
+    CTU_INLINE T* Data() const { return Real; }
 
     /**
      * @brief 
      * 
-     * @return ALWAYSINLINE& Front 
+     * @return CTU_INLINE& Front 
      */
-    ALWAYSINLINE T& Front() const { return Real[0]; }
+    CTU_INLINE T& Front() const { return Real[0]; }
 
     /**
      * @brief 
      * 
-     * @return ALWAYSINLINE& Back 
+     * @return CTU_INLINE& Back 
      */
-    ALWAYSINLINE T& Back() const { return Real[Length]; }
+    CTU_INLINE T& Back() const { return Real[Length]; }
 
     //STL iterators, dont use directly
     //use for(auto& I : Arr) instead
@@ -364,9 +364,9 @@ struct Array
      * @brief 
      * 
      * @param Item 
-     * @return ALWAYSINLINE Has 
+     * @return CTU_INLINE Has 
      */
-    ALWAYSINLINE bool Has(const T& Item) const
+    CTU_INLINE bool Has(const T& Item) const
     {
         return Find(Item).Valid();
     }

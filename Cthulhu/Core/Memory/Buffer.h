@@ -36,18 +36,18 @@ struct Buffer
         return Real[--Index];
     }
 
-    ALWAYSINLINE U32 Length() const { return Index; }
-    ALWAYSINLINE T* Data() const { return Real; }
-    ALWAYSINLINE T* operator*() const { return Real; }
-    ALWAYSINLINE void Wipe() { Index = 0; }
+    CTU_INLINE U32 Length() const { return Index; }
+    CTU_INLINE T* Data() const { return Real; }
+    CTU_INLINE T* operator*() const { return Real; }
+    CTU_INLINE void Wipe() { Index = 0; }
 
-    ALWAYSINLINE T& operator[](U32 Index) const 
+    CTU_INLINE T& operator[](U32 Index) const 
     { 
         ASSERT(Index <= Size, "Accessing buffer out of bounds");
         return Real[Index]; 
     }
 
-    ALWAYSINLINE ~Buffer() { delete[] Real; }
+    CTU_INLINE ~Buffer() { delete[] Real; }
 private:
     T* Real = new T[Size];
     U32 Index;

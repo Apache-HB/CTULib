@@ -31,7 +31,7 @@ namespace Cthulhu
  * @return auto the return value of Object
  */
 template<typename TObject, typename... TArgs>
-ALWAYSINLINE auto Invoke(TObject&& Object, TArgs&&... Args)
+CTU_INLINE auto Invoke(TObject&& Object, TArgs&&... Args)
 {
     return Forward<TObject>(Object)(Forward<TArgs>(Args)...);
 }

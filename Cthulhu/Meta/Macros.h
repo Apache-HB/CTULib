@@ -31,7 +31,7 @@
 #endif
 
  /**compiler switch to detect edianness of the current system
-  *
+  * it'll nearly always be PLATFORM_LITTLE_ENDIAN but you can never be sure
   */
 
 #if defined(OS_WINDOWS)
@@ -80,6 +80,12 @@
 #   define DEPRECATED(Version, Message) //TODO: how does one deprecate on the intel compiler?
 #else
 #   error "Unrecognised compiler"
+#endif
+
+#if defined(CTU_FORCEINLINE)
+#	define CTU_INLINE FORCEINLINE
+#else
+#	define CTU_INLINE inline
 #endif
 
 #define WITH_CTHULHU 1

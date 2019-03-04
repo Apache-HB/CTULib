@@ -78,7 +78,7 @@ namespace Memory
      * @return T* the Memory param
      */
     template<typename T>
-    ALWAYSINLINE T* Set(T* Memory, int Value, size_t Len) 
+    CTU_INLINE T* Set(T* Memory, int Value, size_t Len) 
     { 
         return (T*)memset((void*)Memory, Value, Len); 
     }
@@ -90,10 +90,10 @@ namespace Memory
      * @param From 
      * @param Into 
      * @param Len 
-     * @return ALWAYSINLINE* Move 
+     * @return CTU_INLINE* Move 
      */
     template<typename T>
-    ALWAYSINLINE T* Move(const T* From, T* Into, size_t Len) 
+    CTU_INLINE T* Move(const T* From, T* Into, size_t Len) 
     { 
         return (T*)memmove((void*)Into, (void*)From, Len); 
     }
@@ -105,10 +105,10 @@ namespace Memory
      * @param From 
      * @param Into 
      * @param Len 
-     * @return ALWAYSINLINE* Copy 
+     * @return CTU_INLINE* Copy 
      */
     template<typename T>
-    ALWAYSINLINE T* Copy(const T* From, T* Into, U32 Len) 
+    CTU_INLINE T* Copy(const T* From, T* Into, U32 Len) 
     { 
         return (T*)memcpy((void*)Into, (void*)From, Len); 
     }
@@ -120,10 +120,10 @@ namespace Memory
      * @param Left 
      * @param Right 
      * @param Len 
-     * @return ALWAYSINLINE Compare 
+     * @return CTU_INLINE Compare 
      */
     template<typename T>
-    ALWAYSINLINE int Compare(const T* Left, const T* Right, U32 Len) 
+    CTU_INLINE int Compare(const T* Left, const T* Right, U32 Len) 
     { 
         return memcmp((void*)Left, (void*)Right, Len); 
     }
@@ -134,10 +134,10 @@ namespace Memory
      * @tparam T 
      * @param Memory 
      * @param Len 
-     * @return ALWAYSINLINE* Zero 
+     * @return CTU_INLINE* Zero 
      */
     template<typename T>
-    ALWAYSINLINE T* Zero(const T* Memory, U32 Len) 
+    CTU_INLINE T* Zero(const T* Memory, U32 Len) 
     {
         return (T*)memset((void*)Memory, 0, Len); 
     }
@@ -148,10 +148,10 @@ namespace Memory
      * @tparam T 
      * @param Data 
      * @param NewLen 
-     * @return ALWAYSINLINE* Realloc 
+     * @return CTU_INLINE* Realloc 
      */
     template<typename T>
-    ALWAYSINLINE T* Realloc(T* Data, U32 NewLen) 
+    CTU_INLINE T* Realloc(T* Data, U32 NewLen) 
     { 
         return (T*)realloc((void*)Data, NewLen); 
     }
@@ -161,10 +161,10 @@ namespace Memory
      * 
      * @tparam T 
      * @param Len 
-     * @return ALWAYSINLINE* Alloc 
+     * @return CTU_INLINE* Alloc 
      */
     template<typename T>
-    ALWAYSINLINE T* Alloc(U32 Len) 
+    CTU_INLINE T* Alloc(U32 Len) 
     { 
         return (T*)malloc(Len); 
     }
@@ -174,10 +174,10 @@ namespace Memory
      * 
      * @tparam T 
      * @param Data 
-     * @return ALWAYSINLINE Free 
+     * @return CTU_INLINE Free 
      */
     template<typename T>
-    ALWAYSINLINE void Free(T* Data) 
+    CTU_INLINE void Free(T* Data) 
     { 
         free((void*)Data); 
     }
@@ -206,7 +206,7 @@ namespace Memory
      * @tparam T 
      * @param Data 
      * @param Len 
-     * @return ALWAYSINLINE* NewDuplicate 
+     * @return CTU_INLINE* NewDuplicate 
      */
     template<typename T>
     T* NewDuplicate(const T* Data, U32 Len)

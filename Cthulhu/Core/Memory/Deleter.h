@@ -33,7 +33,7 @@ struct Deleter
      * 
      * @param Item 
      */
-    ALWAYSINLINE static void Delete(T* Item)
+    CTU_INLINE static void Delete(T* Item)
     {
         delete Item;
     }
@@ -52,7 +52,7 @@ struct Deleter<T[]>
      * 
      * @param Item the array to delete
      */
-    ALWAYSINLINE static void Delete(T* Item)
+    CTU_INLINE static void Delete(T* Item)
     {
         delete[] Item;
     }

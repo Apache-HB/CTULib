@@ -29,13 +29,13 @@ namespace Cthulhu
  * @return T&& the forwarded type
  */
 template<typename T>
-ALWAYSINLINE T&& Forward(typename RemoveReference<T>::Type& Obj)
+CTU_INLINE T&& Forward(typename RemoveReference<T>::Type& Obj)
 {
     return (T&&)Obj;
 }
 
 template<typename T>
-ALWAYSINLINE T&& Forward(typename RemoveReference<T>::Type&& Obj)
+CTU_INLINE T&& Forward(typename RemoveReference<T>::Type&& Obj)
 {
     return (T&&)Obj;
 }
