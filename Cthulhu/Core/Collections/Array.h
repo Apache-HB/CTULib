@@ -462,6 +462,20 @@ struct Array
     }
 
     /**
+     * @brief claim the raw pointer
+     * this makes the array unusable after that and doing any other operations
+     * is undefined behaviour and will more than likley crash
+     * 
+     * @return T* the arrays raw data
+     */
+    T* Claim()
+    {
+        T* Ret = Real;
+        Real = nullptr;
+        return Ret;
+    }
+
+    /**
      * @brief the default slack of an array
      * 
      */
