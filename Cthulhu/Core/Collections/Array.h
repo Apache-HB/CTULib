@@ -25,6 +25,9 @@
 
 #include "CthulhuString.h"
 
+#include "Core/Traits/IsPOD.h"
+#include "Core/Traits/IsSame.h"
+
 #pragma once
 
 namespace Cthulhu
