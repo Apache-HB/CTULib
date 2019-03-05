@@ -14,6 +14,7 @@
  */
 
 #include <Core/Collections/CthulhuString.h>
+#include <Core/Collections/Array.h>
 
 #include "Core/Traits/IsPOD.h"
 
