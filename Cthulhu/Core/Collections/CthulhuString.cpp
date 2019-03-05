@@ -404,6 +404,23 @@ String& Cthulhu::String::operator<<(bool Val)
     return *this;
 }
 
+String Cthulhu::String::operator/(const String& Other) const
+{
+    String Ret(Real);
+    Ret.Append(Consts::PathSeperator());
+    Ret.Append(Other);
+
+    return Ret;
+}
+
+String& Cthulhu::String::operator/=(const String& Other)
+{
+    Append(Consts::PathSeperator());
+    Append(Other);
+
+    return *this;
+}
+
 /*================================================================*/
 /*              Cthulhu::CString functions                        */
 /*================================================================*/

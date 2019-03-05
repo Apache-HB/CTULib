@@ -13,8 +13,6 @@
  *  limitations under the License.
  */
 
-#include "../TestMacros.h"
-
 #include <Graphics/Graphics.h>
 #include <Graphics/Window.h>
 #include <Graphics/Path.h>

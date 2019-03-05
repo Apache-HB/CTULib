@@ -15,7 +15,7 @@ add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
 )
 
-#turns out part of cmake is in fact busted, 
+#turns out part of cmake is in fact busted
 #so we have to do this to enable C++17 instead
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
@@ -36,6 +36,11 @@ option(FORCEINLINE "FORCEINLINE" OFF)
 if(FORCEINLINE)
     add_compile_definitions(CTU_FORCEINLINE)
 endif()
+
+add_executable(Tests ${CMAKE_CURRENT_SOURCE_DIR}/Programs/Tests/Collections/Main.cpp)
+
+target_link_libraries(Tests CthulhuCore)
+
 
 file(
     GLOB_RECURSE

@@ -68,6 +68,9 @@ struct String
     String& operator<<(float Num);
     String& operator<<(bool Val);
 
+    String operator/(const String& Other) const;
+    String& operator/=(const String& Other);
+
     void Append(const String& Other);
     void Append(char Other);
 

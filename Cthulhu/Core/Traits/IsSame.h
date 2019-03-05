@@ -35,5 +35,8 @@ template<> struct IsDecimal<I16> { static constexpr bool Value = true; };
 template<> struct IsDecimal<I32> { static constexpr bool Value = true; };
 template<> struct IsDecimal<I64> { static constexpr bool Value = true; };
 
+template<typename T> struct IsFloat { static constexpr bool Value = false; };
 
+template<> struct IsFloat<F32> { static constexpr bool Value = true; };
+template<> struct IsFloat<F64> { static constexpr bool Value = true; };
 }

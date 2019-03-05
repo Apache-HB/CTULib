@@ -15,6 +15,7 @@
 
 #include <stdio.h>
 
+#include "Core/Collections/Array.h"
 #include "BufferedFile.h"
 
 using namespace Cthulhu;
@@ -84,4 +85,9 @@ U64 BufferedFile::Seek(U64 NewLocation)
 {
     fseek(Real, NewLocation, SEEK_SET);
     return ftell(Real);
+}
+
+void BufferedFile::Write(Array<Byte> Data)
+{
+    fwrite(Data.Data(), sizeof(Byte), Data.Len(), Real);
 }

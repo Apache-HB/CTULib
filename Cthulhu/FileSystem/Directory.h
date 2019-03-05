@@ -29,7 +29,6 @@ struct Directory
 
     String Path() const;
 
-
     friend Option<Directory> OpenDir(const String& InPath);
 
     friend Array<Directory> ListDirs(const String& Path);

@@ -320,6 +320,7 @@ inline char* ReadFile(FILE* Ptr)
 
     U32 I = 0;
     char C;
+    
     while((C = fgetc(Ptr)) != EOF)
     {
         Buffer[I++] = C;

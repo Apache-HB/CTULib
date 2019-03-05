@@ -244,7 +244,7 @@ struct Array
      * @brief 
      * 
      * @param Index 
-     * @return CTU_INLINE& operator[] 
+     * @return T&
      */
     CTU_INLINE T& operator[](U32 Index) const
     {
@@ -266,10 +266,11 @@ struct Array
      * @return Len 
      */
     CTU_INLINE U32 Len() const { return Length; }
+    
     /**
      * @brief 
      * 
-     * @return CTU_INLINE GetSlack 
+     * @return GetSlack 
      */
     CTU_INLINE U16 GetSlack() const { return Slack; }
     
@@ -277,42 +278,42 @@ struct Array
      * @brief 
      * 
      * @param NewSlack 
-     * @return CTU_INLINE SetSlack 
+     * @return SetSlack 
      */
     CTU_INLINE void SetSlack(U16 NewSlack) { Slack = NewSlack; }
     
     /**
      * @brief 
      * 
-     * @return CTU_INLINE RealSize 
+     * @return RealSize 
      */
     CTU_INLINE U32 RealSize() const { return Allocated; }
     
     /**
      * @brief 
      * 
-     * @return CTU_INLINE* operator* 
+     * @return T*
      */
     CTU_INLINE T* operator*() const { return Real; }
     
     /**
      * @brief 
      * 
-     * @return CTU_INLINE* Data 
+     * @return T*
      */
     CTU_INLINE T* Data() const { return Real; }
 
     /**
      * @brief 
      * 
-     * @return CTU_INLINE& Front 
+     * @return T&
      */
     CTU_INLINE T& Front() const { return Real[0]; }
 
     /**
      * @brief 
      * 
-     * @return CTU_INLINE& Back 
+     * @return T& 
      */
     CTU_INLINE T& Back() const { return Real[Length]; }
 
@@ -527,6 +528,28 @@ namespace Utils
 
         return Ret;
     }
+}
+
+/**
+ * @brief take any trivial item and turn it into a byte array
+ * 
+ * this can be helpful to serialize blocks of memory without having to worry about
+ * messing with `reinterpret_cast` or accidentally editing memory
+ * 
+ * @tparam T 
+ * @param Data 
+ * @return Array<Byte> 
+ */
+template<typename T>
+Array<Byte> RawBytes(T Data)
+{
+    static_assert(IsDecimal<T>::Value || IsFloat<T>::Value || IsPOD<T>::Value, "T must be a decimal, float or POD type");
+
+    Byte* Bytes = new Byte[sizeof(T)];
+    Memory::Copy<T>(&Data, Bytes, sizeof(T));
+    Array<Byte> Ret = { Bytes, sizeof(T) };
+
+    return Ret;
 }
 
 } // Cthulhu

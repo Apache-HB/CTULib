@@ -43,20 +43,22 @@ struct BufferedFile
     template<typename T>
     T Read()
     {
-        static_assert(IsDecimal<T>::Value || IsPOD<T>::Value, "T needs to be an integer");
+        static_assert(IsDecimal<T>::Value || IsPOD<T>::Value, "T needs to be an integer or POD type");
         
         T Ret;
         fread(&Ret, sizeof(T), 1, Real);
         return Ret;
     }
 
-    U8* ReadBytes(U32 Length)
+    Array<Byte> ReadBytes(U32 Length)
     {
         U8* Ret = new U8[Length];
 
         fread(Ret, sizeof(U8), Length, Real);
 
-        return Ret;
+        Array<Byte> Bytes = { Ret, Length };
+
+        return Bytes;
     }
 
     U32 Size() const;
@@ -64,6 +66,8 @@ struct BufferedFile
     CTU_INLINE U32 CurrentDepth() const;
 
     U64 Seek(U64 NewLocation);
+
+    void Write(Array<Byte> Data);
 
 private:
     FILE* Real;

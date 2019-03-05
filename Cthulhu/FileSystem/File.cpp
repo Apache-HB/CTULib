@@ -78,7 +78,8 @@ Errno FileSystem::Delete(const String& Name)
 Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 {
 #ifdef OS_WINDOWS
-	HANDLE Handle = CreateFileA(
+	if (
+        HANDLE Handle = CreateFileA(
 		*Name,
 		GENERIC_READ,
 		0,
@@ -86,9 +87,7 @@ Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 		FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,
 		OPEN_EXISTING,
 		NULL
-	);
-
-	if (Handle)
+    ))
 	{
 		FILETIME Lifetime;
 		GetFileTime(Handle, NULL, NULL, &Lifetime);
