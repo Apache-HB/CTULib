@@ -54,28 +54,6 @@ add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
 )
 
-file(
-    GLOB_RECURSE
-    CthulhuJSONSources
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/JSON/*.cpp
-)
-
-add_library(CthulhuJSON STATIC
-    ${CthulhuJSONSources}
-)
-
-file(
-    GLOB_RECURSE
-    CthulhuXMLSources
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/XML/*.cpp
-)
-
-add_library(CthulhuXML STATIC
-    ${CthulhuXMLSources}
-)
-
 add_executable(Tests ${CMAKE_CURRENT_SOURCE_DIR}/Programs/Tests/Collections/Main.cpp)
 
 target_link_libraries(Tests CthulhuCore)
