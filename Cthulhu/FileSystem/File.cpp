@@ -98,12 +98,22 @@ Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 
 	return Fail<U64, Errno>(Errno::FileNotFound);
 
-#else
+#elif defined(OS_APPLE)
     struct stat Result;
     
     if(stat(*Name, &Result) == 0)
     {
         U64 Ret = Result.st_mtimespec.tv_sec;
+        return Pass<U64, Errno>(Ret);
+    }
+
+    return Fail<U64, Errno>(Errno(errno));
+#else
+    struct stat Result;
+
+    if(stat(*Name, &Result) == 0)
+    {
+        U64 Ret = Result.st_mtime;
         return Pass<U64, Errno>(Ret);
     }
 
