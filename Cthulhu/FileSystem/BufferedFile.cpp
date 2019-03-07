@@ -33,11 +33,6 @@ BufferedFile::BufferedFile(const String& Name)
         fputs("\n", Real);
 }
 
-C8 BufferedFile::Next()
-{
-    return fgetc(Real);
-}
-
 C8 BufferedFile::Peek() const
 {
     //Take the next char
@@ -46,21 +41,6 @@ C8 BufferedFile::Peek() const
     ungetc(Ret, Real);
     //Return the taken char
     return Ret;
-}
-
-bool BufferedFile::Valid() const
-{
-    return Real != nullptr;
-}
-
-void BufferedFile::Close()
-{
-    fclose(Real);
-}
-
-void BufferedFile::Push(char C)
-{
-    ungetc(C, Real);
 }
 
 U32 BufferedFile::Size() const
@@ -74,11 +54,6 @@ U32 BufferedFile::Size() const
     fseek(Real, Depth, SEEK_SET);
 
     return Ret;
-}
-
-U32 BufferedFile::CurrentDepth() const
-{
-    return ftell(Real);
 }
 
 U64 BufferedFile::Seek(U64 NewLocation)

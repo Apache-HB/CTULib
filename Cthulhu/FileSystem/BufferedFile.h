@@ -29,17 +29,17 @@ struct BufferedFile
 {
     BufferedFile(const String& Name);
 
-    ~BufferedFile() { fclose(Real); }
+    ~BufferedFile() { if(Real) fclose(Real); }
 
-    CTU_INLINE C8 Next();
+    CTU_INLINE C8 Next() { return fgetc(Real); }
 
-    CTU_INLINE C8 Peek() const;
+    C8 Peek() const;
 
-    CTU_INLINE void Close();
+    CTU_INLINE void Close() { fclose(Real); Real = nullptr; }
 
-    CTU_INLINE bool Valid() const;
+    CTU_INLINE bool Valid() const { return Real != nullptr; }
 
-    CTU_INLINE void Push(char C);
+    CTU_INLINE void Push(char C) { ungetc(C, Real); }
 
     template<typename T>
     T Read()
@@ -64,7 +64,7 @@ struct BufferedFile
 
     U32 Size() const;
 
-    CTU_INLINE U32 CurrentDepth() const;
+    CTU_INLINE U32 CurrentDepth() const { return ftell(Real); }
 
     U64 Seek(U64 NewLocation);
 
