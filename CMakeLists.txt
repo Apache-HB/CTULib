@@ -1,6 +1,45 @@
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-project(Cthulhu)
+project(Cthulhu CXX)
+
+
+#turns out part of cmake is in fact busted
+#so we have to do this to enable C++17 instead
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+endif()
+
+#build in release mode to enable optimizations
+option(RELEASE "RELEASE" OFF)
+if(RELEASE)
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
+    endif()
+endif()
+
+#build in debug mode to enable all the stack trace stuff
+option(DEBUG "DEBUG" OFF)
+if(DEBUG)
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address")
+    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3")
+    elseif(AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DEBUG:FULL")
+    endif()
+endif()
+
+#force CTU_INLINE to always inline
+option(FORCEINLINE "FORCEINLINE" OFF)
+if(FORCEINLINE)
+    add_compile_definitions(CTU_FORCEINLINE)
+endif()
+
+
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Cthulhu)
 
@@ -15,32 +54,31 @@ add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
 )
 
-#turns out part of cmake is in fact busted
-#so we have to do this to enable C++17 instead
-if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-endif()
+file(
+    GLOB_RECURSE
+    CthulhuJSONSources
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    Cthulhu/JSON/*.cpp
+)
 
-if(RELEASE)
-    if(MSVC)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
-    endif()
-endif()
+add_library(CthulhuJSON STATIC
+    ${CthulhuJSONSources}
+)
 
-option(FORCEINLINE "FORCEINLINE" OFF)
+file(
+    GLOB_RECURSE
+    CthulhuXMLSources
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    Cthulhu/XML/*.cpp
+)
 
-if(FORCEINLINE)
-    add_compile_definitions(CTU_FORCEINLINE)
-endif()
+add_library(CthulhuXML STATIC
+    ${CthulhuXMLSources}
+)
 
 add_executable(Tests ${CMAKE_CURRENT_SOURCE_DIR}/Programs/Tests/Collections/Main.cpp)
 
 target_link_libraries(Tests CthulhuCore)
-
 
 file(
     GLOB_RECURSE
@@ -106,6 +144,9 @@ file(
 add_executable(cctu ${CCTUSources})
 target_link_libraries(cctu CthulhuFileSystem)
 target_link_libraries(cctu CthulhuCore)
+
+
+
 
 find_package(Doxygen)
 

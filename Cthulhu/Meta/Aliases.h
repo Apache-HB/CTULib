@@ -22,6 +22,8 @@
 namespace Cthulhu
 {
 
+using TNull = decltype(nullptr);
+
 /**Unsigned long long
  * 
  * always between 0 and +18,446,744,073,709,551,615
