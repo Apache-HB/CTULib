@@ -17,6 +17,9 @@
 !LICENSE
 !*.sh
 
+#dont ignore the buildscript
+!.travis.yml
+
 #dont ignore the doxygen build file
 !CthulhuLib
 

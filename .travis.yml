@@ -1,0 +1,14 @@
+language: cpp
+
+addons:
+  apt:
+    - cmake
+
+before_install:
+  - mkdir Build
+  - cd Build
+  - cmake ..
+
+compiler: 
+  - clang
+  - gcc
