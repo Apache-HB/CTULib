@@ -2,7 +2,8 @@ language: cpp
 
 addons:
   apt:
-    - cmake
+    packages:
+      - cmake
 
 before_install:
   - mkdir Build
