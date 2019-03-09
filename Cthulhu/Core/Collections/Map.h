@@ -91,9 +91,9 @@ struct Map
 
     void Remove(const TKey& Key);
 
-    Array<TKey*> Keys() const
+    Array<TKey&> Keys() const
     {
-        Array<TKey*> Ret;
+        Array<TKey&> Ret;
 
         Node* Current = nullptr;
 
@@ -103,7 +103,7 @@ struct Map
         {
             while(Current != nullptr) 
             {
-                Ret.Append(&Current->Key);
+                Ret.Append(Current->Key);
                 Current = Current->Next;
             }
         }
@@ -111,9 +111,9 @@ struct Map
         return Ret;
     }
 
-    Array<TVal*> Values() const
+    Array<TVal&> Values() const
     {
-        Array<TVal*> Ret;
+        Array<TVal&> Ret;
 
         Node* Current = nullptr;
 
@@ -121,7 +121,7 @@ struct Map
         {
             while(Current != nullptr)
             {
-                Ret.Append(&Current->Val);
+                Ret.Append(Current->Val);
                 Current = Current->Next;
             }
         }
@@ -129,7 +129,7 @@ struct Map
         return Ret;
     }
     
-    using MapPair = Pair<TKey*, TVal*>;
+    using MapPair = Pair<TKey, TVal>;
 
     Array<MapPair> Items() const
     {
@@ -141,7 +141,7 @@ struct Map
         {
             while(Current != nullptr)
             {
-                Ret.Append({ &Current->Key, &Current->Val });
+                Ret.Append(MapPair{Current->Key, Current->Val});
                 Current = Current->Next;
             }
         }
