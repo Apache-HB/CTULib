@@ -19,16 +19,15 @@
 
 #include "File.h"
 
-#if !defined(OS_WINDOWS)
-#	include <libgen.h>
-#	include <unistd.h>
-#endif
-
-#if defined(OS_WINDOWS)
+#ifdef OS_WINDOWS
 #	include <io.h>
 #	include <stdio.h>
 #	include <stdlib.h>
+#	include <direct.h>
 #	include "corecrt_io.h"
+#else
+#	include <libgen.h>
+#	include <unistd.h>
 #endif
 
 using namespace Cthulhu;
@@ -62,7 +61,7 @@ bool FileSystem::Exists(const String& Name)
 	//make sure the file exists (it has invalid attributes if it doesnt exist)
 	return (Attributes != INVALID_FILE_ATTRIBUTES) && 
 	
-	//then make sure the file isnt actually a directory
+	//and make sure the file isnt actually a directory
 		!(Attributes & FILE_ATTRIBUTE_DIRECTORY);
 #else
 	//just use the posix access function to check if its openable
@@ -74,6 +73,8 @@ Errno FileSystem::Delete(const String& Name)
 {
     return remove(*Name) == 0 ? Errno::None : Errno(errno);
 }
+
+static_assert(sizeof(U64) == sizeof(FILETIME), "FILETIME must be 8 bytes wide");
 
 Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 {
@@ -121,11 +122,16 @@ Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 #endif
 }
 
+#ifndef S_ISDIR
+#	define S_ISDIR(Mode) (((Mode) & S_IFMT) == S_IFREG)
+#endif
+
 bool FileSystem::DirExists(const String& Path)
 {
     struct stat S;
 
-    if(stat(*Path, &S) != -1) {
+    if(stat(*Path, &S) != -1) 
+	{
         return S_ISDIR(S.st_mode);
     }
 
@@ -134,7 +140,11 @@ bool FileSystem::DirExists(const String& Path)
 
 bool FileSystem::MakeDir(const String& Path)
 {
+#ifdef OS_WINDOWS
+	return ::_mkdir(*Path) != -1;
+#else
     return mkdir(*Path, 0777) != -1;
+#endif
 }
 
 File::File(const File& Other)
@@ -162,8 +172,7 @@ File::File(const String& Path, Mode ReadMode)
 #endif
 {
 #if defined(OS_WINDOWS)
-	//should be enought for most filenames
-	char Name[256];
+	char Name[MAX_PATH];
 	//i dont know of any file extentions that go beyond 6 chars at most anyway
 	char Ext[32];
 	_splitpath_s(Path.CStr(), nullptr, 0, nullptr, 0, Name, sizeof(Name), Ext, sizeof(Ext));
@@ -254,12 +263,16 @@ const String& File::Name() const
 
 String File::AbsolutePath() const
 {
+#ifdef OS_WINDOWS
+	char* Ret = new char[MAX_PATH];
+	GetFullPathNameA(*FileName, FileName.Len(), Ret, nullptr);
+
+	return String::FromPtr(Ret);
+#else
     char* Path = realpath(*FileName, nullptr);
 
-    String Ret = Path;
-    free(Path);
-
-    return Ret;
+	return String::FromPtr(Path);
+#endif
 }
 
 Errno File::Rename(const String& NewName)
