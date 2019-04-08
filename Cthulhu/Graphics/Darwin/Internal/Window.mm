@@ -36,7 +36,7 @@
 - (void)setHandle:(Cthulhu::Graphics::MacWindow*)handle
 {
     Handle = handle;
-    ((CthulhuView*)_contentView)->Handle = handle;
+    ((CthulhuView*)self.contentView)->Handle = handle;
 }
 
 @end

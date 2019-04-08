@@ -33,10 +33,22 @@ if(DEBUG)
     endif()
 endif()
 
+
+
 #force CTU_INLINE to always inline
 option(FORCEINLINE "FORCEINLINE" OFF)
 if(FORCEINLINE)
     add_compile_definitions(CTU_FORCEINLINE)
+endif()
+
+
+
+#enable the use of native instructions
+option(NATIVE "NATIVE" ON)
+if(NATIVE)
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+    endif()
 endif()
 
 

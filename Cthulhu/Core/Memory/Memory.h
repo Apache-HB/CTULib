@@ -84,13 +84,13 @@ namespace Memory
     }
     
     /**
-     * @brief 
+     * @brief move memory from one location to another
      * 
-     * @tparam T 
-     * @param From 
-     * @param Into 
-     * @param Len 
-     * @return CTU_INLINE* Move 
+     * @tparam T the type of the memory to move
+     * @param From the memory location to take from
+     * @param Into the memory location to move to
+     * @param Len the length of the data to move
+     * @return T* the location of the moved memory
      */
     template<typename T>
     CTU_INLINE T* Move(const T* From, T* Into, size_t Len) 
@@ -201,12 +201,15 @@ namespace Memory
     }
 
     /**
-     * @brief 
+     * @brief   duplicate the memory of a type without invoking copy
+     *          or move constructors. this can be dangerous but also 
+     *          very useful for certain applications 
      * 
-     * @tparam T 
-     * @param Data 
-     * @param Len 
-     * @return CTU_INLINE* NewDuplicate 
+     * @tparam T the type of variable to duplicate
+     * @param Data the data to copy
+     * @param Len the length of the data in bytes to copy
+     * @return T* a pointer to the copied object. 
+     *          this needs to be Free'd later to avoid memory leaks
      */
     template<typename T>
     T* NewDuplicate(const T* Data, U32 Len)

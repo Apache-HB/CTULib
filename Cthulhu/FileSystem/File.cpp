@@ -74,7 +74,9 @@ Errno FileSystem::Delete(const String& Name)
     return remove(*Name) == 0 ? Errno::None : Errno(errno);
 }
 
+#ifdef OS_WINDOWS
 static_assert(sizeof(U64) == sizeof(FILETIME), "FILETIME must be 8 bytes wide");
+#endif
 
 Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 {
