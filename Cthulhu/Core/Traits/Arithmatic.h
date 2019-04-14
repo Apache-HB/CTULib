@@ -38,8 +38,8 @@ template<> struct IsArithmatic<bool> { static constexpr bool Value = true; };
 template<> struct IsArithmatic<char> { static constexpr bool Value = true; };
 
 //overloads of types with qualifiers
-template<typename T> struct IsArithmatic<const          T> { static constexpr bool Value = IsArithmatic<T>; }; 
-template<typename T> struct IsArithmatic<      volatile T> { static constexpr bool Value = IsArithmatic<T>; };
-template<typename T> struct IsArithmatic<const volatile T> { static constexpr bool Value = IsArithmatic<T>; };
+template<typename T> struct IsArithmatic<const          T> { static constexpr bool Value = IsArithmatic<T>::Value; }; 
+template<typename T> struct IsArithmatic<      volatile T> { static constexpr bool Value = IsArithmatic<T>::Value; };
+template<typename T> struct IsArithmatic<const volatile T> { static constexpr bool Value = IsArithmatic<T>::Value; };
 
 }

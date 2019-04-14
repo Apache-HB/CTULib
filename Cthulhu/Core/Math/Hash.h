@@ -36,7 +36,7 @@ constexpr CTU_INLINE U32 Hash(U16 Item) { return Item; }
 constexpr CTU_INLINE U32 Hash(U32 Item) { return Item; }
 constexpr CTU_INLINE U32 Hash(U64 Item) { return static_cast<U32>(Item) ^ Consts::MersenePrime; }
 
-inline U32 Hash(const String& Item)
+CTU_INLINE U32 Hash(const String& Item)
 {
     U32 Ret = 0;
     

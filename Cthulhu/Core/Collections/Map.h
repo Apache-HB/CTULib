@@ -17,7 +17,7 @@
 #include "Core/Memory/Block.h"
 #include "Pair.h"
 
-#include "Core/Serialization/Hash.h"
+#include "Core/Math/Hash.h"
 
 #pragma once
 
