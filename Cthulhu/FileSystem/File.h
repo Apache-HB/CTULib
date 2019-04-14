@@ -367,7 +367,7 @@ inline Result<File*, Errno> Open(const String& Name, Mode ReadMode)
 		
 #endif
 
-        Memory::Zero<void>(&Ret->Content, Math::Max(sizeof(Array<Byte>), sizeof(String)));
+        Memory::Zero<void>(&Ret->Content, Math::Max((U32)sizeof(Array<Byte>), (U32)sizeof(String)));
 
         if(Ret->GetType() == Type::Text)
         {

@@ -106,7 +106,7 @@ struct Array
      * @param InitList the initalizer list to use
      */
     Array(std::initializer_list<T> InitList)
-        : Allocated(InitList.size())
+        : Allocated((U32)InitList.size())
         , Length(0)
         , Real(new T[InitList.size()+1])
     {

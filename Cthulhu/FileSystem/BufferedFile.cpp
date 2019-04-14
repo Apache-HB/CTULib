@@ -58,7 +58,7 @@ U32 BufferedFile::Size() const
 
 U64 BufferedFile::Seek(U64 NewLocation)
 {
-    fseek(Real, NewLocation, SEEK_SET);
+    fseek(Real, (long)NewLocation, SEEK_SET);
     return ftell(Real);
 }
 
