@@ -71,11 +71,11 @@ namespace Memory
      * 
      * @description functionally identical to <a href="http://www.cplusplus.com/reference/cstring/memset/">cstring/memset</a>
      * 
-     * @tparam T the type the memory represents
-     * @param Memory the pointer to set the value of
-     * @param Value the value to set the pointer to
-     * @param Len the length of the memory the pointer points to
-     * @return T* the Memory param
+     * @tparam T    the type the memory represents
+     * @param Memory    the pointer to set the value of
+     * @param Value     the value to set the pointer to
+     * @param Len       the length of the memory the pointer points to
+     * @return T*       the Memory param
      */
     template<typename T>
     CTU_INLINE T* Set(T* Memory, int Value, size_t Len) 
@@ -86,11 +86,11 @@ namespace Memory
     /**
      * @brief move memory from one location to another
      * 
-     * @tparam T the type of the memory to move
-     * @param From the memory location to take from
-     * @param Into the memory location to move to
-     * @param Len the length of the data to move
-     * @return T* the location of the moved memory
+     * @tparam T    the type of the memory to move
+     * @param From  the memory location to take from
+     * @param Into  the memory location to move to
+     * @param Len   the length of the data to move
+     * @return T*   the location of the moved memory
      */
     template<typename T>
     CTU_INLINE T* Move(const T* From, T* Into, size_t Len) 
@@ -99,13 +99,13 @@ namespace Memory
     }
     
     /**
-     * @brief 
+     * @brief copy memory from one location to another
      * 
-     * @tparam T 
-     * @param From 
-     * @param Into 
-     * @param Len 
-     * @return CTU_INLINE* Copy 
+     * @tparam T    the type of the memory to copy
+     * @param From  the location to copy memory from
+     * @param Into  the location to copy memory to
+     * @param Len   the length of the memory to copy
+     * @return T* a pointer to the copies memory
      */
     template<typename T>
     CTU_INLINE T* Copy(const T* From, T* Into, U32 Len) 
@@ -114,18 +114,19 @@ namespace Memory
     }
 
     /**
-     * @brief 
+     * @brief compare memory between two different pointers
      * 
-     * @tparam T 
-     * @param Left 
-     * @param Right 
-     * @param Len 
-     * @return CTU_INLINE Compare 
+     * @tparam T    the type of memory to compare
+     * @param Left  the left memory to compare
+     * @param Right the right memory to compare
+     * @param Len   the amount of memory to compare
+     * @return I32  the difference between the first 2 non-equal bytes
+     *              if 0 then the memory is equal
      */
     template<typename T>
-    CTU_INLINE int Compare(const T* Left, const T* Right, U32 Len) 
+    CTU_INLINE I32 Compare(const T* Left, const T* Right, U32 Len) 
     { 
-        return memcmp((void*)Left, (void*)Right, Len); 
+        return (I32)memcmp((void*)Left, (void*)Right, Len); 
     }
 
     /**
@@ -205,11 +206,11 @@ namespace Memory
      *          or move constructors. this can be dangerous but also 
      *          very useful for certain applications 
      * 
-     * @tparam T the type of variable to duplicate
-     * @param Data the data to copy
-     * @param Len the length of the data in bytes to copy
-     * @return T* a pointer to the copied object. 
-     *          this needs to be Free'd later to avoid memory leaks
+     * @tparam T    the type of variable to duplicate
+     * @param Data  the data to copy
+     * @param Len   the length of the data in bytes to copy
+     * @return T*   a pointer to the copied object. 
+     *              this needs to be Free'd later to avoid memory leaks
      */
     template<typename T>
     T* NewDuplicate(const T* Data, U32 Len)
@@ -224,9 +225,9 @@ namespace Memory
     /**
      * @brief Get the allocated size of a block of memory
      * 
-     * @tparam T the type of the memory
+     * @tparam T    the type of the memory
      * @param Block the memory to find the size of
-     * @return U32 the allocated size of the block of memory
+     * @return U32  the allocated size of the block of memory
      */
     template<typename T>
     U32 AllocSize(T* Block)

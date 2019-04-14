@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 project(Cthulhu CXX)
 
-
 #turns out part of cmake is in fact busted
 #so we have to do this to enable C++17 instead
 if(MSVC)
@@ -33,7 +32,9 @@ if(DEBUG)
     endif()
 endif()
 
-
+if(RELEASE AND DEBUG)
+    message(FATAL_ERROR "Release and debug modes are incompatible")
+endif()
 
 #force CTU_INLINE to always inline
 option(FORCEINLINE "FORCEINLINE" OFF)
