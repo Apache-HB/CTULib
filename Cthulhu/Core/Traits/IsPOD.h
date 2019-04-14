@@ -22,6 +22,7 @@
 namespace Cthulhu
 {
 
+//check if a type is POD (PlainOldData)
 template<typename T>
 struct IsPOD
 {

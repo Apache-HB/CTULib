@@ -138,7 +138,7 @@ using F32 = float;
 using F64 = double;
 
 /** An empty struct
- * usefull for constructors or functions with special
+ * useful for constructors or functions with special
  * functionallity or that are only internally available
  * @link Cthulhu::String::String(Empty)
  */

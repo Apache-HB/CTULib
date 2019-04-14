@@ -13,4 +13,24 @@
  *  limitations under the License.
  */
 
-#include "Reader.h"
+#include <stdio.h>
+
+#define STR(X) #X
+#define TEST(Expr) if(!(Expr)) { printf("Test failed: " __FILE__ ":" STR(__LINE__)); exit(1); }
+
+#include <Core/Collections/CthulhuString.h>
+
+void CTor()
+{
+
+}
+
+void Ops()
+{
+
+}
+
+int main()
+{
+    TEST(false);
+}

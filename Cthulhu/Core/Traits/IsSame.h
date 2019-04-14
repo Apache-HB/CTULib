@@ -20,11 +20,13 @@
 namespace Cthulhu
 {
 
+//check if 2 types are the same
 template<typename A, typename B> struct IsSame { static constexpr bool Value = false; };
 template<typename T> struct IsSame<T, T> { static constexpr bool Value = true; };
 
 template<typename T> struct IsDecimal { static constexpr bool Value = false; };
 
+//check if a type is decimal only (no floating point)
 template<> struct IsDecimal<U8> { static constexpr bool Value = true; };
 template<> struct IsDecimal<U16> { static constexpr bool Value = true; };
 template<> struct IsDecimal<U32> { static constexpr bool Value = true; };
@@ -35,6 +37,7 @@ template<> struct IsDecimal<I16> { static constexpr bool Value = true; };
 template<> struct IsDecimal<I32> { static constexpr bool Value = true; };
 template<> struct IsDecimal<I64> { static constexpr bool Value = true; };
 
+//check if a type is floating point type
 template<typename T> struct IsFloat { static constexpr bool Value = false; };
 
 template<> struct IsFloat<F32> { static constexpr bool Value = true; };

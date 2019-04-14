@@ -39,12 +39,17 @@ Cthulhu::String::String(char Letter)
     , Length(1)
 {
     Real[0] = Letter;
-	Real[1] = '\0';
+    Real[1] = '\0';
 }
 
 Cthulhu::String::String(const char* Data)
     : Real(CString::Duplicate(Data))
     , Length(CString::Length(Data))
+{}
+
+Cthulhu::String::String(const C8 * Content)
+    : Real(CString::Duplicate((char*)Content))
+    , Length(CString::Length((char*)Content))
 {}
 
 Cthulhu::String::String(const String& Other)

@@ -54,6 +54,10 @@ struct IsTriviallyAssignable
     static constexpr bool Value = Or<__has_trivial_assign(T), IsPOD<T>>::Value;
 };
 
+//check if a type is trivial
+//meaning it has a trivial destructor
+//trivial copy
+//and trivial move
 template<typename T>
 struct IsTrivial
 {

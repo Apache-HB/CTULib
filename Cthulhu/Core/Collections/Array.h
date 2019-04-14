@@ -150,7 +150,7 @@ struct Array
      * Numbers.Append(4);
      * Numbers.Append(8);
      * Numbers.Append(16);
-     * 
+     *
      * @endcode
      * 
      * @param Amount the amount of items initially in the array
@@ -174,6 +174,14 @@ struct Array
      * <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html#method.push">vec::push</a>
      * 
      * @param Item the item to push
+     *
+     * @code{.cpp}
+     * Array<U32> Arr = { 5, 6, 7 };
+     *
+     * Arr.Append(8);
+     *
+     * //Arr = { 5, 6, 7, 8 };
+     * @endcode
      */
     void Append(const T& Item)
     {        
@@ -189,6 +197,16 @@ struct Array
      * @brief Append another array to an array
      * 
      * @param Other the array to append
+     *
+     * @code{.cpp}
+     *
+     * Array<U32> Arr = { 10, 20, 30 };
+     * Array<U32> Other = { 30, 20, 10 };
+     *
+     * Arr.Append(Other);
+     *
+     * //Arr = { 10, 20, 30, 30, 20, 10 };
+     * @endcode
      */
     void Append(const Array& Other)
     {
@@ -204,6 +222,15 @@ struct Array
      * 
      * @param Item the item to append
      * @return Array& a refernce to itself
+     *
+     * @code{.cpp}
+     *
+     * Array<U32> Arr = { 5, 10, 15 };
+     *
+     * Arr += 20;
+     *
+     * //Arr = { 5, 10, 15, 20 };
+     * @endcode
      */
     Array& operator+=(const T& Item) 
     {
@@ -216,6 +243,17 @@ struct Array
      * 
      * @param Other the other array to append
      * @return Array& a refence to itself
+     *
+     * @code{.cpp}
+     *
+     * Array<U32> Arr = { 5, 10, 15 };
+     * Array<U32> Other = { 20, 25, 30 };
+     *
+     * Arr += Other;
+     * 
+     * //Arr = { 5, 10, 15, 20, 25, 30 };
+     *
+     * @endcode
      */
     Array& operator+=(const Array& Other)
     {
@@ -227,6 +265,15 @@ struct Array
      * @brief Remove the last item from the array and return it
      * 
      * @return T the last item on the array
+     *
+     * @code{.cpp}
+     *
+     * Array<U32> Arr = { 5, 10, 15 };
+     *
+     * U32 I = Arr.Pop();
+     *
+     * //I = 15
+     * @endcode
      */
     T Pop()
     {
@@ -235,19 +282,19 @@ struct Array
     }
 
     /**
-     * @brief 
+     * @brief Check if an index would be inside the arrays bounds
      * 
-     * @param Index 
-     * @return true 
-     * @return false 
+     * @param Index The index to check
+     * @return true the index is in range
+     * @return false the index is out of range
      */
     bool ValidIndex(U32 Index) const { return 0 <= Index && Index <= Length; }
 
     /**
-     * @brief 
+     * @brief Get an item from an array by index
      * 
-     * @param Index 
-     * @return T&
+     * @param Index the index to get from
+     * @return T& the iten at that index
      */
     CTU_INLINE T& operator[](U32 Index) const
     {
@@ -256,69 +303,68 @@ struct Array
     }
 
     /**
-     * @brief 
+     * @brief Get an item from an array if its in range
      * 
-     * @param Index 
-     * @return Option<T> 
+     * @param Index The index to get from
+     * @return Option<T> Some<T> if index is in range or None<T> if its out of range
      */
     Option<T> At(U32 Index) const { return ValidIndex(Index) ? Some(Real[Index]) : None<T>(); }
 
     /**
-     * @brief 
+     * @brief Get the length of an array
      * 
-     * @return Len 
+     * @return U32 the length of the array
      */
     CTU_INLINE U32 Len() const { return Length; }
     
     /**
-     * @brief 
+     * @brief get the slack the array has
      * 
-     * @return GetSlack 
+     * @return U16 the current slack
      */
     CTU_INLINE U16 GetSlack() const { return Slack; }
     
     /**
-     * @brief 
+     * @brief set the slack the array uses
      * 
-     * @param NewSlack 
-     * @return SetSlack 
+     * @param NewSlack the slack to use instead
      */
     CTU_INLINE void SetSlack(U16 NewSlack) { Slack = NewSlack; }
     
     /**
-     * @brief 
+     * @brief get the allocated size of the array
      * 
-     * @return RealSize 
+     * @return U32 the actual amount of elements the array can fit
      */
     CTU_INLINE U32 RealSize() const { return Allocated; }
     
     /**
-     * @brief 
+     * @brief get the raw pointer the array has
      * 
-     * @return T*
+     * @return T* the raw pointer
      */
     CTU_INLINE T* operator*() const { return Real; }
     
     /**
-     * @brief 
+     * @brief get the ray pointer the array has
      * 
-     * @return T*
+     * @return T* the raw pointer
      */
     CTU_INLINE T* Data() const { return Real; }
 
     /**
-     * @brief 
+     * @brief get the first element in the array
      * 
-     * @return T&
+     * @return T& a reference to the first element
      */
-    CTU_INLINE T& Front() const { return Real[0]; }
+    CTU_INLINE T& Front() const { ASSERT(Len() > 0, "An empty array has no front"); return Real[0]; }
 
     /**
-     * @brief 
+     * @brief get the last item in the array
      * 
-     * @return T& 
+     * @return T& a reference to the last element
      */
-    CTU_INLINE T& Back() const { return Real[Length]; }
+    CTU_INLINE T& Back() const { ASSERT(Len() > 0, "An empty array has no back"); return Real[Length]; }
 
     //STL iterators, dont use directly
     //use for(auto& I : Arr) instead
@@ -328,7 +374,7 @@ struct Array
     /**
      * @brief Cut N elements from the front of the array
      * 
-     * @param Amount 
+     * @param Amount the amount of elements to remove from the front
      */
     void Cut(U32 Amount)
     {
@@ -339,7 +385,7 @@ struct Array
     /**
      * @brief Cut N elements from the back of the array
      * 
-     * @param Amount 
+     * @param Amount the amount of elements to drop from the back
      */
     void Drop(U32 Amount)
     {
@@ -348,10 +394,10 @@ struct Array
     }
 
     /**
-     * @brief 
+     * @brief Find the first occurence of a value
      * 
-     * @param Item 
-     * @return Option<U32> 
+     * @param Item the item to search for
+     * @return Option<U32> the index of the item if the array contained the item
      */
     Option<U32> Find(const T& Item) const
     {
@@ -365,10 +411,11 @@ struct Array
     }
 
     /**
-     * @brief 
+     * @brief check if an array contains an item
      * 
-     * @param Item 
-     * @return CTU_INLINE Has 
+     * @param Item the item to check for existence
+     * @return true if the array contains the item
+     * @return false if the array does not contain the item
      */
     CTU_INLINE bool Has(const T& Item) const
     {
@@ -376,10 +423,10 @@ struct Array
     }
 
     /**
-     * @brief 
+     * @brief count the number of occurences of an element in an array
      * 
-     * @param Item 
-     * @return U32 
+     * @param Item the item to count
+     * @return U32 the number of times the item occured
      */
     U32 Count(const T& Item) const
     {
@@ -477,7 +524,9 @@ struct Array
 
     /**
      * @brief the default slack of an array
-     * 
+     * @description this value is used to resize the array
+     *              everytime the internal array size gets 
+     *              bigger than the internally allocated size.
      */
     static constexpr U32 DefaultSlack = 32;
 
@@ -485,7 +534,6 @@ struct Array
      * @brief Destroy the Array object
      * 
      * @description this will call the destrutor for every object in the array
-     * 
      */
     ~Array()
     {

@@ -1,4 +1,5 @@
-### standard library impl
+### Standard
 
-when compiling with -nostdlib and -nostdioc stuff just dont work properly<br>
-so stuff needs to be put in here to mirror the stdlib properly
+These functions somewhat replicate the functionality of the C standard library.
+They are in this folder as they do not fit into any other categorys.
+Imagine this folder as a sort of "misc" folder for functions.

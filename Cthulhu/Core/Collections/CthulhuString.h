@@ -44,6 +44,7 @@ struct String
     String();
     String(char Content);
     String(const char* Content);
+	String(const C8* Content);
     String(const String& Other);
 
     String& operator=(const String& Other);

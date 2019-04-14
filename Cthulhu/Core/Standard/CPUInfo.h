@@ -14,6 +14,7 @@
  */
 
 #include <Core/Collections/Option.h>
+#include <Core/Collections/CthulhuString.h>
 
 #pragma once
 
@@ -24,7 +25,7 @@ struct Instructions
 {
     //Others
     bool MMX, 
-         x64, 
+         X64, 
          ABM, 
          RDRAND, 
          BMI1, 
@@ -62,15 +63,56 @@ struct Instructions
          AVX512VBMI; 
 };
 
+enum ISA : U8
+{
+    MMX,
+    X64,
+    ABM,
+    RDRAND,
+    BMI1,
+    BMI2,
+    ADX,
+    PREFETCHWT1,
+
+    SSE,
+    SSE2,
+    SSE3,
+    SSSE3,
+    SSE41,
+    SSE42,
+    SSE4a,
+    AES,
+    SHA,
+
+    AVX,
+    XOP,
+    FMA3,
+    FMA4,
+    AVX2,
+
+    AVX512F,
+    AVX512CD,
+    AVX512PF,
+    AVX512ER,
+    AVX512VL,
+    AVX512BW,
+    AVX512DQ,
+    AVX512IFMA,
+    AVX512VBMI,
+};
+
 Option<Instructions> CurrentInstructions();
 
-bool Is32Bit();
-bool Is64Bit();
+bool Supports(ISA InstructionSet);
+
+String VendorName();
 
 enum class CPUVendor : U8
 {
      AMD,
      Intel
 };
+
+CPUVendor VendorID();
 
 }

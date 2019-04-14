@@ -35,5 +35,5 @@ void Cthulhu::Standard::OnExit(Cthulhu::Lambda<void(U16)> Function)
 void Cthulhu::Standard::Exit(U16 Code)
 {
     ExitCallback(Code);
-    //exit?
+    exit(Code);
 }

@@ -28,39 +28,44 @@
 namespace Cthulhu::Math
 {
 
-inline U16 ByteSwap(U16 Data)
+//TODO: does intel have a builtin function for byteswaps
+
+CTU_INLINE U16 ByteSwap(U16 Data)
 {
 #if defined(CC_MSVC)
     return _byteswap_ushort(Data);
 #elif defined(CC_CLANG) || defined(CC_GCC)
     return __builtin_bswap16(Data);
 #else
-    //TODO: intel and CPU agnostic byteswap
-    NO_IMPL();
+    return (Data >> 8) | (Data << 8);
 #endif
 }
 
-inline U32 ByteSwap(U32 Data)
+CTU_INLINE U32 ByteSwap(U32 Data)
 {
 #if defined(CC_MSVC)
     return _byteswap_ulong(Data);
 #elif defined(CC_CLANG) || defined(CC_GCC)
     return __builtin_bswap32(Data);
 #else
-    //TODO: intel and CPU agnostic byteswap
-    NO_IMPL();
+    return ((Data >> 24) & 0xff) |
+        ((Num << 8) & 0xff0000) |
+        ((Num >> 8) & 0xff00) |
+        ((Data << 24) & 0xff000000);
 #endif
 }
 
-inline U64 ByteSwap(U64 Data)
+CTU_INLINE U64 ByteSwap(U64 Data)
 {
 #if defined(CC_MSVC)
     return _byteswap_uint64(Data);
 #elif defined(CC_CLANG) || defined(CC_GCC)
     return __builtin_bswap64(Data);
 #else
-    //TODO: intel and CPU agnostic byteswap
-    NO_IMPL();
+    Data = (Data & 0x00000000FFFFFFFF) << 32 | (Data & 0xFFFFFFFF00000000) >> 32;
+    Data = (Data & 0x0000FFFF0000FFFF) << 16 | (Data & 0xFFFF0000FFFF0000) >> 16;
+    Data = (Data & 0x00FF00FF00FF00FF) << 8 | (Data & 0xFF00FF00FF00FF00) >> 8;
+    return Data;
 #endif
 }
 

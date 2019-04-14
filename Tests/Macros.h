@@ -13,35 +13,8 @@
  *  limitations under the License.
  */
 
+#pragma once
+
 #include <stdio.h>
 
-#include "Logger.h"
-
-using namespace Cthulhu;
-using namespace Cthulhu::Lang;
-
-namespace 
-{ 
-
-static const char* ToTag(Level Tag)
-{
-    switch(Tag)
-    {
-        default:
-        case Level::Fatal:
-            return "\x1B[31mFatal: \x1B[0m";
-        case Level::Warning:
-            return "\x1B[33mWarning: \x1B[0m";
-        case Level::Note:
-            return "\x1B[35mNote: \x1B[0m";
-        case Level::Debug:
-            return "\x1B[32mDebug: \x1B[0m";
-    }
-}
-
-}
-
-void Cthulhu::Lang::Log(const Channel& InChannel, const String& Message)
-{
-    printf("%s%s\n", ToTag(InChannel.ThisLevel), *Message);
-}
+#define TEST(Expr) if(!(Expr)) { printf("Test failed: " __FILE__ ":" #__LINE__); exit(1); }
