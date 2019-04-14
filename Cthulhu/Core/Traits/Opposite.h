@@ -20,6 +20,8 @@
 namespace Cthulhu
 {
 
+//switch between signed and unsigned types
+
 template<typename T> struct Opposite {};
 
 template<> struct Opposite<U8>  { using Type = I8;  };
@@ -32,6 +34,8 @@ template<> struct Opposite<I16> { using Type = U16; };
 template<> struct Opposite<I32> { using Type = U32; };
 template<> struct Opposite<I64> { using Type = U64; };
 
+
+//force a type to be signed
 template<typename T> struct Signed {};
 
 template<> struct Signed<U8>  { using Type = I8;  };
@@ -43,6 +47,7 @@ template<> struct Signed<I16> { using Type = I16; };
 template<> struct Signed<I32> { using Type = I32; };
 template<> struct Signed<I64> { using Type = I64; };
 
+//force a type to be unsigned
 template<typename T> struct Unsigned {};
 
 template<> struct Unsigned<I8>  { using Type = U8;  };

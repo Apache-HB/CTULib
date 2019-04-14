@@ -27,14 +27,14 @@ namespace Cthulhu::Consts
 namespace Cthulhu::Utils
 {
 
-constexpr inline U32 Hash(I8 Item)  { return Item; }
-constexpr inline U32 Hash(I16 Item) { return Item; }
-constexpr inline U32 Hash(I32 Item) { return Item; }
-constexpr inline U32 Hash(I64 Item) { return static_cast<U32>(Item) ^ Consts::MersenePrime; }
-constexpr inline U32 Hash(U8 Item)  { return Item; }
-constexpr inline U32 Hash(U16 Item) { return Item; }
-constexpr inline U32 Hash(U32 Item) { return Item; }
-constexpr inline U32 Hash(U64 Item) { return static_cast<U32>(Item) ^ Consts::MersenePrime; }
+constexpr CTU_INLINE U32 Hash(I8 Item)  { return Item; }
+constexpr CTU_INLINE U32 Hash(I16 Item) { return Item; }
+constexpr CTU_INLINE U32 Hash(I32 Item) { return Item; }
+constexpr CTU_INLINE U32 Hash(I64 Item) { return static_cast<U32>(Item) ^ Consts::MersenePrime; }
+constexpr CTU_INLINE U32 Hash(U8 Item)  { return Item; }
+constexpr CTU_INLINE U32 Hash(U16 Item) { return Item; }
+constexpr CTU_INLINE U32 Hash(U32 Item) { return Item; }
+constexpr CTU_INLINE U32 Hash(U64 Item) { return static_cast<U32>(Item) ^ Consts::MersenePrime; }
 
 inline U32 Hash(const String& Item)
 {

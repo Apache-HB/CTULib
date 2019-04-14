@@ -20,6 +20,7 @@
 namespace Cthulhu
 {
 
+//check if a type can be used in arithmatic expressions
 template<typename T> struct IsArithmatic { static constexpr bool Value = false; };
 
 template<> struct IsArithmatic<float> { static constexpr bool Value = true; };
@@ -36,8 +37,9 @@ template<> struct IsArithmatic<U64> { static constexpr bool Value = true; };
 template<> struct IsArithmatic<bool> { static constexpr bool Value = true; };
 template<> struct IsArithmatic<char> { static constexpr bool Value = true; };
 
-template<typename T> struct IsArithmatic<const          T> { static constexpr bool Value = true; }; 
-template<typename T> struct IsArithmatic<      volatile T> { static constexpr bool Value = true; };
-template<typename T> struct IsArithmatic<const volatile T> { static constexpr bool Value = true; };
+//overloads of types with qualifiers
+template<typename T> struct IsArithmatic<const          T> { static constexpr bool Value = IsArithmatic<T>; }; 
+template<typename T> struct IsArithmatic<      volatile T> { static constexpr bool Value = IsArithmatic<T>; };
+template<typename T> struct IsArithmatic<const volatile T> { static constexpr bool Value = IsArithmatic<T>; };
 
 }

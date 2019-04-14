@@ -26,7 +26,7 @@ using Window = struct WindowsWindow
     void Resize(const Size NewSize);
 
 private:
-    HWND Handle;
+    struct HWND& Handle;
 };
 
 void Startup(hInstance* Instance);

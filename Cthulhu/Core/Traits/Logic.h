@@ -18,8 +18,12 @@
 namespace Cthulhu
 {
 
+//compile time logic
+
+//Not<expr> is equivilent to !expr
 template<typename T> struct Not { static constexpr bool Value = !T::Value; };
 
+//equivilent to ||
 template<bool...> struct Or;
 
 template<bool TLeft, bool... TRight>
@@ -41,6 +45,7 @@ template<>
 struct Or<> { static constexpr bool Value = false; };
 
 
+//equivilent to &&
 template<typename... T>
 struct And;
 
