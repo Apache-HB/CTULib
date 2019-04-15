@@ -20,6 +20,10 @@ cmake ..
 make
 ```
 
+### Testing
+
+we use the `ctest` test suite, it can be run by typing `ctest --output-on-failure`
+
 ### Options
 
 enable debug flags

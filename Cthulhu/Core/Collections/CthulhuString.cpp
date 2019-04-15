@@ -395,7 +395,7 @@ String& Cthulhu::String::operator<<(I64 Num)
     return *this;
 }
 
-String& Cthulhu::String::operator<<(float Num)
+String& Cthulhu::String::operator<<(F32 Num)
 {
     Append(Utils::ToString(Num));
 

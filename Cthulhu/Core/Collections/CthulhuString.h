@@ -66,7 +66,7 @@ struct String
     String operator+(char Other) const;
 
     String& operator<<(I64 Num);
-    String& operator<<(float Num);
+    String& operator<<(F32 Num);
     String& operator<<(bool Val);
 
     String operator/(const String& Other) const;
@@ -140,6 +140,11 @@ private:
     char* Real;
     U32 Length{0};
 };
+
+CTU_INLINE String operator""_S(const char* Str, size_t)
+{
+    return String(Str);
+}
 
 namespace CString
 {
