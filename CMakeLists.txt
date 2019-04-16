@@ -111,9 +111,16 @@ add_library(CthulhuFileSystem STATIC
 
 enable_testing()
 
+#Core/Collections/String
 add_executable(StringTest Tests/Core/Collections/String.cpp)
 target_link_libraries(StringTest CthulhuCore)
 add_test(StringTest "StringTest")
+
+
+#Core/Math/SIMD
+add_executable(SIMDTest Tests/Core/Math/SIMD.cpp)
+target_link_libraries(SIMDTest CthulhuCore)
+add_test(SIMDTest "SIMDTest")
 
 
 option(BUILD_DOC "Build documentation" OFF)

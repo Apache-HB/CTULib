@@ -192,7 +192,7 @@ void Funs()
     TEST(S5 == "AAABBBC");
 
     String S6 = "AAA";
-    S6.Push('BC');
+    S6.Push("BC");
 
     TEST(S6 == "BCAAA");
 
@@ -200,15 +200,15 @@ void Funs()
 
     TEST(S6 == "DBCAAA");
 
-    String S6 = "Something";
+    String S7 = "Something";
 
-    TEST(S6.StartsWith("Some"));
+    TEST(S7.StartsWith("Some"));
 
-    TEST(S6.EndsWith("ing"));
+    TEST(S7.EndsWith("ing"));
 
-    TEST(S6.ValidIndex(3));
+    TEST(S7.ValidIndex(3));
 
-    TEST(S6.At(5) == 'h');
+    TEST(S7.At(5) == 'h');
 }
 
 int main()
