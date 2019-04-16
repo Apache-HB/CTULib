@@ -28,6 +28,12 @@ struct Unique
         : Raw(Input)
     {}
 
+    Unique(const Unique&& Other)
+        : Raw(Other.Raw)
+    {
+        Other.Raw = nullptr;
+    }
+
     T* Take() 
     {
         T* Ret = Raw;
@@ -51,7 +57,6 @@ struct Unique
     }
 
     Unique(const Unique&) = delete;
-    Unique(const Unique&&) = delete;
     Unique(const Unique*) = delete;
 
 private:

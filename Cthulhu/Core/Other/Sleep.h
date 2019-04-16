@@ -13,17 +13,34 @@
  *  limitations under the License.
  */
 
-#include "Core/Types/Lambda.h"
+#include "Meta/Macros.h"
+#include "Meta/Aliases.h"
+
+#ifdef OS_WINDOWS
+#   include <windows.h>
+#elif _POSIX_C_SOURCE >= 199309
+#   include <time.h>
+#else
+#   include <unistd.h>
+#endif
 
 #pragma once
 
-namespace Cthulhu::Standard
+namespace Cthulhu
 {
 
-extern Lambda<void(U16)> ExitCallback;
+void SleepMS(I32 Millis)
+{
+#if OS_WINDOWS
+    Sleep(Millis);
+#elif _POSIX_C_SOURCE >= 199309
+    struct timespec T;
+    T.tv_sec = Millis / 1000;
+    T.tv_nsec = (Millis % 1000) / 1000000;
+    nanosleep(&T, nullptr);
+#else
+    usleep(Millis);
+#endif
+}
 
-void OnExit(Lambda<void(U16)> Function);
-
-void Exit(U16 Code);
-
-} // Cthulhu::Standard
+}
