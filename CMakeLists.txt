@@ -67,35 +67,40 @@ add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
 )
 
-file(
-    GLOB_RECURSE
-    CthulhuGraphicsSourcesOS
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/Graphics/${CMAKE_SYSTEM_NAME}/*.*
-)
+option(BUILD_GUI "Build CthulhuGraphics" ON)
 
-file(
-    GLOB
-    CthulhuGraphicsSources
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/Graphics/*.cpp
-)
-
-set(CthulhuGraphicsSources ${CthulhuGraphicsSources} ${CthulhuGraphicsSourcesOS})
-
-add_library(CthulhuGraphics STATIC
-    ${CthulhuGraphicsSources}
-)
-
-target_link_libraries(CthulhuGraphics CthulhuCore)
-
-if (APPLE)
-    target_link_libraries(
-        CthulhuGraphics
-        "-framework Cocoa"
-        "-framework Metal"
-        "-framework MetalKit"
+if(BUILD_GUI)
+    file(
+        GLOB_RECURSE
+        CthulhuGraphicsSourcesOS
+        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+        Cthulhu/Graphics/${CMAKE_SYSTEM_NAME}/*.*
     )
+
+    file(
+        GLOB
+        CthulhuGraphicsSources
+        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+        Cthulhu/Graphics/*.cpp
+    )
+
+    set(CthulhuGraphicsSources ${CthulhuGraphicsSources} ${CthulhuGraphicsSourcesOS})
+
+    add_library(CthulhuGraphics STATIC
+        ${CthulhuGraphicsSources}
+    )
+
+    target_link_libraries(CthulhuGraphics CthulhuCore)
+
+    if (APPLE)
+        target_link_libraries(
+            CthulhuGraphics
+            "-framework Cocoa"
+            "-framework Metal"
+            "-framework MetalKit"
+        )
+    endif()
+
 endif()
 
 file(
@@ -115,13 +120,6 @@ enable_testing()
 add_executable(StringTest Tests/Core/Collections/String.cpp)
 target_link_libraries(StringTest CthulhuCore)
 add_test(StringTest "StringTest")
-
-
-#Core/Math/SIMD
-add_executable(SIMDTest Tests/Core/Math/SIMD.cpp)
-target_link_libraries(SIMDTest CthulhuCore)
-add_test(SIMDTest "SIMDTest")
-
 
 option(BUILD_DOC "Build documentation" OFF)
 
