@@ -153,6 +153,24 @@ struct BufferedFile
 
     void Write(Array<Byte> Data);
 
+    BufferedFile& Claim(BufferedFile* Other)
+    {
+        FileType = Other->FileType;
+        if(FileType == FType::Disk)
+        {
+            Real = Other->Real;
+            Other->Real = nullptr;
+        }
+        else
+        {
+            Arr = Other->Arr;
+            Cursor = Other->Cursor;
+            Other->Arr = nullptr;
+        }
+
+        return *this;
+    }
+
     //what type of file is this
     enum FType : U8
     {
