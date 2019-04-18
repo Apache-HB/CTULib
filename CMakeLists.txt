@@ -106,7 +106,7 @@ endif()
 option(BUILD_GUI "Build CthulhuGraphics" ON)
 
 if(BUILD_GUI)
-    install(TARGETS CthulhuGraphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
+    install(TARGETS CthulhuGraphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release OPTIONAL)
 endif()
 
 file(
