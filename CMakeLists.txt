@@ -67,6 +67,8 @@ add_library(CthulhuCore STATIC
     ${CthulhuCoreSources}
 )
 
+install(TARGETS CthulhuCore DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
+ 
 option(BUILD_GUI "Build CthulhuGraphics" ON)
 
 if(BUILD_GUI)
@@ -101,6 +103,7 @@ if(BUILD_GUI)
         )
     endif()
 
+    install(TARGETS CthulhuGraphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 endif()
 
 file(
@@ -113,6 +116,8 @@ file(
 add_library(CthulhuFileSystem STATIC
     ${CthulhuFileSystemSources}
 )
+
+install(TARGETS CthulhuFileSystem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 
 enable_testing()
 
