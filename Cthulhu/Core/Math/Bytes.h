@@ -30,6 +30,20 @@ namespace Cthulhu::Math
 
 //TODO: does intel have a builtin function for byteswaps
 
+//generic byteswap function to match correct sizes
+template<typename T>
+CTU_INLINE T ByteSwap(T Data)
+{
+    static_assert(sizeof(T) == 2 || sizeof(T) == 4 || sizeof(T) == 8);
+
+    if constexpr(sizeof(T) == 2)
+        return ByteSwap((U16)Data);
+    else if constexpr(sizeof(T) == 4)
+        return ByteSwap((U32)Data);
+    else
+        return ByteSwap((U64)Data);
+}
+
 CTU_INLINE U16 ByteSwap(U16 Data)
 {
 #if defined(CC_MSVC)
