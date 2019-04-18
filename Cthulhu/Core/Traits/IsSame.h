@@ -21,8 +21,8 @@ namespace Cthulhu
 {
 
 //check if 2 types are the same
-template<typename A, typename B> struct IsSame { static constexpr bool Value = false; };
-template<typename T> struct IsSame<T, T> { static constexpr bool Value = true; };
+template<typename A, typename B> struct Same { static constexpr bool Value = false; };
+template<typename T> struct Same<T, T> { static constexpr bool Value = true; };
 
 template<typename T> struct IsDecimal { static constexpr bool Value = false; };
 
