@@ -69,40 +69,43 @@ add_library(CthulhuCore STATIC
 
 install(TARGETS CthulhuCore DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
  
+file(
+    GLOB_RECURSE
+    CthulhuGraphicsSourcesOS
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    Cthulhu/Graphics/${CMAKE_SYSTEM_NAME}/*.*
+)
+
+file(
+    GLOB
+    CthulhuGraphicsSources
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    Cthulhu/Graphics/*.cpp
+)
+
+set(CthulhuGraphicsSources ${CthulhuGraphicsSources} ${CthulhuGraphicsSourcesOS})
+
+add_library(CthulhuGraphics STATIC
+    ${CthulhuGraphicsSources}
+)
+
+set_target_properties(CthulhuGraphics PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+
+target_link_libraries(CthulhuGraphics CthulhuCore)
+
+if (APPLE)
+    target_link_libraries(
+        CthulhuGraphics
+        "-framework Cocoa"
+        "-framework Metal"
+        "-framework MetalKit"
+    )
+endif()
+
+
 option(BUILD_GUI "Build CthulhuGraphics" ON)
 
 if(BUILD_GUI)
-    file(
-        GLOB_RECURSE
-        CthulhuGraphicsSourcesOS
-        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-        Cthulhu/Graphics/${CMAKE_SYSTEM_NAME}/*.*
-    )
-
-    file(
-        GLOB
-        CthulhuGraphicsSources
-        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-        Cthulhu/Graphics/*.cpp
-    )
-
-    set(CthulhuGraphicsSources ${CthulhuGraphicsSources} ${CthulhuGraphicsSourcesOS})
-
-    add_library(CthulhuGraphics STATIC
-        ${CthulhuGraphicsSources}
-    )
-
-    target_link_libraries(CthulhuGraphics CthulhuCore)
-
-    if (APPLE)
-        target_link_libraries(
-            CthulhuGraphics
-            "-framework Cocoa"
-            "-framework Metal"
-            "-framework MetalKit"
-        )
-    endif()
-
     install(TARGETS CthulhuGraphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 endif()
 

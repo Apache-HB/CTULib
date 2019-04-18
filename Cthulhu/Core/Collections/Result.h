@@ -49,7 +49,7 @@ private:
         : Val(Input)
         , HasError(false)
         , Err()
-    {}
+    {}  
 
     //The flag is here to stop clashing contructor signatures
     //ie
