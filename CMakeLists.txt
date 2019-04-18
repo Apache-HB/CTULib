@@ -102,7 +102,6 @@ if (APPLE)
     )
 endif()
 
-
 option(BUILD_GUI "Build CthulhuGraphics" ON)
 
 if(BUILD_GUI)

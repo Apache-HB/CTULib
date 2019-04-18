@@ -24,6 +24,7 @@ using namespace Cthulhu::FileSystem;
 BufferedFile::BufferedFile(const String& Name)
 #if defined(OS_LINUX) || defined(OS_APPLE)
     : Real(fopen(*Name, "r"))
+    , FileType(FType::Disk)
 #endif
 {
 #if defined(OS_WINDOWS)
@@ -31,38 +32,76 @@ BufferedFile::BufferedFile(const String& Name)
 #endif
     if(Real)
         fputs("\n", Real);
+
+    FileType = FType::Disk;
 }
+
+BufferedFile::BufferedFile(Array<U8>* Data)
+    : Arr(Data)
+    , Cursor(0)
+    , FileType(FType::Memory)
+{}
+
 
 C8 BufferedFile::Peek() const
 {
-    //Take the next char
-    char Ret = fgetc(Real);
-    //Push the char back onto the file
-    ungetc(Ret, Real);
-    //Return the taken char
-    return Ret;
+    if(FileType == FType::Disk)
+    {
+        //Take the next char
+        C8 Ret = fgetc(Real);
+        //Push the char back onto the file
+        ungetc(Ret, Real);
+        //Return the taken char
+        return Ret;
+    }
+    else
+    {
+        return Arr->At(Cursor + 1).Or(-1);
+    }
 }
 
 U32 BufferedFile::Size() const
 {
-    //seek to end
-    U32 Depth = CurrentDepth();
-    fseek(Real, 0, SEEK_END);
-    const U32 Ret = ftell(Real);
+    if(FileType == FType::Disk)
+    {
+        //seek to end
+        U32 Depth = CurrentDepth();
+        fseek(Real, 0, SEEK_END);
+        const U32 Ret = ftell(Real);
 
-    //seek back
-    fseek(Real, Depth, SEEK_SET);
+        //seek back
+        fseek(Real, Depth, SEEK_SET);
 
-    return Ret;
+        return Ret;
+    }
+    else
+    {
+        return Arr->Len();
+    }
 }
 
 U64 BufferedFile::Seek(U64 NewLocation)
 {
-    fseek(Real, (long)NewLocation, SEEK_SET);
-    return ftell(Real);
+    if(FileType == FType::Disk)
+    {
+        fseek(Real, (long)NewLocation, SEEK_SET);
+        return ftell(Real);
+    }
+    else
+    {
+        return Cursor = NewLocation;
+    }
 }
 
 void BufferedFile::Write(Array<Byte> Data)
 {
-    fwrite(Data.Data(), sizeof(Byte), Data.Len(), Real);
+    if(FileType == FType::Disk)
+    {
+        fwrite(Data.Data(), sizeof(Byte), Data.Len(), Real);
+    }
+    else
+    {
+        Arr->Append(Data);
+        Cursor += Data.Len();
+    }
 }
