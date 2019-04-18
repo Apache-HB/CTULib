@@ -155,6 +155,7 @@ struct BufferedFile
 
     BufferedFile& Claim(BufferedFile* Other)
     {
+        Close();
         FileType = Other->FileType;
         if(FileType == FType::Disk)
         {
