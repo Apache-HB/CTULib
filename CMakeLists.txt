@@ -10,143 +10,107 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif()
 
-#build in release mode to enable optimizations
-option(RELEASE "RELEASE" OFF)
-if(RELEASE)
-    if(MSVC)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
-    endif()
-endif()
+# ========================================================
+#                       [ Core ]
+# ========================================================
 
-#build in debug mode to enable all the stack trace stuff
-option(DEBUG "DEBUG" OFF)
-if(DEBUG)
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address")
-    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3")
-    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DEBUG:FULL")
-    endif()
-endif()
-
-if(RELEASE AND DEBUG)
-    message(FATAL_ERROR "Release and debug modes are incompatible")
-endif()
-
-#force CTU_INLINE to always inline
-option(FORCEINLINE "FORCEINLINE" OFF)
-if(FORCEINLINE)
-    add_compile_definitions(CTU_FORCEINLINE)
-endif()
-
-
-
-#enable the use of native instructions
-option(NATIVE "NATIVE" ON)
-if(NATIVE)
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-    endif()
-endif()
-
-
-
+#add base include directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Cthulhu)
 
-file(
-    GLOB_RECURSE 
-    CthulhuCoreSources 
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/Core/*.cpp
-)
+#collect all files in the core library
+file(GLOB_RECURSE CORE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} Cthulhu/Core/*.cpp)
+file(GLOB_RECURSE CORE_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} Cthulhu/Core/*.h)
 
-add_library(CthulhuCore STATIC
-    ${CthulhuCoreSources}
-)
+#add the core library as a target to build
+add_library(Core STATIC ${CORE_SOURCES})
 
-install(TARGETS CthulhuCore DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
- 
-file(
-    GLOB_RECURSE
-    CthulhuGraphicsSourcesOS
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/Graphics/${CMAKE_SYSTEM_NAME}/*.*
-)
+#install the core library so people can link to it
+install(TARGETS Core DESTINATION bin/Cthulhu)
 
-file(
-    GLOB
-    CthulhuGraphicsSources
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/Graphics/*.cpp
-)
+#install the headers so people can include the library
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Cthulhu/Core DESTINATION include/Cthulhu)
 
-set(CthulhuGraphicsSources ${CthulhuGraphicsSources} ${CthulhuGraphicsSourcesOS})
+# ========================================================
+#                      [ FileSystem ]
+# ========================================================
 
-add_library(CthulhuGraphics STATIC
-    ${CthulhuGraphicsSources}
-)
+file(GLOB_RECURSE FILE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} Cthulhu/FileSystem/*.cpp)
+file(GLOB_RECURSE FILE_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} Cthulhu/FileSystem/*.h)
 
-set_target_properties(CthulhuGraphics PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+add_library(FileSystem STATIC ${FILE_SOURCES})
 
-target_link_libraries(CthulhuGraphics CthulhuCore)
+# the filesystem relies on core
+target_link_libraries(FileSystem Core)
 
-if (APPLE)
-    target_link_libraries(
-        CthulhuGraphics
-        "-framework Cocoa"
-        "-framework Metal"
-        "-framework MetalKit"
-    )
-endif()
+install(TARGETS FileSystem DESTINATION bin/Cthulhu)
 
-option(BUILD_GUI "Build CthulhuGraphics" ON)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Cthulhu/FileSystem DESTINATION include/Cthulhu)
 
-if(BUILD_GUI)
-    install(TARGETS CthulhuGraphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release OPTIONAL)
-endif()
+# file(
+#     GLOB_RECURSE
+#     CthulhuGraphicsSourcesOS
+#     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+#     Cthulhu/Graphics/${CMAKE_SYSTEM_NAME}/*.*
+# )
 
-file(
-    GLOB_RECURSE 
-    CthulhuFileSystemSources 
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    Cthulhu/FileSystem/*.cpp
-)
+# file(
+#     GLOB
+#     CthulhuGraphicsSources
+#     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+#     Cthulhu/Graphics/*.cpp
+# )
 
-add_library(CthulhuFileSystem STATIC
-    ${CthulhuFileSystemSources}
-)
+# set(CthulhuGraphicsSources ${CthulhuGraphicsSources} ${CthulhuGraphicsSourcesOS})
 
-install(TARGETS CthulhuFileSystem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
+# add_library(CthulhuGraphics STATIC
+#     ${CthulhuGraphicsSources}
+# )
 
-enable_testing()
+# set_target_properties(CthulhuGraphics PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
 
-#Core/Collections/String
-add_executable(StringTest Tests/Core/Collections/String.cpp)
-target_link_libraries(StringTest CthulhuCore)
-add_test(StringTest "StringTest")
+# target_link_libraries(CthulhuGraphics CthulhuCore)
 
-option(BUILD_DOC "Build documentation" OFF)
+# if (APPLE)
+#     target_link_libraries(
+#         CthulhuGraphics
+#         "-framework Cocoa"
+#         "-framework Metal"
+#         "-framework MetalKit"
+#     )
+# endif()
 
-if(BUILD_DOC)
-	find_package(Doxygen)
-endif()
+# option(BUILD_GUI "Build CthulhuGraphics" ON)
 
-if(DOXYGEN_FOUND AND BUILD_DOC)
-    file(MAKE_DIRECTORY Docs)
-    set(DOXYGEN_OUT ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+# if(BUILD_GUI)
+#     install(TARGETS CthulhuGraphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release OPTIONAL)
+# endif()
 
-    configure_file(${DOXYGEN_OUT} @ONLY)
+# enable_testing()
 
-    add_custom_target(
-        docs
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Generating docs..."
-        VERBATIM
-    )
-else(DOXYGEN_FOUND)
-    message("Doxygen needs to be installed to generate documentation")
-endif()
+# #Core/Collections/String
+# add_executable(StringTest Tests/Core/Collections/String.cpp)
+# target_link_libraries(StringTest CthulhuCore)
+# add_test(StringTest "StringTest")
+
+# option(BUILD_DOC "Build documentation" OFF)
+
+# if(BUILD_DOC)
+# 	find_package(Doxygen)
+# endif()
+
+# if(DOXYGEN_FOUND AND BUILD_DOC)
+#     file(MAKE_DIRECTORY Docs)
+#     set(DOXYGEN_OUT ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+
+#     configure_file(${DOXYGEN_OUT} @ONLY)
+
+#     add_custom_target(
+#         docs
+#         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+#         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#         COMMENT "Generating docs..."
+#         VERBATIM
+#     )
+# else(DOXYGEN_FOUND)
+#     message("Doxygen needs to be installed to generate documentation")
+# endif()
