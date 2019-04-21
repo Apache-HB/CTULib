@@ -17,17 +17,17 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "Meta/Macros.h"
+#include "Cthulhu/Meta/Macros.h"
 
 #if !defined(OS_WINDOWS)
 #	include <unistd.h>
 #	include <libgen.h>
 #endif
 
-#include "Core/Collections/CthulhuString.h"
-#include "Core/Collections/Array.h"
-#include "Core/Types/Errno.h"
-#include "Core/Collections/Result.h"
+#include "Cthulhu/Core/Collections/CthulhuString.h"
+#include "Cthulhu/Core/Collections/Array.h"
+#include "Cthulhu/Core/Types/Errno.h"
+#include "Cthulhu/Core/Collections/Result.h"
 
 #pragma once
 

@@ -14,10 +14,10 @@
  */
 
 #include "Array.h"
-#include "Core/Memory/Block.h"
+#include "Cthulhu/Core/Memory/Block.h"
 #include "Pair.h"
 
-#include "Core/Math/Hash.h"
+#include "Cthulhu/Core/Math/Hash.h"
 
 #pragma once
 

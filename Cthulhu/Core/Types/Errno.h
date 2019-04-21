@@ -13,8 +13,8 @@
  *  limitations under the License.
  */
 
-#include "Meta/Aliases.h"
-#include "Core/Collections/CthulhuString.h"
+#include "Cthulhu/Meta/Aliases.h"
+#include "Cthulhu/Core/Collections/CthulhuString.h"
 
 #pragma once
 

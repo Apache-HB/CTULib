@@ -13,15 +13,15 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Meta/Assert.h"
+#include "Cthulhu/Meta/Macros.h"
+#include "Cthulhu/Meta/Assert.h"
 //CTU_INLINE
 
-#include "Meta/Aliases.h"
+#include "Cthulhu/Meta/Aliases.h"
 //U32
 
-#include "Core/Traits/IsSame.h"
-#include "Core/Traits/Opposite.h"
+#include "Cthulhu/Core/Traits/IsSame.h"
+#include "Cthulhu/Core/Traits/Opposite.h"
 
 #pragma once
 
