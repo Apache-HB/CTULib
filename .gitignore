@@ -11,26 +11,16 @@
 #objective c files
 !*.mm
 
-#dont ignore the makefile, lisence or readmes
-!Makefile
+#dont ignore the lisence or readmes
 !*.md
 !LICENSE
-!*.sh
 
-#dont ignore the buildscript
-!.travis.yml
+#dont ignore this build stuff
+!buck
+!buckaroo.toml
 
-#dont ignore the doxygen build file
-!CthulhuLib
-
-#ignore the generated docs
-Build/Docs
-Build/Makefile
-
-#ignore cmake stuff
-Makefile
-#dont ignore the actual build script though
-!CMakeLists.txt
-Build/*
-CMakeFiles/*
-CMakeCXXCompilerId.cpp
+#ignore buck stuff
+Docs/
+.buckd/
+buck-out/
+.buckconfig

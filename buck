@@ -1,0 +1,34 @@
+cxx_library(
+    name = 'CthulhuCore',
+    exported_headers = subdir_glob([
+        ('Cthulhu/Core', '**/*.h')
+    ]),
+    srcs = glob(['Cthulhu/Core/**/*.cpp']),
+    headers = subdir_glob([
+        ('Cthulhu/Core', '**/*.h'),
+        ('Cthulhu', '**/*.h')
+    ]),
+    visibility = ['PUBLIC'],
+    platform_compiler_flags = [
+        ('windows.*', [ '/std:c++17' ]),
+        ('[apple|linux].*', [ '-std=c++17' ])
+    ]
+)
+
+cxx_library(
+    name = 'CthulhuFileSystem',
+    exported_headers = subdir_glob([
+        ('Cthulhu/FileSystem', '**/*.h')
+    ]),
+    srcs = glob(['Cthulhu/FileSystem/**/*.cpp']),
+    headers = subdir_glob([
+        ('Cthulhu/FileSystem', '**/*.h'),
+        ('Cthulhu', '**/*.h')
+    ]),
+    visibility = ['PUBLIC'],
+    platform_compiler_flags = [
+        ('windows.*', [ '/std:c++17' ]),
+        ('[apple|linux].*', [ '-std=c++17' ])
+    ],
+    deps = [ ':CthulhuCore' ]
+)
