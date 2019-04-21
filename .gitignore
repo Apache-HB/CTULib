@@ -18,6 +18,7 @@
 #dont ignore this build stuff
 !buck
 !buckaroo.toml
+!buckaroo.lock.toml
 
 #ignore buck stuff
 Docs/

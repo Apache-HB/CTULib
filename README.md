@@ -4,57 +4,22 @@ A proper standard library that was meant to be read by human beings. This librar
 
 ## Building
 
+we use buckaroo and buck to build Cthulhu
+you can install buck through https://buckbuild.com/setup/getting_started.html
+and buckaroo through https://buckaroo.readthedocs.io/en/latest/quickstart.html
+
 ### windows
 ```
-mkdir Build
-cd Build
-cmake .. -G "Visual Studio 15 2017"
+touch .buckconfig
+buck build //:CthulhuCore //:CthulhuFileSystem
 ```
 
 ### mac/linux
 
 ```sh
-mkdir Build
-cd Build
-cmake ..
-make
+touch .buckconfig
+buck build //:CthulhuCore //:CthulhuConfig
 ```
-
-### Testing
-
-we use the `ctest` test suite, it can be run by typing `ctest --output-on-failure`
-
-### Options
-
-enable debug flags
-```
--DDEBUG=ON
-```
-
-enable optimizations
-```
--DRELEASE=ON
-```
-
-make `CTU_INLINE` use `ALWAYSINLINE` instead of `inline`
-```
--DFORCEINLINE=ON
-```
-
-disable native instruction set (on by default)
-```
--DNATIVE=OFF
-```
-## Documenting
-
-adding documentation is as easy as commenting your code using the doxygen @ style, additionally all classes/functions put inside 
-```cpp
-namespace Private
-```
-will be ignored by doxygen docs. to build docs install doxygen, navigate to the root directory and create a document folder
-`mkdir Docs && cd Docs`
-then run doxygen
-`doxygen ../Doxyfile`
 
 ## Branches
 
