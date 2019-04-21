@@ -13,8 +13,8 @@
  *  limitations under the License.
  */
 
-#include "Meta/Macros.h"
-#include "Meta/Aliases.h"
+#include "Cthulhu/Meta/Macros.h"
+#include "Cthulhu/Meta/Aliases.h"
 
 #ifdef OS_WINDOWS
 #   include <windows.h>
