@@ -3,6 +3,7 @@ cxx_library(
     exported_headers = subdir_glob([
         ('Cthulhu/Core', '**/*.h')
     ]),
+    header_namespace = 'Cthulhu/Core',
     srcs = glob(['Cthulhu/Core/**/*.cpp']),
     headers = subdir_glob([
         ('Cthulhu/Core', '**/*.h'),
@@ -20,6 +21,7 @@ cxx_library(
     exported_headers = subdir_glob([
         ('Cthulhu/FileSystem', '**/*.h')
     ]),
+    header_namespace = 'Cthulhu/FileSystem',
     srcs = glob(['Cthulhu/FileSystem/**/*.cpp']),
     headers = subdir_glob([
         ('Cthulhu/FileSystem', '**/*.h'),
