@@ -580,7 +580,7 @@ namespace Utils
      * @return String the array as a string
      */
     template<typename T>
-    String ToString(const Array<T> Arr)
+    CTU_INLINE String ToString(const Array<T> Arr)
     {
         String Ret = "{ ";
         for(const auto& I : Arr)
@@ -606,7 +606,7 @@ namespace Utils
  * @return Array<Byte> 
  */
 template<typename T>
-Array<Byte> RawBytes(T Data)
+CTU_INLINE Array<Byte> RawBytes(T Data)
 {
     static_assert(IsDecimal<T>::Value || IsFloat<T>::Value || IsPOD<T>::Value, "T must be a decimal, float or POD type");
 
