@@ -129,7 +129,7 @@ Option<TOpt> None() { return Option<TOpt>::None(); }
 namespace Utils
 {
     template<typename T>
-    String ToString(const Option<T> Item)
+    CTU_INLINE String ToString(const Option<T> Item)
     {
         return Item.Valid() ? String("Some({})").Replace("{}", ToString(Item.Get())) : String("None()");
     }

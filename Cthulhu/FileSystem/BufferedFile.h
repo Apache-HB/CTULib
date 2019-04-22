@@ -13,8 +13,8 @@
  *  limitations under the License.
  */
 
-#include <Cthulhu/Core/Collections/CthulhuString.h>
-#include <Cthulhu/Core/Collections/Array.h>
+#include <Core/Collections/CthulhuString.h>
+#include <Core/Collections/Array.h>
 
 #include "Core/Traits/IsPOD.h"
 
