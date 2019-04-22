@@ -14,8 +14,8 @@
  */
 
 #include "CthulhuString.h"
-#include "Core/Types/Lambda.h"
-#include "Meta/Assert.h"
+#include "Cthulhu/Core/Types/Lambda.h"
+#include "Cthulhu/Meta/Assert.h"
 
 #pragma once
 
@@ -38,8 +38,7 @@ struct Option
      * @param Real the data to store in the Option
      * @return Option<TOpt> the created Option with data
      */
-    template<typename TOpt>
-    friend Option<TOpt> Some(TOpt Real);
+    static Option Some(T Real) { return Option(Real); }
 
     /**
      * @brief A named constructor for making an option type without a value
@@ -47,8 +46,7 @@ struct Option
      * @tparam TOpt the type the option should have
      * @return Option<TOpt> the created empty Option
      */
-    template<typename TOpt>
-    friend Option<TOpt> None();
+    static Option None() { return Option(); }
 
     /**
      * @brief Check if the option has data
@@ -123,10 +121,10 @@ private:
 };
 
 template<typename TOpt>
-Option<TOpt> Some(TOpt Input) { return Option<TOpt>(Input); }
+Option<TOpt> Some(TOpt Input) { return Option<TOpt>::Some(Input); }
 
 template<typename TOpt>
-Option<TOpt> None() { return Option<TOpt>(); }
+Option<TOpt> None() { return Option<TOpt>::None(); }
 
 namespace Utils
 {
