@@ -15,8 +15,8 @@
 
 //TODO: switch from char* to C8*
 
-#include "Cthulhu/Meta/Macros.h"
-#include "Cthulhu/Meta/Assert.h"
+#include "Meta/Macros.h"
+#include "Meta/Assert.h"
 //CTU_INLINE
 
 #include "Cthulhu/Meta/Aliases.h"
