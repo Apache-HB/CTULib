@@ -46,8 +46,8 @@ private:
     //TODO: make this work with stuff that doesnt have default constructors
     //TODO: also make it work with stuff with non-trivial destructors
     Result(TRes Input)
-        : Val(Input)
-        , HasError(false)
+        : HasError()
+        , Val(Input)
         , Err()
     {}  
 
@@ -56,9 +56,9 @@ private:
     //Result<int, int> would cause problems because it wouldnt know which
     //constructor to choose, so the flag is there to alleviate that
     Result(TErr InError, Empty)
-        : Err(InError)
-        , HasError(true)
+        : HasError(true)
         , Val()
+        , Err(InError)
     {}
 
     bool HasError;

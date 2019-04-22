@@ -23,8 +23,8 @@ using namespace Cthulhu::FileSystem;
 
 BufferedFile::BufferedFile(const String& Name)
 #if defined(OS_LINUX) || defined(OS_APPLE)
-    : Real(fopen(*Name, "r"))
-    , FileType(FType::Disk)
+    : FileType(FType::Disk)
+    , Real(fopen(*Name, "r"))
 #endif
 {
 #if defined(OS_WINDOWS)
@@ -37,9 +37,9 @@ BufferedFile::BufferedFile(const String& Name)
 }
 
 BufferedFile::BufferedFile(Array<U8>* Data)
-    : Arr(Data)
+    : FileType(FType::Memory)
+    , Arr(Data)
     , Cursor(0)
-    , FileType(FType::Memory)
 {}
 
 

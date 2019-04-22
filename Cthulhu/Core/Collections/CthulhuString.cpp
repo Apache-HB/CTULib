@@ -677,7 +677,7 @@ const I8 HexTable[] = {
 Option<I64> Cthulhu::Utils::ParseHex(const String& Text)
 {
     I64 Ret = 0;
-    const char* T = *Text;
+    const C8* T = (C8*)*Text;
     while(*T && Ret >= 0) 
         Ret = (Ret << 4) | HexTable[*T++];
     

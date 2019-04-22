@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+//TODO: switch from char* to C8*
+
 #include "Cthulhu/Meta/Macros.h"
 #include "Cthulhu/Meta/Assert.h"
 //CTU_INLINE

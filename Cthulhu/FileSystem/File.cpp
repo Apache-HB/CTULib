@@ -150,11 +150,11 @@ bool FileSystem::MakeDir(const String& Path)
 }
 
 File::File(const File& Other)
-    : FileName(Other.FileName)
+    : Real(Other.Real)
+    , FileName(Other.FileName)
     , FileType(Other.FileType)
-    , Real(Other.Real)
-    , Epoch(Other.Epoch)
     , FilePermissions(Other.FilePermissions)
+    , Epoch(Other.Epoch)
 {
     if(FileType == Type::Binary)
     {
@@ -167,13 +167,15 @@ File::File(const File& Other)
 }
 
 File::File(const String& Path, Mode ReadMode)
-    : FileType(ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary)
 #if !defined(OS_WINDOWS)
-	, FileName(basename(*Path))
-    , Real(fopen(Path.CStr(), Private::ModeToString(ReadMode).CStr()))
+    : Real(fopen(Path.CStr(), Private::ModeToString(ReadMode).CStr()))
+    , FileName(basename(*Path))
+    , FileType(ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary)
 #endif
 {
 #if defined(OS_WINDOWS)
+    FileType = ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary;
+
 	char Name[MAX_PATH];
 	//i dont know of any file extentions that go beyond 6 chars at most anyway
 	char Ext[32];

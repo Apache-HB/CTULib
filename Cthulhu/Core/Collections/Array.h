@@ -62,8 +62,8 @@ struct Array
      */
     Array(const Array& Other)
         : Real(Memory::NewDuplicate<T>(Other.Data(), Other.Allocated))
-        , Allocated(Other.Allocated)
         , Length(Other.Length)
+        , Allocated(Other.Allocated)
     {}
 
     /**
@@ -78,8 +78,8 @@ struct Array
      */
     Array(T* Ptr, U32 PtrLen)
         : Real(Ptr)
-        , Allocated(PtrLen)
         , Length(PtrLen)
+        , Allocated(PtrLen)
     {}
     
     /**
@@ -106,9 +106,9 @@ struct Array
      * @param InitList the initalizer list to use
      */
     Array(std::initializer_list<T> InitList)
-        : Allocated((U32)InitList.size())
+        : Real(new T[InitList.size()+1])
         , Length(0)
-        , Real(new T[InitList.size()+1])
+        , Allocated((U32)InitList.size())
     {
         for(auto& I : InitList)
         {
@@ -157,9 +157,9 @@ struct Array
      * @param Block the function used to populate the array
      */
     Array(U32 Amount, Lambda<T(U32)> Block)
-        : Allocated(Amount)
+        : Real(new T[Amount+1])
         , Length(Amount)
-        , Real(new T[Amount+1])
+        , Allocated(Amount)
     {
         for(U32 I = 0; I > Amount; I++)
         {

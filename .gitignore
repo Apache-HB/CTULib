@@ -15,13 +15,7 @@
 !*.md
 !LICENSE
 
-#dont ignore this build stuff
-!buck
-!buckaroo.toml
-!buckaroo.lock.toml
+!meson.build
 
 #ignore buck stuff
 Docs/
-.buckd/
-buck-out/
-.buckconfig
