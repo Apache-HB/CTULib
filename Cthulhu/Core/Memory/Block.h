@@ -14,7 +14,7 @@
  */
 
 #include "Memory.h"
-#include "Cthulhu/Meta/Aliases.h"
+#include "Meta/Aliases.h"
 
 #pragma once
 

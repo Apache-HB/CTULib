@@ -16,10 +16,10 @@
 #include "Map.h"
 //Map<T, K> Array<T> Option<T> Memory::* 
 
-#include "Cthulhu/Core/Math/Math.h"
+#include "Core/Math/Math.h"
 //Math::Min Math::Max
 
-#include "Cthulhu/Core/Math/Limits.h"
+#include "Core/Math/Limits.h"
 
 #include "CthulhuString.h"
 

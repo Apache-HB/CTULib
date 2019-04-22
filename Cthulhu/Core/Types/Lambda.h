@@ -13,8 +13,8 @@
  *  limitations under the License.
  */
 
-#include "Cthulhu/Core/Traits/Invoke.h"
-#include "Cthulhu/Meta/Aliases.h"
+#include "Core/Traits/Invoke.h"
+#include "Meta/Aliases.h"
 
 #pragma once
 

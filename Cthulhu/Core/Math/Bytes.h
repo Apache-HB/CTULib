@@ -13,8 +13,8 @@
  *  limitations under the License.
  */
 
-#include "Cthulhu/Meta/Aliases.h"
-#include "Cthulhu/Meta/Macros.h"
+#include "Meta/Aliases.h"
+#include "Meta/Macros.h"
 
 
 #if defined(OS_APPLE)

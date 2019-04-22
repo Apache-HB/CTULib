@@ -13,8 +13,8 @@
  *  limitations under the License.
  */
 
-#include "Cthulhu/Core/Types/Lambda.h"
-#include "Cthulhu/Meta/Assert.h"
+#include "Core/Types/Lambda.h"
+#include "Meta/Assert.h"
 
 #pragma once
 

@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "Cthulhu/Meta/Macros.h"
+#include "Meta/Macros.h"
 
 #ifdef OS_WINDOWS
 #   include <windows.h>

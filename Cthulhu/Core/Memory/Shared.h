@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 
-#include "Cthulhu/Meta/Aliases.h"
+#include "Meta/Aliases.h"
 #include "Deleter.h"
 
 #pragma once

@@ -13,8 +13,8 @@
  *  limitations under the License.
  */
 
-#include "Cthulhu/Meta/Aliases.h"
-#include "Cthulhu/Meta/Assert.h"
+#include "Meta/Aliases.h"
+#include "Meta/Assert.h"
 
 #pragma once
 

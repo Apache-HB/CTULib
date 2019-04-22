@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 
-#include "Cthulhu/Meta/Assert.h"
+#include "Meta/Assert.h"
 #include "Deleter.h"
 
 #pragma once

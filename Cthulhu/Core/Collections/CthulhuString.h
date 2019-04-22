@@ -19,11 +19,11 @@
 #include "Meta/Assert.h"
 //CTU_INLINE
 
-#include "Cthulhu/Meta/Aliases.h"
+#include "Meta/Aliases.h"
 //U32
 
-#include "Cthulhu/Core/Traits/IsSame.h"
-#include "Cthulhu/Core/Traits/Opposite.h"
+#include "Core/Traits/IsSame.h"
+#include "Core/Traits/Opposite.h"
 
 #pragma once
 

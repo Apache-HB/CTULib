@@ -14,7 +14,7 @@
  */
 
 #include "Errno.h"
-#include "Cthulhu/Core/Collections/Array.h"
+#include "Core/Collections/Array.h"
 
 using namespace Cthulhu;
 

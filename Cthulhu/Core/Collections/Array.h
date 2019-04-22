@@ -15,18 +15,18 @@
 
 #include <initializer_list>
 
-#include "Cthulhu/Core/Math/Math.h"
+#include "Core/Math/Math.h"
 //Math::Min
 
 #include "Option.h"
 //Option<T>
 
-#include "Cthulhu/Core/Memory/Memory.h"
+#include "Core/Memory/Memory.h"
 
 #include "CthulhuString.h"
 
-#include "Cthulhu/Core/Traits/IsPOD.h"
-#include "Cthulhu/Core/Traits/IsSame.h"
+#include "Core/Traits/IsPOD.h"
+#include "Core/Traits/IsSame.h"
 
 #pragma once
 

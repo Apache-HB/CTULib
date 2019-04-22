@@ -16,7 +16,7 @@
 #include <cstring>
 #include <cstdlib>
 
-#include "Cthulhu/Meta/Macros.h"
+#include "Meta/Macros.h"
 
 #ifdef OS_APPLE
 #   include <malloc/malloc.h>

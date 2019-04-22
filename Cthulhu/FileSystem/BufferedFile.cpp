@@ -15,7 +15,7 @@
 
 #include <stdio.h>
 
-#include "Cthulhu/Core/Collections/Array.h"
+#include "Core/Collections/Array.h"
 #include "BufferedFile.h"
 
 using namespace Cthulhu;
