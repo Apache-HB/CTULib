@@ -149,6 +149,22 @@ struct BufferedFile
         }
     }
 
+    template<typename T>
+    CTU_INLINE U32 ReadN(T* Data, U32 Len)
+    {
+        U32 ReadLength = 0;
+        const U32 Max = Size();
+        U8* Out = (U8*)Data;
+        
+        while(CurrentDepth() < Size() && Len-- > 0)
+        {
+            ReadLength++;
+            Out[ReadLength] = Next();
+        }
+
+        return ReadLength;
+    }
+
     U64 Seek(U64 NewLocation);
 
     void Write(Array<Byte> Data);
