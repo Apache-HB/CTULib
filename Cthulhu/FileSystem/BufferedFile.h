@@ -156,7 +156,7 @@ struct BufferedFile
         const U32 Max = Size();
         U8* Out = (U8*)Data;
         
-        while(CurrentDepth() < Size() && Len-- > 0)
+        while(CurrentDepth() < Max && Len-- > 0)
         {
             ReadLength++;
             Out[ReadLength] = Next();
