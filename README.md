@@ -4,21 +4,19 @@ A proper standard library that was meant to be read by human beings. This librar
 
 ## Building
 
-we use buckaroo and buck to build Cthulhu
-you can install buck through https://buckbuild.com/setup/getting_started.html
-and buckaroo through https://buckaroo.readthedocs.io/en/latest/quickstart.html
+we use meson to build Cthulhu
 
 ### windows
 ```
-touch .buckconfig
-buck build //:CthulhuCore //:CthulhuFileSystem
+???
 ```
 
 ### mac/linux
 
 ```sh
-touch .buckconfig
-buck build //:CthulhuCore //:CthulhuConfig
+meson Build
+cd Build
+ninja
 ```
 
 ## Branches
