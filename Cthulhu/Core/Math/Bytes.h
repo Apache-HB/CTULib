@@ -32,7 +32,7 @@ namespace Cthulhu::Math
 
 //generic byteswap function to match correct sizes
 template<typename T>
-CTU_INLINE T ByteSwap(T Data)
+CTU_INLINE T GenericByteSwap(T Data)
 {
     static_assert(sizeof(T) == 2 || sizeof(T) == 4 || sizeof(T) == 8);
 
