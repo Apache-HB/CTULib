@@ -42,6 +42,18 @@ BufferedFile::BufferedFile(Array<U8>* Data)
     , Cursor(0)
 {}
 
+BufferedFile::~BufferedFile()
+{ 
+    if(FileType == FType::Disk)
+    {
+        if (Real) 
+            fclose(Real);
+    }
+    else
+    {
+        delete Arr;
+    }
+}
 
 C8 BufferedFile::Peek() const
 {
