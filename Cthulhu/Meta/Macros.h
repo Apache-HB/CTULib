@@ -30,6 +30,18 @@
 #   error "Unrecognised target platform"
 #endif
 
+#ifndef OS_WINDOWS
+#   define OS_WINDOWS 0
+#endif
+
+#ifndef OS_APPLE
+#   define OS_APPLE 0
+#endif
+
+#ifndef OS_LINUX
+#   define OS_LINUX 0
+#endif
+
  /**compiler switch to detect edianness of the current system
   * it'll nearly always be PLATFORM_LITTLE_ENDIAN but you can never be sure
   */
