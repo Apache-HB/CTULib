@@ -94,6 +94,22 @@
 #   error "Unrecognised compiler"
 #endif
 
+#ifndef CC_MSVC
+#   define CC_MSVC 0
+#endif
+
+#ifndef CC_CLANG
+#   define CC_CLANG 0
+#endif
+
+#ifndef CC_GCC
+#   define CC_GCC 0
+#endif
+
+#ifndef CC_INTEL
+#   define CC_INTEL 0
+#endif
+
 #if defined(CTU_FORCEINLINE)
 #	  define CTU_INLINE ALWAYSINLINE
 #else

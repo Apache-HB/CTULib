@@ -17,7 +17,7 @@
 #include "Meta/Macros.h"
 
 
-#if defined(OS_APPLE)
+#if OS_APPLE
 #   include <machine/endian.h>
 #else
 #   include <stdlib.h>
@@ -32,9 +32,9 @@ namespace Cthulhu::Math
 
 CTU_INLINE U16 ByteSwap(U16 Data)
 {
-#if defined(CC_MSVC)
+#if CC_MSVC
     return _byteswap_ushort(Data);
-#elif defined(CC_CLANG) || defined(CC_GCC)
+#elif CC_CLANG || CC_GCC
     return __builtin_bswap16(Data);
 #else
     return (Data >> 8) | (Data << 8);
@@ -43,9 +43,9 @@ CTU_INLINE U16 ByteSwap(U16 Data)
 
 CTU_INLINE U32 ByteSwap(U32 Data)
 {
-#if defined(CC_MSVC)
+#if CC_MSVC
     return _byteswap_ulong(Data);
-#elif defined(CC_CLANG) || defined(CC_GCC)
+#elif CC_CLANG || CC_GCC
     return __builtin_bswap32(Data);
 #else
     return ((Data >> 24) & 0xff) |
@@ -57,9 +57,9 @@ CTU_INLINE U32 ByteSwap(U32 Data)
 
 CTU_INLINE U64 ByteSwap(U64 Data)
 {
-#if defined(CC_MSVC)
+#if CC_MSVC
     return _byteswap_uint64(Data);
-#elif defined(CC_CLANG) || defined(CC_GCC)
+#elif CC_CLANG || CC_GCC
     return __builtin_bswap64(Data);
 #else
     Data = (Data & 0x00000000FFFFFFFF) << 32 | (Data & 0xFFFFFFFF00000000) >> 32;
