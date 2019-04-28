@@ -34,7 +34,7 @@
   * it'll nearly always be PLATFORM_LITTLE_ENDIAN but you can never be sure
   */
 
-#if defined(OS_WINDOWS)
+#if OS_WINDOWS
 #	include <Windows.h>
 #	if REG_DWORD == REG_DWORD_BIG_ENDIAN
 #		define PLATFORM_BIG_ENDIAN 1
