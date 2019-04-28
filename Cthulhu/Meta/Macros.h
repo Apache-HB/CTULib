@@ -47,22 +47,22 @@
   */
 
 #if OS_WINDOWS
-#	include <Windows.h>
-#	if REG_DWORD == REG_DWORD_BIG_ENDIAN
-#		define PLATFORM_BIG_ENDIAN 1
-#	elif REG_DWORD == REG_DWORD_LITTLE_ENDIAN
-#		define PLATFORM_LITTLE_ENDIAN 1
-#	else
-#		error "Unknown byte order (neither big or little)"
+#	  include <Windows.h>
+#	  if REG_DWORD == REG_DWORD_BIG_ENDIAN
+#		  define PLATFORM_BIG_ENDIAN 1
+#	  elif REG_DWORD == REG_DWORD_LITTLE_ENDIAN
+#		  define PLATFORM_LITTLE_ENDIAN 1
+#	  else
+#		  error "Unknown byte order (neither big or little)"
 #	endif
 #else
-#	if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#		define PLATFORM_BIG_ENDIAN 1
-#	elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#		define PLATFORM_LITTLE_ENDIAN 1
-#	else
-#		error "Unknown byte order (neither big or little)"
-#	endif
+#	  if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#		  define PLATFORM_BIG_ENDIAN 1
+#	  elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#		  define PLATFORM_LITTLE_ENDIAN 1
+#	  else
+#		  error "Unknown byte order (neither big or little)"
+#	  endif
 #endif
 
 
