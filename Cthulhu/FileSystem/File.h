@@ -19,7 +19,7 @@
 
 #include "Meta/Macros.h"
 
-#if !defined(OS_WINDOWS)
+#if !OS_WINDOWS
 #	include <unistd.h>
 #	include <libgen.h>
 #endif
@@ -302,7 +302,7 @@ inline String ModeToString(Mode Input)
 
 inline FILE* WrapFOpen(const char* Path, const char* Mode)
 {
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 	FILE* Ret;
 	fopen_s(&Ret, Path, Mode);
 	return Ret;
@@ -361,7 +361,7 @@ inline Result<File*, Errno> Open(const String& Name, Mode ReadMode)
         Ret->Real = Data;
         Ret->FileType = bool(ReadMode & (Mode::WriteText | Mode::ReadText)) ? Type::Text : Type::Binary;
 
-#if !defined(OS_WINDOWS)
+#if !OS_WINDOWS
         Ret->FileName = basename(*Name);
 #else
 		

@@ -19,7 +19,7 @@
 
 #include "File.h"
 
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 #	include <io.h>
 #	include <stdio.h>
 #	include <stdlib.h>
@@ -35,7 +35,7 @@ using namespace Cthulhu::FileSystem;
 
 Errno FileSystem::CHMod(const String& Name, Permissions NewPermissions)
 {
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 	size_t ConvertedChars = 0;
 	size_t NewSize = Name.Len() + 1;
 
@@ -54,7 +54,7 @@ Errno FileSystem::CHMod(const String& Name, Permissions NewPermissions)
 
 bool FileSystem::Exists(const String& Name)
 {
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 	//fetch the attributes of the file
 	DWORD Attributes = GetFileAttributes(*Name);
 
@@ -74,13 +74,13 @@ Errno FileSystem::Delete(const String& Name)
     return remove(*Name) == 0 ? Errno::None : Errno(errno);
 }
 
-#ifdef OS_WINDOWS
-static_assert(sizeof(U64) == sizeof(FILETIME), "FILETIME must be 8 bytes wide");
+#if OS_WINDOWS
+    static_assert(sizeof(U64) == sizeof(FILETIME), "FILETIME must be 8 bytes wide");
 #endif
 
 Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 {
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 	if (
         HANDLE Handle = CreateFileA(
 		*Name,
@@ -101,7 +101,7 @@ Result<U64, Errno> FileSystem::LastEdited(const String& Name)
 
 	return Fail<U64, Errno>(Errno::FileNotFound);
 
-#elif defined(OS_APPLE)
+#elif OS_APPLE
     struct stat Result;
     
     if(stat(*Name, &Result) == 0)
@@ -142,7 +142,7 @@ bool FileSystem::DirExists(const String& Path)
 
 bool FileSystem::MakeDir(const String& Path)
 {
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 	return ::_mkdir(*Path) != -1;
 #else
     return mkdir(*Path, 0777) != -1;
@@ -167,13 +167,13 @@ File::File(const File& Other)
 }
 
 File::File(const String& Path, Mode ReadMode)
-#if !defined(OS_WINDOWS)
+#if !OS_WINDOWS
     : Real(fopen(Path.CStr(), Private::ModeToString(ReadMode).CStr()))
     , FileName(basename(*Path))
     , FileType(ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary)
 #endif
 {
-#if defined(OS_WINDOWS)
+#if OS_WINDOWS
     FileType = ReadMode == Mode::ReadText || ReadMode == Mode::WriteText ? Type::Text : Type::Binary;
 
 	char Name[MAX_PATH];
@@ -267,7 +267,7 @@ const String& File::Name() const
 
 String File::AbsolutePath() const
 {
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 	char* Ret = new char[MAX_PATH];
 	GetFullPathNameA(*FileName, FileName.Len(), Ret, nullptr);
 
