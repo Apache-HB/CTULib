@@ -13,14 +13,15 @@
  *  limitations under the License.
  */
 
-#if OS_LINUX || OS_APPLE
-#   include <unistd.h>
-#endif
 
 #include <stdlib.h>
 
 #include "System.h"
 #include "Core/Collections/Array.h"
+
+#if OS_LINUX || OS_APPLE
+#   include <unistd.h>
+#endif
 
 #if OS_WINDOWS
 #   include <windows.h>
@@ -70,7 +71,11 @@ bool HasCommandPromt()
 
 String Exec(const String& Command)
 {
+#if OS_WINDOWS
     FILE* Temp = _popen(*Command, "r");
+#else
+    FILE* Temp = popen(*Command, "r");
+#endif
     String Ret;
 
     char C[64];
@@ -80,7 +85,11 @@ String Exec(const String& Command)
         Ret += C;
     }
 
+#if OS_WINDOWS
     _pclose(Temp);
+#else
+    pclose(Temp);
+#endif
 
     return Ret;
 }
@@ -88,7 +97,12 @@ String Exec(const String& Command)
 Option<String> CurrentDirectory()
 {
     char* Path = new char[1024];
+
+#if OS_WINDOWS
     if(_getcwd(Path, 1024) != nullptr)
+#else
+    if(getcwd(Path, 1024) != nullptr)
+#endif
     {
         String Temp = Path;
         delete[] Path;
