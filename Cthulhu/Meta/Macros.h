@@ -30,6 +30,18 @@
 #   error "Unrecognised target platform"
 #endif
 
+#ifndef OS_WINDOWS
+#   define OS_WINDOWS 0
+#endif
+
+#ifndef OS_APPLE
+#   define OS_APPLE 0
+#endif
+
+#ifndef OS_LINUX
+#   define OS_LINUX 0
+#endif
+
  /**compiler switch to detect edianness of the current system
   * it'll nearly always be PLATFORM_LITTLE_ENDIAN but you can never be sure
   */
@@ -80,6 +92,22 @@
 #   define DEPRECATED(Version, Message) //TODO: how does one deprecate on the intel compiler?
 #else
 #   error "Unrecognised compiler"
+#endif
+
+#ifndef CC_MSVC
+#   define CC_MSVC 0
+#endif
+
+#ifndef CC_CLANG
+#   define CC_CLANG 0
+#endif
+
+#ifndef CC_GCC
+#   define CC_GCC 0
+#endif
+
+#ifndef CC_INTEL
+#   define CC_INTEL 0
 #endif
 
 #if defined(CTU_FORCEINLINE)

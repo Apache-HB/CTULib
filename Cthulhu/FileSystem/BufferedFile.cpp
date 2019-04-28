@@ -22,12 +22,12 @@ using namespace Cthulhu;
 using namespace Cthulhu::FileSystem;
 
 BufferedFile::BufferedFile(const String& Name)
-#if defined(OS_LINUX) || defined(OS_APPLE)
+#if OS_LINUX || OS_APPLE
     : FileType(FType::Disk)
     , Real(fopen(*Name, "r"))
 #endif
 {
-#if defined(OS_WINDOWS)
+#if OS_WINDOWS
 	fopen_s(&Real, *Name, "r");
 #endif
     if(Real)
@@ -42,6 +42,18 @@ BufferedFile::BufferedFile(Array<U8>* Data)
     , Cursor(0)
 {}
 
+BufferedFile::~BufferedFile()
+{ 
+    if(FileType == FType::Disk)
+    {
+        if (Real) 
+            fclose(Real);
+    }
+    else
+    {
+        delete Arr;
+    }
+}
 
 C8 BufferedFile::Peek() const
 {

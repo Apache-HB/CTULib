@@ -13,14 +13,19 @@
  *  limitations under the License.
  */
 
-#include <unistd.h>
+#if OS_LINUX || OS_APPLE
+#   include <unistd.h>
+#endif
+
 #include <stdlib.h>
 
 #include "System.h"
 #include "Core/Collections/Array.h"
 
-#ifdef OS_WINDOWS
+#if OS_WINDOWS
 #   include <windows.h>
+#   include <stdio.h>
+#   include <direct.h>
 #endif
 
 using namespace Cthulhu;
@@ -28,12 +33,18 @@ using namespace Cthulhu::System;
 
 U32 CoreCount()
 {
+#if OS_WINDOWS
+    SYSTEM_INFO Info;
+    GetSystemInfo(&Info);
+    return Info.dwNumberOfProcessors;
+#else
     return sysconf(_SC_NPROCESSORS_ONLN);
+#endif
 }
 
 U64 TotalRam()
 {
-#ifndef OS_WINDOWS
+#if !OS_WINDOWS
     const U32 Pages = sysconf(_SC_PHYS_PAGES),
               PageSize = sysconf(_SC_PAGE_SIZE);
     
@@ -59,7 +70,7 @@ bool HasCommandPromt()
 
 String Exec(const String& Command)
 {
-    FILE* Temp = popen(*Command, "r");
+    FILE* Temp = _popen(*Command, "r");
     String Ret;
 
     char C[64];
@@ -69,7 +80,7 @@ String Exec(const String& Command)
         Ret += C;
     }
 
-    pclose(Temp);
+    _pclose(Temp);
 
     return Ret;
 }
@@ -77,7 +88,7 @@ String Exec(const String& Command)
 Option<String> CurrentDirectory()
 {
     char* Path = new char[1024];
-    if(getcwd(Path, 1024) != nullptr)
+    if(_getcwd(Path, 1024) != nullptr)
     {
         String Temp = Path;
         delete[] Path;

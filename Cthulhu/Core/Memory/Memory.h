@@ -18,7 +18,7 @@
 
 #include "Meta/Macros.h"
 
-#ifdef OS_APPLE
+#if OS_APPLE
 #   include <malloc/malloc.h>
 #else
 #   include <malloc.h>

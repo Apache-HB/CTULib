@@ -37,18 +37,7 @@ struct BufferedFile
      */
     BufferedFile(Array<U8>* Data);
 
-    ~BufferedFile() 
-    { 
-        if(FileType == FType::Disk)
-        {
-            if (Real) 
-                fclose(Real);
-        }
-        else
-        {
-            delete Arr;
-        }
-    }
+    ~BufferedFile();
 
     CTU_INLINE C8 Next() 
     { 
