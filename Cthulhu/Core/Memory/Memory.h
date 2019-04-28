@@ -232,9 +232,9 @@ namespace Memory
     template<typename T>
     U32 AllocSize(T* Block)
     {
-#if defined(OS_WINDOWS)
+#if OS_WINDOWS
         return _msize((void*)Block);
-#elif defined(OS_LINUX)
+#elif OS_LINUX
         return malloc_usable_size((void*)Block);
 #else
         return malloc_size((void*)Block);
