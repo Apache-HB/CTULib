@@ -508,6 +508,16 @@ struct Array
         Resize(Length + Size);
     }
 
+    static Array FromPtr(T* Ptr, U32 Len)
+    {
+        Array Ret = Array(Empty{});
+        Ret.Real = Ptr;
+        Ret.Allocated = Len;
+        Ret.Length = Len;
+
+        return Ret;
+    }
+
     /**
      * @brief claim the raw pointer
      * this makes the array unusable after that and doing any other operations
@@ -541,6 +551,8 @@ struct Array
     }
 
 private:
+
+    Array(Empty) {}
 
     void Resize(U32 NewSize)
     {

@@ -70,6 +70,8 @@ struct Block
 
     constexpr U32 Len() const { return Size; }
 
+    T* Copy() const { return Memory::Duplicate<T>(Real, Size); }
+
 private:
     T* Real;
 
