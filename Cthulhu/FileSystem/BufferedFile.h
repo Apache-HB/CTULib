@@ -147,8 +147,7 @@ struct BufferedFile
         
         while(CurrentDepth() < Max && Len-- > 0)
         {
-            ReadLength++;
-            Out[ReadLength] = Next();
+            Out[ReadLength++] = Next();
         }
 
         return ReadLength;
