@@ -46,7 +46,7 @@ struct Block
      * 
      * @param Other The block to copy from
      */
-    Block(const Block& Other)
+    constexpr Block(const Block& Other)
     {
         Real = Other.Real;
     }
@@ -57,13 +57,13 @@ struct Block
      * @param Index 
      * @return T& 
      */
-    T& operator[](U32 Index) const
+    constexpr T& operator[](U32 Index) const
     {
         ASSERT(Index <= Size, "Accessing block out of range");
         return Real[Index];
     }
 
-    void Wipe()
+    constexpr void Wipe()
     {
         Memory::Zero(Real, Size * sizeof(T));
     }
@@ -77,7 +77,7 @@ private:
 
 public:
 
-    ~Block()
+    constexpr ~Block()
     {
         delete[] Real;
     }
