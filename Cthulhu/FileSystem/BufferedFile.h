@@ -84,14 +84,9 @@ struct BufferedFile
     template<typename T>
     CTU_INLINE U32 ReadN(T* Data, U32 Len)
     {
-        // calculate the amount of bytes we need to read in
-        // we take the smallest value of Requested length, length of the file 
-        // or the amount of bytes left in the file
-        U32 Length = Math::Min(Size() - CurrentDepth(), Len);
-        fread((Byte*)Data, sizeof(Byte), Length, Real);
-        return Length;
+        return fread(Data, sizeof(Byte), Len, Real);
     }
-
+    
     U64 Seek(U64 NewLocation);
 
     void Write(Array<Byte> Data);
