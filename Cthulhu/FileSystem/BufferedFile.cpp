@@ -15,7 +15,6 @@
 
 #include <stdio.h>
 
-#include "Core/Collections/Array.h"
 #include "BufferedFile.h"
 
 using namespace Cthulhu;
@@ -23,8 +22,7 @@ using namespace Cthulhu::FileSystem;
 
 BufferedFile::BufferedFile(const String& Name)
 #if OS_LINUX || OS_APPLE
-    : FileType(FType::Disk)
-    , Real(fopen(*Name, "r"))
+    : Real(fopen(*Name, "r"))
 #endif
 {
 #if OS_WINDOWS
@@ -32,88 +30,44 @@ BufferedFile::BufferedFile(const String& Name)
 #endif
     if(Real)
         fputs("\n", Real);
-
-    FileType = FType::Disk;
 }
-
-BufferedFile::BufferedFile(Array<U8>* Data)
-    : FileType(FType::Memory)
-    , Arr(Data)
-    , Cursor(0)
-{}
 
 BufferedFile::~BufferedFile()
 { 
-    if(FileType == FType::Disk)
-    {
-        if (Real) 
-            fclose(Real);
-    }
-    else
-    {
-        delete Arr;
-    }
+    if (Real) 
+        fclose(Real);
 }
 
 C8 BufferedFile::Peek() const
 {
-    if(FileType == FType::Disk)
-    {
-        //Take the next char
-        C8 Ret = fgetc(Real);
-        //Push the char back onto the file
-        ungetc(Ret, Real);
-        //Return the taken char
-        return Ret;
-    }
-    else
-    {
-        return Arr->At(Cursor + 1).Or(-1);
-    }
+    //Take the next char
+    C8 Ret = fgetc(Real);
+    //Push the char back onto the file
+    ungetc(Ret, Real);
+    //Return the taken char
+    return Ret;
 }
 
 U32 BufferedFile::Size() const
 {
-    if(FileType == FType::Disk)
-    {
-        //seek to end
-        U32 Depth = CurrentDepth();
-        fseek(Real, 0, SEEK_END);
-        const U32 Ret = ftell(Real);
+    //seek to end
+    U32 Depth = CurrentDepth();
+    fseek(Real, 0, SEEK_END);
+    const U32 Ret = ftell(Real);
 
-        //seek back
-        fseek(Real, Depth, SEEK_SET);
+    //seek back
+    fseek(Real, Depth, SEEK_SET);
 
-        return Ret;
-    }
-    else
-    {
-        return Arr->Len();
-    }
+    return Ret;
 }
 
 U64 BufferedFile::Seek(U64 NewLocation)
 {
-    if(FileType == FType::Disk)
-    {
-        fseek(Real, (long)NewLocation, SEEK_SET);
-        return ftell(Real);
-    }
-    else
-    {
-        return Cursor = NewLocation;
-    }
+    fseek(Real, (long)NewLocation, SEEK_SET);
+    return ftell(Real);
 }
 
 void BufferedFile::Write(Array<Byte> Data)
 {
-    if(FileType == FType::Disk)
-    {
-        fwrite(Data.Data(), sizeof(Byte), Data.Len(), Real);
-    }
-    else
-    {
-        Arr->Append(Data);
-        Cursor += Data.Len();
-    }
+    fwrite(Data.Data(), sizeof(Byte), Data.Len(), Real);
 }

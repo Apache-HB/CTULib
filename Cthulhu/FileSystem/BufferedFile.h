@@ -31,64 +31,30 @@ struct BufferedFile
      *
      */
     BufferedFile(const String& Name);
-    
-    /**
-     *
-     */
-    BufferedFile(Array<U8>* Data);
 
     ~BufferedFile();
 
     CTU_INLINE C8 Next() 
     { 
-        if(FileType == FType::Disk)
-        {
-            return fgetc(Real);
-        }
-        else
-        {
-            return Arr->At(Cursor++).Or(-1);
-        }
+        return fgetc(Real);
     }
 
     C8 Peek() const;
 
     CTU_INLINE void Close() 
     {
-        if(FileType == FType::Disk)
-        {
-            fclose(Real); 
-        }
-        else
-        {
-            delete Real;
-        }
+        fclose(Real); 
         Real = nullptr;
     }
 
     CTU_INLINE bool Valid() const 
     { 
-        if(FileType == FType::Disk)
-        {
-            return Real != nullptr;
-        }
-        else
-        {
-            return true;
-        }
+        return Real != nullptr;
     }
 
     CTU_INLINE void Push(C8 C) 
     { 
-        if(FileType == FType::Disk)
-        {
-            ungetc(C, Real);
-        }
-        else
-        {
-            Arr->Append(C);
-            Cursor++;
-        }
+        ungetc(C, Real);
     }
 
     template<typename T>
@@ -96,31 +62,15 @@ struct BufferedFile
     {
         static_assert(IsDecimal<T>::Value || IsPOD<T>::Value, "T needs to be an integer or POD type");
         
-        if(FileType == FType::Disk)
-        {
-            T Ret;
-            fread(&Ret, sizeof(T), 1, Real);
-            return Ret;
-        }
-        else
-        {
-            return *reinterpret_cast<T*>(Arr->Data() + Cursor);
-        }
+        T Ret;
+        fread(&Ret, sizeof(T), 1, Real);
+        return Ret;
     }
 
     Array<Byte> ReadBytes(U32 Length)
     {
         U8* Ret = new U8[Length];
-        if(FileType == FType::Disk)
-        {
-            fread(Ret, sizeof(U8), Length, Real);
-        }
-        else
-        {
-            Memory::Copy<Byte>(Arr->Data() + Cursor, Ret, Length);
-            Cursor += Length;
-        }
-
+        fread(Ret, sizeof(U8), Length, Real);
         return { Ret, Length };
     }
 
@@ -128,33 +78,18 @@ struct BufferedFile
 
     CTU_INLINE U32 CurrentDepth() const 
     { 
-        if(FileType == FType::Disk)
-        {
-            return ftell(Real);
-        }
-        else
-        {
-            return Cursor;
-        }
+        return ftell(Real);
     }
 
     template<typename T>
     CTU_INLINE U32 ReadN(T* Data, U32 Len)
     {
-        U32 ReadLength = 0;
-        const U32 Max = Size();
-        U8* Out = (U8*)Data;
-        
-        // caching the depth is far quicker than calling ftell
-        // many magnitudes quicker actually
-        U32 Depth = CurrentDepth();
-
-        while(Depth++ < Max && Len-- > 0)
-        {
-            Out[ReadLength++] = Next();
-        }
-
-        return ReadLength;
+        // calculate the amount of bytes we need to read in
+        // we take the smallest value of Requested length, length of the file 
+        // or the amount of bytes left in the file
+        U32 Length = Math::Min(Size() - CurrentDepth(), Len);
+        fread((Byte*)Data, sizeof(Byte), Length, Real);
+        return Length;
     }
 
     U64 Seek(U64 NewLocation);
@@ -164,45 +99,14 @@ struct BufferedFile
     BufferedFile& Claim(BufferedFile* Other)
     {
         Close();
-        FileType = Other->FileType;
-        if(FileType == FType::Disk)
-        {
-            Real = Other->Real;
-            Other->Real = nullptr;
-        }
-        else
-        {
-            Arr = Other->Arr;
-            Cursor = Other->Cursor;
-            Other->Arr = nullptr;
-        }
+        Real = Other->Real;
+        Other->Real = nullptr;
 
         return *this;
     }
 
-    //what type of file is this
-    enum FType : U8
-    {
-        // this is a real file that exists on the computers drive
-        Disk,
-        // this file is actually fake and is stored in memory
-        Memory
-    };
-
-    FType Type() const { return FileType; }
-
 private:
-
-    FType FileType;
-    union
-    {
-        FILE* Real;
-        struct
-        {
-            Array<U8>* Arr;
-            U32 Cursor;
-        };
-    };
+    FILE* Real;
 };
 
 }
