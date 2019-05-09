@@ -77,7 +77,7 @@ private:
 
 public:
 
-    constexpr ~Block()
+    ~Block()
     {
         delete[] Real;
     }
