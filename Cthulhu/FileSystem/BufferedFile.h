@@ -145,7 +145,11 @@ struct BufferedFile
         const U32 Max = Size();
         U8* Out = (U8*)Data;
         
-        while(CurrentDepth() < Max && Len-- > 0)
+        // caching the depth is far quicker than calling ftell
+        // many magnitudes quicker actually
+        U32 Depth = CurrentDepth();
+
+        while(Depth++ < Max && Len-- > 0)
         {
             Out[ReadLength++] = Next();
         }
