@@ -84,7 +84,17 @@ struct BufferedFile
     template<typename T>
     CTU_INLINE U32 ReadN(T* Data, U32 Len)
     {
-        return fread(Data, sizeof(Byte), Len, Real);
+        U32 Max = Size();
+        U32 Depth = CurrentDepth();
+        Byte* Out = (Byte*)Data;
+
+        U32 I = 0;
+        while(Depth++ < Max && Len-- > 0)
+        {
+            Out[I++] = Next();
+        }
+
+        return I;
     }
     
     U64 Seek(U64 NewLocation);
