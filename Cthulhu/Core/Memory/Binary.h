@@ -26,15 +26,26 @@ struct Binary
         : Length(Size)
         , Cursor(0)
         , Data(new Byte[Size])
+        , Step(64)
     {}
 
     template<typename T>
-    void Write(const T* Bytes)
+    U32 Write(const T* Bytes)
     {
-        U32 WriteLength = Math::Min(sizeof(T), Length - Cursor);
-        Memory::Copy(Bytes, Data + Cursor, WriteLength);
-        Cursor += WriteLength;
-        return WriteLength;
+        EnsureSize(sizeof(T));
+        
+        Memory::Copy(Bytes, Data + Cursor, sizeof(T));
+        Cursor += sizeof(T);
+        return Cursor;
+    }
+
+    U32 Write(const Byte* Bytes, U32 Size)
+    {
+        EnsureSize(Size);
+
+        Memory::Copy(Bytes, Data + Cursor, Size);
+        Cursor += Size;
+        return Cursor;
     }
 
     U32 Seek(U32 To)
@@ -67,7 +78,25 @@ struct Binary
     U32 GetLength() const { return Length; }
     U32 Depth() const { return Cursor; }
 
+    U32 Step;
 private:
+
+    void EnsureSize(U32 Extra)
+    {
+        if(Cursor + Extra > Length)
+        {
+            while(Cursor + Extra > Length)
+            {
+                Length += Step;
+            }
+
+            Byte* Temp = Data;
+            Data = new Byte[Length];
+            Memory::Copy(Temp, Data, Length);
+            delete[] Temp;
+        }
+    }
+
     U32 Cursor;
     U32 Length;
     Byte* Data;
