@@ -63,6 +63,15 @@ struct Binary
 
     U32 Seek(U32 To)
     {
+        if(To > Length)
+        {
+            Byte* Temp = Data;
+            U32 Len = To + Step;
+            Data = new Byte[Len];
+            Memory::Copy(Temp, Data, Len);
+            Length = Len;
+        }
+
         if(To <= 0)
         {
             Cursor = 0;
