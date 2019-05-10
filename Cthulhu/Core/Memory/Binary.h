@@ -112,6 +112,8 @@ private:
                 Length += Step;
             }
 
+            Length += Extra;
+
             Byte* Temp = Data;
             Data = new Byte[Length];
             Memory::Copy(Temp, Data, Length);
