@@ -36,9 +36,10 @@ struct Binary
         , Data(new Byte[Size])
     {}
 
-    ~Binary()
+    void Close() 
     {
         delete[] Data;
+        Data = nullptr;
     }
 
     template<typename T>
