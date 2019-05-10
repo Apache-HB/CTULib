@@ -30,9 +30,9 @@ struct Binary
     {}
 
     Binary(U32 Size)
-        : Cursor(0)
+        : Step(64)
+        , Cursor(0)
         , Length(Size)
-        , Step(64)
         , Data(new Byte[Size])
     {}
 
