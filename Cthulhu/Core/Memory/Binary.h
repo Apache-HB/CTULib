@@ -30,10 +30,10 @@ struct Binary
     {}
 
     Binary(U32 Size)
-        : Length(Size)
-        , Cursor(0)
-        , Data(new Byte[Size])
+        : Cursor(0)
+        , Length(Size)
         , Step(64)
+        , Data(new Byte[Size])
     {}
 
     ~Binary()
@@ -84,7 +84,7 @@ struct Binary
         T Ret = *(T*)(Data + Cursor);
         Cursor += sizeof(T);
 
-        return T;
+        return Ret;
     }
 
     U32 GetLength() const { return Length; }
