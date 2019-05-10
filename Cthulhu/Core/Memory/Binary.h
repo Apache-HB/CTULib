@@ -47,7 +47,7 @@ struct Binary
     {
         EnsureSize(sizeof(T));
         
-        Memory::Copy(Bytes, Data + Cursor, sizeof(T));
+        Memory::Copy((Byte*)Bytes, Data + Cursor, sizeof(T));
         Cursor += sizeof(T);
         return Cursor;
     }
