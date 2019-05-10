@@ -22,12 +22,24 @@ namespace Cthulhu
 
 struct Binary
 {
+    Binary()
+        : Length(64)
+        , Cursor(0)
+        , Data(new Byte[64])
+        , Step(64)
+    {}
+
     Binary(U32 Size)
         : Length(Size)
         , Cursor(0)
         , Data(new Byte[Size])
         , Step(64)
     {}
+
+    ~Binary()
+    {
+        delete[] Data;
+    }
 
     template<typename T>
     U32 Write(const T* Bytes)
