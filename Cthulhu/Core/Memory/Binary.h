@@ -23,10 +23,10 @@ namespace Cthulhu
 struct Binary
 {
     Binary()
-        : Length(64)
-        , Cursor(0)
-        , Data(new Byte[64])
+        : Cursor(64)
         , Step(64)
+        , Length(0)
+        , Data(new Byte[64])
     {}
 
     Binary(U32 Size)
