@@ -68,7 +68,7 @@ struct Binary
             Byte* Temp = Data;
             U32 Len = To + Step;
             Data = new Byte[Len];
-            Memory::Copy(Temp, Data, Len);
+            Memory::Copy(Temp, Data, Length);
             Length = Len;
         }
 
