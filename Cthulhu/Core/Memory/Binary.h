@@ -107,6 +107,7 @@ private:
     {
         if(Cursor + Extra > Length)
         {
+            U32 Original = Length;
             while(Cursor + Extra > Length)
             {
                 Length += Step;
@@ -116,7 +117,7 @@ private:
 
             Byte* Temp = Data;
             Data = new Byte[Length];
-            Memory::Copy(Temp, Data, Length);
+            Memory::Copy(Temp, Data, Original);
             delete[] Temp;
         }
     }
