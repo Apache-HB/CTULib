@@ -43,11 +43,11 @@ struct Binary
     }
 
     template<typename T>
-    U32 Write(T Bytes)
+    U32 Write(const T* Bytes)
     {
         EnsureSize(sizeof(T));
         
-        Memory::Copy((Byte*)&Bytes, Data + Cursor, sizeof(T));
+        Memory::Copy((Byte*)Bytes, Data + Cursor, sizeof(T));
         Cursor += sizeof(T);
         return Cursor;
     }
