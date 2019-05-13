@@ -101,6 +101,8 @@ struct Binary
     U32 Depth() const { return Cursor; }
 
     U32 Step;
+
+    const Byte* GetData() const { return Data; }
 private:
 
     void EnsureSize(U32 Extra)
