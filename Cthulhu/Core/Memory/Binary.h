@@ -26,20 +26,19 @@ struct Binary
         : Step(64)
         , Cursor(64)
         , Length(0)
-        , Data(new Byte[64])
+        , Data(new Byte[64]())
     {}
 
     Binary(U32 Size)
         : Step(64)
         , Cursor(0)
         , Length(Size)
-        , Data(new Byte[Size])
+        , Data(new Byte[Size]())
     {}
 
     void Close() 
     {
         delete[] Data;
-        Data = nullptr;
     }
 
     template<typename T>
@@ -76,10 +75,6 @@ struct Binary
         {
             Cursor = 0;
         }
-        else if(To >= Length)
-        {
-            Cursor = Length;
-        }
         else
         {
             Cursor = To;
@@ -103,6 +98,14 @@ struct Binary
     U32 Step;
 
     const Byte* GetData() const { return Data; }
+
+    Byte* TakeData() const { return Data; }
+    
+    Byte* GiveData(Byte* NewData, U32 NewLen) 
+    { 
+        Data = NewData; 
+        Length = NewLen;
+    }
 private:
 
     void EnsureSize(U32 Extra)
