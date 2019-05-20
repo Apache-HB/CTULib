@@ -101,7 +101,7 @@ struct Binary
 
     Byte* TakeData() const { return Data; }
     
-    Byte* GiveData(Byte* NewData, U32 NewLen) 
+    void GiveData(Byte* NewData, U32 NewLen) 
     { 
         Data = NewData; 
         Length = NewLen;
