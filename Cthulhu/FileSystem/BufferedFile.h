@@ -36,10 +36,6 @@ struct BufferedFile
         : Real(nullptr)
     {}
 
-    BufferedFile(BufferedFile& Other)
-        : Real(Other.Handle())
-    {}
-
     ~BufferedFile();
 
     CTU_INLINE C8 Next() 
@@ -51,8 +47,11 @@ struct BufferedFile
 
     CTU_INLINE void Close() 
     {
-        fclose(Real); 
-        Real = nullptr;
+        if(Valid())
+        {
+            fclose(Real); 
+            Real = nullptr;
+        }
     }
 
     CTU_INLINE bool Valid() const 
