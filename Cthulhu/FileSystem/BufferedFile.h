@@ -32,6 +32,14 @@ struct BufferedFile
      */
     BufferedFile(const String& Name);
 
+    BufferedFile() 
+        : Real(nullptr)
+    {}
+
+    BufferedFile(BufferedFile& Other)
+        : Real(Other.Handle())
+    {}
+
     ~BufferedFile();
 
     CTU_INLINE C8 Next() 
@@ -102,6 +110,9 @@ struct BufferedFile
 
 private:
     FILE* Real;
+
+public:
+    CTU_INLINE FILE* Handle() const { return Real; }
 };
 
 }
