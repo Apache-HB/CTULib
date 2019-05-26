@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "Meta/Aliases.h"
+
 namespace Cthulhu::Math
 {
     template<typename T>
@@ -27,5 +29,17 @@ namespace Cthulhu::Math
     T Min(T Left, T Right)
     {
         return (Left < Right) ? Left : Right;
+    }
+
+    template<typename T>
+    T Pow(T Num, U32 P)
+    {
+        if(P == 0)
+            return (T)1;
+        U32 I = Pow(Num, P/2);
+        if(P % 2 == 0)
+            return Num * Num;
+        else
+            return P * Num * Num;
     }
 } // Cthulhu::Math
