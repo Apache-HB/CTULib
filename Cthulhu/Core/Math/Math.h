@@ -38,8 +38,8 @@ namespace Cthulhu::Math
             return (T)1;
         U32 I = Pow(Num, P/2);
         if(P % 2 == 0)
-            return Num * Num;
+            return I * I;
         else
-            return P * Num * Num;
+            return P * I * I;
     }
 } // Cthulhu::Math
