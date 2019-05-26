@@ -32,6 +32,10 @@ struct BufferedFile
      */
     BufferedFile(const String& Name);
 
+    BufferedFile() 
+        : Real(nullptr)
+    {}
+
     ~BufferedFile();
 
     CTU_INLINE C8 Next() 
@@ -43,8 +47,11 @@ struct BufferedFile
 
     CTU_INLINE void Close() 
     {
-        fclose(Real); 
-        Real = nullptr;
+        if(Valid())
+        {
+            fclose(Real); 
+            Real = nullptr;
+        }
     }
 
     CTU_INLINE bool Valid() const 
@@ -102,6 +109,9 @@ struct BufferedFile
 
 private:
     FILE* Real;
+
+public:
+    CTU_INLINE FILE* Handle() const { return Real; }
 };
 
 }

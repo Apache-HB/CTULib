@@ -10,8 +10,6 @@ license = 'Apache'
 inc = include_directories('Cthulhu')
 pkg_mod = import('pkgconfig')
 
-
-
 meta_sources = [ 'Cthulhu/Meta/System.cpp' ]
 metalib = static_library('meta', meta_sources, include_directories : inc, install : true)
 pkg_mod.generate(metalib, version : version, name : 'cthulhumeta', filebase : 'meta', description : 'Code that helps code be code. confusing isnt it')
