@@ -24,7 +24,7 @@ struct Binary
 {
     Binary()
         : Step(64)
-        , Cursor(64)
+        , Cursor(0)
         , Length(0)
         , Data(new Byte[64]())
     {}
@@ -90,6 +90,21 @@ struct Binary
         Cursor += sizeof(T);
 
         return Ret;
+    }
+
+    U32 ReadN(Byte* Out, U32 Len)
+    {        
+        U32 D = 0;
+        
+        while(Len < Length && Len >= 0)
+        {
+            Out[D] = Data[D + Cursor];
+            Cursor++;
+            D++;
+            Len--;
+        }
+
+        return D;
     }
 
     U32 GetLength() const { return Length; }
