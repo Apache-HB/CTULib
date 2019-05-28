@@ -75,12 +75,12 @@
 #if defined(_MSC_VER)
 #   define ALWAYSINLINE __forceinline
 #   define CC_MSVC 1
-#   define DEPRECATED(Version, Message) __declspec(deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont"))
+#   define DEPRECATED(Version, Message) __declspec(deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile"))
 #elif defined(__clang__)
 #   define ALWAYSINLINE __attribute__((always_inline))
 #   define CC_CLANG 1
 #   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
-#elif defined(__GUNC__) || defined(__GUNG__) || defined(__GNU__)
+#elif __GUNC__ || defined(__GUNG__) || defined(__GNU__)
     //use inline instead of alwaysinline here because gcc has problems
     //with inlining functions with out of line definitions
 #   define ALWAYSINLINE inline
