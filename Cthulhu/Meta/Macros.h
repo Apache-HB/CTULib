@@ -83,6 +83,8 @@
 #   define CC_CLANG 1
 #   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
 #elif defined(__GUNC__) || defined(__GUNG__) || defined(__GNU__)
+    // im just going to leave this here for posterity: gcc is garbage at compiler detection
+    // these macros are a pain and are never defined even though they should be, i just dont get it
     //use inline instead of alwaysinline here because gcc has problems
     //with inlining functions with out of line definitions
 #   define ALWAYSINLINE inline
