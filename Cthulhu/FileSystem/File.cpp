@@ -24,7 +24,9 @@
 #	include <stdio.h>
 #	include <stdlib.h>
 #	include <direct.h>
-#	include "corecrt_io.h"
+#   if CC_MSVC
+#	    include "corecrt_io.h"
+#   endif
 #else
 #	include <libgen.h>
 #	include <unistd.h>
