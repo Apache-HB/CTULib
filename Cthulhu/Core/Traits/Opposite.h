@@ -59,7 +59,7 @@ template<> struct Unsigned<U16> { using Type = U16; };
 template<> struct Unsigned<U32> { using Type = U32; };
 template<> struct Unsigned<U64> { using Type = U64; };
 
-template<typename T> struct IsUnsigned : Same<Unsgined<T>, T> {};
+template<typename T> struct IsUnsigned : Same<Unsigned<T>, T> {};
 template<typename T> struct IsSigned : Same<Signed<T>, T> {};
 
 }
