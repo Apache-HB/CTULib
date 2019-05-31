@@ -36,7 +36,7 @@ template<> struct Opposite<I64> { using Type = U64; };
 
 
 //force a type to be signed
-template<typename T> struct Signed {};
+template<typename T> struct Signed { using Type = T; };
 
 template<> struct Signed<U8>  { using Type = I8;  };
 template<> struct Signed<U16> { using Type = I16; };
@@ -48,7 +48,7 @@ template<> struct Signed<I32> { using Type = I32; };
 template<> struct Signed<I64> { using Type = I64; };
 
 //force a type to be unsigned
-template<typename T> struct Unsigned {};
+template<typename T> struct Unsigned { using Type = T; };
 
 template<> struct Unsigned<I8>  { using Type = U8;  };
 template<> struct Unsigned<I16> { using Type = U16; };
