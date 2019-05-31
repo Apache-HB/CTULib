@@ -95,8 +95,8 @@ struct Binary
     U32 ReadN(Byte* Out, U32 Len)
     {        
         U32 D = 0;
-        
-        while(Len < Length && Len >= 0)
+
+        while(Len < Length && Len > 0)
         {
             Out[D] = Data[D + Cursor];
             Cursor++;

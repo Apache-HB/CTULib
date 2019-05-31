@@ -28,7 +28,7 @@
 namespace Cthulhu::Math
 {
 
-//TODO: does intel have a builtin function for byteswaps
+// TODO: does intel have a builtin function for byteswaps
 
 CTU_INLINE U16 ByteSwap(U16 Data)
 {
@@ -49,8 +49,8 @@ CTU_INLINE U32 ByteSwap(U32 Data)
     return __builtin_bswap32(Data);
 #else
     return ((Data >> 24) & 0xff) |
-        ((Num << 8) & 0xff0000) |
-        ((Num >> 8) & 0xff00) |
+        ((Data << 8) & 0xff0000) |
+        ((Data >> 8) & 0xff00) |
         ((Data << 24) & 0xff000000);
 #endif
 }
