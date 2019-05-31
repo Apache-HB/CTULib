@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 
-#include "Meta/Aliases.h"
+#include "IsSame.h"
 
 #pragma once
 
@@ -58,5 +58,8 @@ template<> struct Unsigned<U8>  { using Type = U8;  };
 template<> struct Unsigned<U16> { using Type = U16; };
 template<> struct Unsigned<U32> { using Type = U32; };
 template<> struct Unsigned<U64> { using Type = U64; };
+
+template<typename T> struct IsUnsigned : Same<Unsgined<T>, T> {};
+template<typename T> struct IsSigned : Same<Signed<T>, T> {};
 
 }
