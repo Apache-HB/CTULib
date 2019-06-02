@@ -77,23 +77,28 @@
 #if defined(__GUNC__) || defined(__GUNG__) || defined(__GNU__) || defined(GCC_WORKAROUND_BULLSHIT)
     // im just going to leave this here for posterity: gcc is garbage at compiler detection
     // these macros are a pain and are never defined even though they should be, i just dont get it
-    //use inline instead of alwaysinline here because gcc has problems
-    //with inlining functions with out of line definitions
+    // use inline instead of alwaysinline here because gcc has problems
+    // with inlining functions with out of line definitions
 #   define ALWAYSINLINE inline
 #   define CC_GCC 1
 #   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
+    // gcc doesnt support if constexpr syntax
+#   define IF_CONSTEXPR if
 #elif defined(_MSC_VER)
 #   define ALWAYSINLINE __forceinline
 #   define CC_MSVC 1
 #   define DEPRECATED(Version, Message) __declspec(deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile"))
+#   define IF_CONSTEXPR if constexpr
 #elif defined(__clang__)
 #   define ALWAYSINLINE __attribute__((always_inline))
 #   define CC_CLANG 1
 #   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
+#   define IF_CONSTEXPR if constexpr
 #elif defined(__INTEL_COMPILER)
 #   define ALWAYSINLINE __forceinline
 #   define CC_INTEL 1
 #   define DEPRECATED(Version, Message) //TODO: how does one deprecate on the intel compiler?
+#   define IF_CONSTEXPR if constexpr
 #else
 #   error "Unrecognised compiler"
 #endif

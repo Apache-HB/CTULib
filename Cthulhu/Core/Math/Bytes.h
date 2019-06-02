@@ -75,9 +75,9 @@ CTU_INLINE T GenericByteSwap(T Data)
 {
     static_assert(sizeof(T) == 2 || sizeof(T) == 4 || sizeof(T) == 8);
 
-    if constexpr(sizeof(T) == 2)
+    IF_CONSTEXPR(sizeof(T) == 2)
         return (T)ByteSwap((U16)Data);
-    else if constexpr(sizeof(T) == 4)
+    else IF_CONSTEXPR(sizeof(T) == 4)
         return (T)ByteSwap((U32)Data);
     else
         return (T)ByteSwap((U64)Data);
