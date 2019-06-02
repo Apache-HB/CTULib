@@ -13,7 +13,7 @@ pkg_mod = import('pkgconfig')
 defs = []
 
 if meson.get_compiler('cpp').get_id() == 'gcc'
-    defs += '-D__GNUG__' # this is hacky but it fixes GCC's retardation and actually lets the library build
+    defs += '-DGCC_WORKAROUND_BULLSHIT' # this is hacky but it fixes GCC's retardation and actually lets the library build
 endif
 
 meta_sources = [ 'Cthulhu/Meta/System.cpp' ]

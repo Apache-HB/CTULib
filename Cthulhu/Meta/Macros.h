@@ -69,26 +69,26 @@
 
 
 /**This is a compiler switch to detect which compiler is being used
- * as every compile has compiler specific stuff, such as __forceinline or 
+ * as every compile has compiler specific stuff, such as __forceinline or
  * __attribute__((always_inline)) because whoever wrote these things doesnt
  * know how to follow standards *cough* MSVC *cough*
  */
 
-#if defined(_MSC_VER)
-#   define ALWAYSINLINE __forceinline
-#   define CC_MSVC 1
-#   define DEPRECATED(Version, Message) __declspec(deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile"))
-#elif defined(__clang__)
-#   define ALWAYSINLINE __attribute__((always_inline))
-#   define CC_CLANG 1
-#   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
-#elif defined(__GUNC__) || defined(__GUNG__) || defined(__GNU__)
+#if defined(__GUNC__) || defined(__GUNG__) || defined(__GNU__) || defined(GCC_WORKAROUND_BULLSHIT)
     // im just going to leave this here for posterity: gcc is garbage at compiler detection
     // these macros are a pain and are never defined even though they should be, i just dont get it
     //use inline instead of alwaysinline here because gcc has problems
     //with inlining functions with out of line definitions
 #   define ALWAYSINLINE inline
 #   define CC_GCC 1
+#   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
+#elif defined(_MSC_VER)
+#   define ALWAYSINLINE __forceinline
+#   define CC_MSVC 1
+#   define DEPRECATED(Version, Message) __declspec(deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile"))
+#elif defined(__clang__)
+#   define ALWAYSINLINE __attribute__((always_inline))
+#   define CC_CLANG 1
 #   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
 #elif defined(__INTEL_COMPILER)
 #   define ALWAYSINLINE __forceinline
