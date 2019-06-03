@@ -37,31 +37,19 @@ namespace Private
 }
 
 template<typename T>
-struct IsTriviallyDestructable
-{
-    static constexpr bool Value = Private::TrivialDestructor<T>::Value;
-};
+struct IsTriviallyDestructable : Private::TrivialDestructor<T> {};
 
 template<typename T>
-struct IsTriviallyCopyable
-{
-    static constexpr bool Value = Or<__has_trivial_copy(T), IsPOD<T>>::Value;
-};
+struct IsTriviallyCopyable : Or<__has_trivial_copy(T), IsPOD<T>> {};
 
 template<typename T>
-struct IsTriviallyAssignable
-{
-    static constexpr bool Value = Or<__has_trivial_assign(T), IsPOD<T>>::Value;
-};
+struct IsTriviallyAssignable : Or<__has_trivial_assign(T), IsPOD<T>> {};
 
 //check if a type is trivial
 //meaning it has a trivial destructor
 //trivial copy
 //and trivial move
 template<typename T>
-struct IsTrivial
-{
-    static constexpr bool Value = And<IsTriviallyDestructable<T>, IsTriviallyCopyable<T>, IsTriviallyAssignable<T>>::Value;
-};
+struct IsTrivial : And<IsTriviallyDestructable<T>, IsTriviallyCopyable<T>, IsTriviallyAssignable<T>> {};
 
 }

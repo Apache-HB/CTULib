@@ -13,6 +13,8 @@
  *  limitations under the License.
  */
 
+#include "Traits.h"
+
 #pragma once
 
 namespace Cthulhu
@@ -33,16 +35,13 @@ struct OrValue
 };
 
 template<bool... T>
-struct OrValue<true, T...>
-{
-    static constexpr bool Value = true;
-};
+struct OrValue<true, T...> : True {};
 
 template<bool TLeft, bool... TRight>
 struct Or<TLeft, TRight...> : OrValue<TLeft, TRight...> {};
 
 template<>
-struct Or<> { static constexpr bool Value = false; };
+struct Or<> : False {};
 
 
 //equivilent to &&
@@ -56,18 +55,12 @@ struct AndValue
 };
 
 template<typename... T>
-struct AndValue<false, T...>
-{
-    static constexpr bool Value = false;
-};
+struct AndValue<false, T...> : False {};
 
 template<typename TLeft, typename... TRight>
 struct And<TLeft, TRight...> : AndValue<TLeft::Value, TRight...> {};
 
 template<>
-struct And<>
-{
-    static constexpr bool Value = true;
-};
+struct And<> : False {};
 
 }

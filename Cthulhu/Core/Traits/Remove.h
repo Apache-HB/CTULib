@@ -19,14 +19,14 @@ namespace Cthulhu
 {
 
 //remove all references to get the most basic form of a type
-template<typename T> struct RemoveReference         { using Type = T; };
-template<typename T> struct RemoveReference<T&>     { using Type = T; };
-template<typename T> struct RemoveReference<T&&>    { using Type = T; };
+template<typename T> struct RemoveReference { using Type = T; };
+template<typename T> struct RemoveReference<T&> { using Type = T; };
+template<typename T> struct RemoveReference<T&&> { using Type = T; };
 
 //remove all qualifiers such as const or volatile to get the basic type
-template<typename T> struct RemoveQualifiers                    { using Type = T; };
-template<typename T> struct RemoveQualifiers<const T>           { using Type = T; };
-template<typename T> struct RemoveQualifiers<volatile T>        { using Type = T; };
-template<typename T> struct RemoveQualifiers<const volatile T>  { using Type = T; };
+template<typename T> struct RemoveQualifiers { using Type = T; };
+template<typename T> struct RemoveQualifiers<const T> { using Type = T; };
+template<typename T> struct RemoveQualifiers<volatile T> { using Type = T; };
+template<typename T> struct RemoveQualifiers<const volatile T> { using Type = T; };
 
 }

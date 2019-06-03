@@ -22,18 +22,30 @@
 namespace Cthulhu
 {
 
+struct False 
+{ 
+    static constexpr bool Value = false; 
+    constexpr operator bool() const { return false; } 
+};
+
+struct True
+{
+    static constexpr bool Value = true;
+    constexpr operator bool() const { return true; }
+};
+
 /**
  * @brief compile time meta-template to check if a type is a pointer
  * 
  * @tparam T the object to check for a pointer on
  */
 template<typename T>
-struct IsPointer { static constexpr bool Value = false; };
+struct IsPointer : False {};
 
-template<typename T> struct IsPointer<T*> { static constexpr bool Value = true; };
+template<typename T> struct IsPointer<T*> : True {};
 
-template<typename T> struct IsPointer<const             T>    { static constexpr bool Value = IsPointer<T>::Value; };
-template<typename T> struct IsPointer<volatile          T>    { static constexpr bool Value = IsPointer<T>::Value; };
-template<typename T> struct IsPointer<const volatile    T>    { static constexpr bool Value = IsPointer<T>::Value; };
+template<typename T> struct IsPointer<const T> : IsPointer<T> {};
+template<typename T> struct IsPointer<volatile T> : IsPointer<T> {};
+template<typename T> struct IsPointer<const volatile T> : IsPointer<T> {};
 
 }

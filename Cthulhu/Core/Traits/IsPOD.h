@@ -24,10 +24,8 @@ namespace Cthulhu
 
 //check if a type is POD (PlainOldData)
 template<typename T>
-struct IsPOD
-{
-    static constexpr bool Value = Or<__is_pod(T) || __is_enum(T), IsArithmatic<T>::Value, IsPointer<T>::Value>::Value;
-}; //                                ^^^^^^^^       ^^^^^^^^^
-   //these are some magic things that compilers have without #including anything 
+struct IsPOD : Or<__is_pod(T) || __is_enum(T), IsArithmatic<T>::Value, IsPointer<T>::Value>{}; 
+//                ^^^^^^^^       ^^^^^^^^^
+//these are some magic things that compilers have without #including anything 
 
 }

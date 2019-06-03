@@ -14,6 +14,7 @@
  */
 
 #include "Meta/Aliases.h"
+#include "Traits.h"
 
 #pragma once
 
@@ -21,25 +22,25 @@ namespace Cthulhu
 {
 
 //check if 2 types are the same
-template<typename A, typename B> struct Same { static constexpr bool Value = false; };
-template<typename T> struct Same<T, T> { static constexpr bool Value = true; };
+template<typename A, typename B> struct Same : False {};
+template<typename T> struct Same<T, T> : True {};
 
-template<typename T> struct IsDecimal { static constexpr bool Value = false; };
+template<typename T> struct IsDecimal : False {};
 
 //check if a type is decimal only (no floating point)
-template<> struct IsDecimal<U8> { static constexpr bool Value = true; };
-template<> struct IsDecimal<U16> { static constexpr bool Value = true; };
-template<> struct IsDecimal<U32> { static constexpr bool Value = true; };
-template<> struct IsDecimal<U64> { static constexpr bool Value = true; };
+template<> struct IsDecimal<U8> : True {};
+template<> struct IsDecimal<U16> : True {};
+template<> struct IsDecimal<U32> : True {};
+template<> struct IsDecimal<U64> : True {};
 
-template<> struct IsDecimal<I8> { static constexpr bool Value = true; };
-template<> struct IsDecimal<I16> { static constexpr bool Value = true; };
-template<> struct IsDecimal<I32> { static constexpr bool Value = true; };
-template<> struct IsDecimal<I64> { static constexpr bool Value = true; };
+template<> struct IsDecimal<I8> : True {};
+template<> struct IsDecimal<I16> : True {};
+template<> struct IsDecimal<I32> : True {};
+template<> struct IsDecimal<I64> : True {};
 
 //check if a type is floating point type
-template<typename T> struct IsFloat { static constexpr bool Value = false; };
+template<typename T> struct IsFloat : False {};
 
-template<> struct IsFloat<F32> { static constexpr bool Value = true; };
-template<> struct IsFloat<F64> { static constexpr bool Value = true; };
+template<> struct IsFloat<F32> : True {};
+template<> struct IsFloat<F64> : True {};
 }
