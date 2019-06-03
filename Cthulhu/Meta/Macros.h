@@ -93,7 +93,11 @@
 #   define ALWAYSINLINE __attribute__((always_inline))
 #   define CC_CLANG 1
 #   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
-#   define IF_CONSTEXPR if constexpr
+#   if (__clang_major__ == 3 && __clang_minor__ == 9) || __clang_major__ > 3
+#       define IF_CONSTEXPR if constexpr
+#   else
+#       define IF_CONSTEXPR if
+#   endif
 #elif defined(__INTEL_COMPILER)
 #   define ALWAYSINLINE __forceinline
 #   define CC_INTEL 1
