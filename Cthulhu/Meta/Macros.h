@@ -93,6 +93,7 @@
 #   define ALWAYSINLINE __attribute__((always_inline))
 #   define CC_CLANG 1
 #   define DEPRECATED(Version, Message) [[deprecated("Deprecated in version " #Version Message " Update your code to the newer api or your build wont compile")]]
+    // if constexpr syntax support was added in clang 3.9 so we need to check for that
 #   if (__clang_major__ == 3 && __clang_minor__ == 9) || __clang_major__ > 3
 #       define IF_CONSTEXPR if constexpr
 #   else
