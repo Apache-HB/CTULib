@@ -134,6 +134,11 @@ protected:
             Length = Location;
         }
 
+        if(Location > Length)
+        {
+            Length = Location;
+        }
+
         Cursor = Location;
     }
 
