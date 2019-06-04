@@ -46,6 +46,7 @@ struct Binary
         EnsureSize(Len);
 
         Memory::Copy(Data + Cursor, Ptr, Len);
+        MoveCursor(Cursor + Len);
 
         return Tell();
     }
@@ -56,6 +57,7 @@ struct Binary
         EnsureSize(sizeof(T));
 
         Memory::Copy((Byte*)&Object, Data + Cursor, sizeof(T));
+        MoveCursor(Cursor + sizeof(T));
 
         return Tell();
     }
@@ -65,6 +67,7 @@ struct Binary
         EnsureSize(Len);
 
         Memory::Copy(Ptr, Data + Cursor, Len);
+        MoveCursor(Cursor + Len);
 
         return Tell();
     }
@@ -100,6 +103,11 @@ struct Binary
     void Reserve(U32 Slack)
     {
         EnsureSize(Slack);
+    }
+
+    void Cleanup()
+    {
+        delete[] Data;
     }
 
 protected:
