@@ -23,126 +23,115 @@ namespace Cthulhu
 struct Binary
 {
     Binary()
-        : Step(64)
-        , Cursor(0)
+        : Cursor(0)
+        , MaxLength(64)
         , Length(0)
+        , Step(0)
         , Data(new Byte[64]())
     {}
-
-    Binary(U32 Size)
-        : Step(64)
-        , Cursor(0)
-        , Length(Size)
-        , Data(new Byte[Size]())
-    {}
-
-    void Close() 
-    {
-        delete[] Data;
-    }
-
-    template<typename T>
-    U32 Write(const T* Bytes)
-    {
-        EnsureSize(sizeof(T));
-        
-        Memory::Copy((Byte*)Bytes, Data + Cursor, sizeof(T));
-        Cursor += sizeof(T);
-        return Cursor;
-    }
-
-    U32 Write(const Byte* Bytes, U32 Size)
-    {
-        EnsureSize(Size);
-
-        Memory::Copy(Bytes, Data + Cursor, Size);
-        Cursor += Size;
-        return Cursor;
-    }
-
-    U32 Seek(U32 To)
-    {
-        if(To > Length)
-        {
-            Byte* Temp = Data;
-            U32 Len = To + Step;
-            Data = new Byte[Len]();
-            Memory::Copy(Temp, Data, Length);
-            Length = Len;
-        }
-
-        if(To <= 0)
-        {
-            Cursor = 0;
-        }
-        else
-        {
-            Cursor = To;
-        }
-
-        return Cursor;
-    }
 
     template<typename T>
     T Read()
     {
-        T Ret = *(T*)(Data + Cursor);
-        Cursor += sizeof(T);
-
+        EnsureSize(sizeof(T));
+        T Ret;
+        Ret = *(T*)(Data + Cursor);
+        MoveCursor(Cursor + sizeof(T));
+        
         return Ret;
     }
 
-    U32 ReadN(Byte* Out, U32 Len)
-    {        
-        U32 D = 0;
+    U32 ReadN(Byte* Ptr, U32 Len)
+    {
+        EnsureSize(Len);
 
-        while(Len < Length && Len > 0)
-        {
-            Out[D] = Data[D + Cursor];
-            Cursor++;
-            D++;
-            Len--;
-        }
+        Memory::Copy(Data + Cursor, Ptr, Len);
 
-        return D;
+        return Tell();
     }
 
-    U32 GetLength() const { return Length; }
-    U32 Depth() const { return Cursor; }
+    template<typename T>
+    U32 Write(const T Object)
+    {
+        EnsureSize(sizeof(T));
+
+        Memory::Copy(&Object, Data + Cursor, sizeof(T));
+
+        return Tell();
+    }
+
+    U32 WriteN(Byte* Ptr, U32 Len)
+    {
+        EnsureSize(Len);
+
+        Memory::Copy(Ptr, Data + Cursor, Len);
+
+        return Tell();
+    }
+
+    U32 Seek(U32 Depth)
+    {
+        MoveCursor(Depth);
+        return Tell();
+    }
+
+    U32 Tell() const
+    {
+        return Cursor;
+    }
 
     U32 Step;
 
-    const Byte* GetData() const { return Data; }
-
-    Byte* TakeData() const { return Data; }
-    
-    void GiveData(Byte* NewData, U32 NewLen) 
-    { 
-        Data = NewData; 
-        Length = NewLen;
+    U32 Len() const
+    {
+        return Length;
     }
-private:
 
+    U32 RealLength() const
+    {
+        return MaxLength;
+    }
+
+    Byte* GetData() const
+    {
+        return Data;
+    }
+
+    U32 Reserve(U32 Slack)
+    {
+        EnsureSize(Slack);
+    }
+
+protected:
+
+    // ensure we have enough extra size to fit Extra
     void EnsureSize(U32 Extra)
     {
-        if(Cursor + Extra > Length)
+        if(Cursor + Extra > MaxLength)
         {
-            U32 Original = Length;
-            while(Cursor + Extra > Length)
-            {
-                Length += Step;
-            }
-
-            Length += Extra;
+            MaxLength = MaxLength + Extra + Step;
 
             Byte* Temp = Data;
-            Data = new Byte[Length]();
-            Memory::Copy(Temp, Data, Original);
+            Data = new Byte[MaxLength]();
+            Memory::Copy(Temp, Data, Length);
             delete[] Temp;
         }
     }
 
+    void MoveCursor(U32 Location)
+    {
+        if(Location > MaxLength)
+        {
+            EnsureSize(Location - MaxLength);
+            Length = Location;
+        }
+
+        Cursor = Location;
+    }
+
+private:
     U32 Cursor;
+    U32 MaxLength;
     U32 Length;
     Byte* Data;
 };
