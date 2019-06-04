@@ -23,9 +23,9 @@ namespace Cthulhu
 struct Binary
 {
     Binary()
-        : Cursor(0)
+        : Step(0)
+        , Cursor(0)
         , MaxLength(64)
-        , Step(0)
         , Length(0)
         , Data(new Byte[64]())
     {}
