@@ -25,8 +25,8 @@ struct Binary
     Binary()
         : Cursor(0)
         , MaxLength(64)
-        , Length(0)
         , Step(0)
+        , Length(0)
         , Data(new Byte[64]())
     {}
 
@@ -97,7 +97,7 @@ struct Binary
         return Data;
     }
 
-    U32 Reserve(U32 Slack)
+    void Reserve(U32 Slack)
     {
         EnsureSize(Slack);
     }
