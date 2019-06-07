@@ -37,7 +37,7 @@ struct Binary
         T Ret;
         Ret = *(T*)(Data + Cursor);
         MoveCursor(Cursor + sizeof(T));
-        
+
         return Ret;
     }
 
@@ -130,14 +130,15 @@ protected:
     {
         if(Location > MaxLength)
         {
-            EnsureSize(Location - MaxLength);
-            Length = Location;
+            MaxLength = Location + Step;
+            Byte* Temp = Data;
+            Data = new Byte[MaxLength]();
+            Memory::Copy(Temp, Data, Length);
+            delete[] Temp;
         }
 
         if(Location > Length)
-        {
             Length = Location;
-        }
 
         Cursor = Location;
     }
