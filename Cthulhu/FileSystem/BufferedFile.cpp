@@ -22,14 +22,12 @@ using namespace Cthulhu::FileSystem;
 
 BufferedFile::BufferedFile(const String& Name)
 #if OS_LINUX || OS_APPLE
-    : Real(fopen(*Name, "r"))
+    : Real(fopen(*Name, "rb"))
 #endif
 {
 #if OS_WINDOWS
-	fopen_s(&Real, *Name, "r");
+	fopen_s(&Real, *Name, "rb");
 #endif
-    if(Real)
-        fputs("\n", Real);
 }
 
 BufferedFile::~BufferedFile()
