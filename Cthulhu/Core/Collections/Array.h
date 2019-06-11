@@ -35,9 +35,9 @@ namespace Cthulhu
 
 /**
  * @brief A dynamically sized array
- * 
+ *
  * @description A dynamically sized slacked array, rather than exponential
- * 
+ *
  * @tparam T the type of object to store in the array
  */
 template<typename T>
@@ -45,7 +45,7 @@ struct Array
 {
     /**
      * @brief Default constructor for an array
-     * 
+     *
      */
     Array()
         : Real(new T[DefaultSlack])
@@ -54,10 +54,20 @@ struct Array
     {}
 
     /**
+     * @brief Contruct an array with space for Size elements
+     * can be useful for interfacing with stuff that needs pointers
+     */
+    Array(U32 Size)
+        : Real(new T[Size])
+        , Length(Size)
+        , Allocated(Size)
+    {}
+
+    /**
      * @brief Copy constructor for an array
-     * 
+     *
      * @descrption perform a deep copy of all elements in an array
-     * 
+     *
      * @param Other the array to copy the data from
      */
     Array(const Array& Other)
@@ -68,11 +78,11 @@ struct Array
 
     /**
      * @brief Construct a new Array object from a raw pointer and its length
-     * 
+     *
      * @description Allows an array to "claim" a pointer as its own data
-     *              This makes the pointer unusable once it has been claimed 
+     *              This makes the pointer unusable once it has been claimed
      *              by the array
-     * 
+     *
      * @param Ptr the raw pointer to claim
      * @param PtrLen the length of the raw pointer
      */
@@ -81,28 +91,28 @@ struct Array
         , Length(PtrLen)
         , Allocated(PtrLen)
     {}
-    
+
     /**
      * @brief Construct a new Array object from an initializer_list
-     * 
+     *
      * @description enable initializer_list syntax to make arrays easier to type
-     * so instead of 
+     * so instead of
      * @code{.cpp}
-     * 
+     *
      * Array<String> Names;
      * Names.Append("Jeb");
      * Names.Append("Bob");
      * Names.Append("Bill");
-     * 
+     *
      * @endcode
-     * the user can type 
+     * the user can type
      * @code{.cpp}
-     * 
+     *
      * Array<String> Names = { "Jeb", "Bob", "Bill" };
-     * 
+     *
      * @endcode
      * instead
-     * 
+     *
      * @param InitList the initalizer list to use
      */
     Array(std::initializer_list<T> InitList)
@@ -118,32 +128,32 @@ struct Array
 
     /**
      * @brief Construct a new Array object using a lambda
-     * 
+     *
      * @description Used to allow an array to be constructed with a function
      * is also more efficient than appending each item individually
-     * 
-     * 
+     *
+     *
      * @code{.cpp}
-     * 
+     *
      * Array<I32> Numbers(5, [](I32 N) { return N + N; });
-     * 
+     *
      * printf(*Utils::ToString(Numbers));
      * // { 0, 2, 4, 8, 16 }
-     * 
+     *
      * @endcode
-     * 
-     * instead of 
-     * 
+     *
+     * instead of
+     *
      * @code{.cpp}
-     * 
+     *
      * Array<I32> Numbers = { 0, 2, 4, 8, 16 };
-     * 
+     *
      * @endcode
-     * 
+     *
      * or
-     * 
+     *
      * @code{.cpp}
-     * 
+     *
      * Array<I32> Numbers;
      * Numbers.Append(0);
      * Numbers.Append(2);
@@ -152,7 +162,7 @@ struct Array
      * Numbers.Append(16);
      *
      * @endcode
-     * 
+     *
      * @param Amount the amount of items initially in the array
      * @param Block the function used to populate the array
      */
@@ -169,10 +179,10 @@ struct Array
 
     /**
      * @brief push an item to the back of the array
-     * 
+     *
      * @description simmilar to <a href="http://www.cplusplus.com/reference/vector/vector/push_back/">vector::push_back</a> or rusts
      * <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html#method.push">vec::push</a>
-     * 
+     *
      * @param Item the item to push
      *
      * @code{.cpp}
@@ -184,7 +194,7 @@ struct Array
      * @endcode
      */
     void Append(const T& Item)
-    {        
+    {
         if(Length + 1 >= Allocated)
         {
             Resize(Length + DefaultSlack);
@@ -195,7 +205,7 @@ struct Array
 
     /**
      * @brief Append another array to an array
-     * 
+     *
      * @param Other the array to append
      *
      * @code{.cpp}
@@ -219,7 +229,7 @@ struct Array
 
     /**
      * @brief Append a single item to an array
-     * 
+     *
      * @param Item the item to append
      * @return Array& a refernce to itself
      *
@@ -232,7 +242,7 @@ struct Array
      * //Arr = { 5, 10, 15, 20 };
      * @endcode
      */
-    Array& operator+=(const T& Item) 
+    Array& operator+=(const T& Item)
     {
         Append(Item);
         return *this;
@@ -240,7 +250,7 @@ struct Array
 
     /**
      * @brief Append another array to this array
-     * 
+     *
      * @param Other the other array to append
      * @return Array& a refence to itself
      *
@@ -250,7 +260,7 @@ struct Array
      * Array<U32> Other = { 20, 25, 30 };
      *
      * Arr += Other;
-     * 
+     *
      * //Arr = { 5, 10, 15, 20, 25, 30 };
      *
      * @endcode
@@ -263,7 +273,7 @@ struct Array
 
     /**
      * @brief Remove the last item from the array and return it
-     * 
+     *
      * @return T the last item on the array
      *
      * @code{.cpp}
@@ -283,7 +293,7 @@ struct Array
 
     /**
      * @brief Check if an index would be inside the arrays bounds
-     * 
+     *
      * @param Index The index to check
      * @return true the index is in range
      * @return false the index is out of range
@@ -292,7 +302,7 @@ struct Array
 
     /**
      * @brief Get an item from an array by index
-     * 
+     *
      * @param Index the index to get from
      * @return T& the iten at that index
      */
@@ -304,7 +314,7 @@ struct Array
 
     /**
      * @brief Get an item from an array if its in range
-     * 
+     *
      * @param Index The index to get from
      * @return Option<T> Some<T> if index is in range or None<T> if its out of range
      */
@@ -312,56 +322,56 @@ struct Array
 
     /**
      * @brief Get the length of an array
-     * 
+     *
      * @return U32 the length of the array
      */
     CTU_INLINE U32 Len() const { return Length; }
-    
+
     /**
      * @brief get the slack the array has
-     * 
+     *
      * @return U16 the current slack
      */
     CTU_INLINE U16 GetSlack() const { return Slack; }
-    
+
     /**
      * @brief set the slack the array uses
-     * 
+     *
      * @param NewSlack the slack to use instead
      */
     CTU_INLINE void SetSlack(U16 NewSlack) { Slack = NewSlack; }
-    
+
     /**
      * @brief get the allocated size of the array
-     * 
+     *
      * @return U32 the actual amount of elements the array can fit
      */
     CTU_INLINE U32 RealSize() const { return Allocated; }
-    
+
     /**
      * @brief get the raw pointer the array has
-     * 
+     *
      * @return T* the raw pointer
      */
     CTU_INLINE T* operator*() const { return Real; }
-    
+
     /**
      * @brief get the ray pointer the array has
-     * 
+     *
      * @return T* the raw pointer
      */
     CTU_INLINE T* Data() const { return Real; }
 
     /**
      * @brief get the first element in the array
-     * 
+     *
      * @return T& a reference to the first element
      */
     CTU_INLINE T& Front() const { ASSERT(Len() > 0, "An empty array has no front"); return Real[0]; }
 
     /**
      * @brief get the last item in the array
-     * 
+     *
      * @return T& a reference to the last element
      */
     CTU_INLINE T& Back() const { ASSERT(Len() > 0, "An empty array has no back"); return Real[Length]; }
@@ -373,7 +383,7 @@ struct Array
 
     /**
      * @brief Cut N elements from the front of the array
-     * 
+     *
      * @param Amount the amount of elements to remove from the front
      */
     void Cut(U32 Amount)
@@ -384,7 +394,7 @@ struct Array
 
     /**
      * @brief Cut N elements from the back of the array
-     * 
+     *
      * @param Amount the amount of elements to drop from the back
      */
     void Drop(U32 Amount)
@@ -395,7 +405,7 @@ struct Array
 
     /**
      * @brief Find the first occurence of a value
-     * 
+     *
      * @param Item the item to search for
      * @return Option<U32> the index of the item if the array contained the item
      */
@@ -406,13 +416,13 @@ struct Array
             if(Real[I] == Item)
                 return Some(Real[I]);
         }
-        
+
         return None<T>();
     }
 
     /**
      * @brief check if an array contains an item
-     * 
+     *
      * @param Item the item to check for existence
      * @return true if the array contains the item
      * @return false if the array does not contain the item
@@ -424,7 +434,7 @@ struct Array
 
     /**
      * @brief count the number of occurences of an element in an array
-     * 
+     *
      * @param Item the item to count
      * @return U32 the number of times the item occured
      */
@@ -437,39 +447,39 @@ struct Array
             if(Real[I] == Item)
                 Ret++;
         }
-        
+
         return Ret;
     }
 
     /**
      * @brief Copy the contents of the array to a new array with a filter
-     * 
+     *
      * @param Block the function that filters each item
      * @return Array the array with the filtered items
      */
     Array Filter(Lambda<bool(const T&)> Block) const
     {
         Array Ret;
-        
+
         for(U32 I = 0; I < Length; I++)
         {
             if(Block(Real[I]))
                 Ret.Append(Real[I]);
         }
-        
+
         return Ret;
     }
 
     /**
      * @brief Map each item into a new array with a transform applied
-     * 
+     *
      * @description Apply a transform to every item in an array using a lambda
      * for example
-     * 
+     *
      * @code{.cpp}
-     * 
+     *
      * Array<String> Names = { "Jeff", "Jeb", "John", "Bill", "Bob", "Barry" };
-     * 
+     *
      * auto NamesWithJ = Names.Map([](const String& Name) {
      *     if(Name.StartsWith("J")) {
      *         return Name;
@@ -477,30 +487,30 @@ struct Array
      *         return String("J") += Name;
      *     }
      * });
-     * 
+     *
      * puts(Utils::ToString(Names).CStr());
      * // { "Jeff", "Jeb", "John", "JBill", "JBob", "JBarry" }
-     * 
+     *
      * @endcode
-     * 
+     *
      * @param Transform the function to use to transform the variable
      * @return Array the new array with the tranformed elements
      */
     Array Map(Lambda<T(const T&)> Transform) const
     {
         Array Ret;
-        
+
         for(U32 I = 0; I < Length; I++)
         {
             Ret.Append(Transform(Real[I]));
         }
-        
+
         return Ret;
     }
 
     /**
      * @brief Allocate extra space
-     * 
+     *
      * @param Size The extra space to allocate
      */
     void Reserve(U32 Size)
@@ -522,7 +532,7 @@ struct Array
      * @brief claim the raw pointer
      * this makes the array unusable after that and doing any other operations
      * is undefined behaviour and will more than likley crash
-     * 
+     *
      * @return T* the arrays raw data
      */
     T* Claim()
@@ -535,14 +545,14 @@ struct Array
     /**
      * @brief the default slack of an array
      * @description this value is used to resize the array
-     *              everytime the internal array size gets 
+     *              everytime the internal array size gets
      *              bigger than the internally allocated size.
      */
     static constexpr U32 DefaultSlack = 32;
 
     /**
      * @brief Destroy the Array object
-     * 
+     *
      * @description this will call the destrutor for every object in the array
      */
     ~Array()
@@ -561,7 +571,7 @@ private:
 
         //figure out how much to copy
         Length = Math::Min(Length, NewSize);
-        
+
         T* Temp = new T[NewSize];
 
         for(U32 I = 0; I < Length; I++)
@@ -583,10 +593,10 @@ namespace Utils
 {
     /**
      * @brief Convert an array to a string
-     * 
+     *
      * @description Convert an array to a string representing every item in the array
      * the output uses initializer_list syntax so it looks simmilar to native C++
-     * 
+     *
      * @tparam T they type of the object stored in the array
      * @param Arr the array to convert
      * @return String the array as a string
@@ -609,13 +619,13 @@ namespace Utils
 
 /**
  * @brief take any trivial item and turn it into a byte array
- * 
+ *
  * this can be helpful to serialize blocks of memory without having to worry about
  * messing with `reinterpret_cast` or accidentally editing memory
- * 
- * @tparam T 
- * @param Data 
- * @return Array<Byte> 
+ *
+ * @tparam T
+ * @param Data
+ * @return Array<Byte>
  */
 template<typename T>
 CTU_INLINE Array<Byte> RawBytes(T Data)
