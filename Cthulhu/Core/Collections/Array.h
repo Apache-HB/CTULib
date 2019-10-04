@@ -414,10 +414,10 @@ struct Array
         for(U32 I = 0; I < Length; I++)
         {
             if(Real[I] == Item)
-                return Some(Real[I]);
+                return Some(I);
         }
 
-        return None<T>();
+        return None<U32>();
     }
 
     /**
