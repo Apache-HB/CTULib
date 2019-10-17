@@ -108,6 +108,10 @@
 #   error "Unrecognised compiler"
 #endif
 
+#ifndef IF_CONSTEXPR
+#   define IF_CONSTEXPR if
+#endif
+
 #ifndef CC_MSVC
 #   define CC_MSVC 0
 #endif
